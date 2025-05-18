@@ -1,58 +1,38 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedriixd alvez</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1bb76e;
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .container {
-            padding: 20px;
-        }
-        .logo {
-            max-width: 200px;
-            margin-top: 20px;
-        }
-        .main-img {
-            max-width: 90%;
-            margin: 20px 0;
-            border-radius: 12px;
-        }
-        .btn {
-            display: inline-block;
-            background-color: #ffffff;
-            color: #1bb76e;
-            padding: 12px 24px;
-            margin: 20px 0;
-            font-size: 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .qr {
-            margin: 20px 0;
-            max-width: 200px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedriixd Stickers</title>
+  <style>
+    body { font-family: sans-serif; background: #d1fae5; text-align: center; padding: 2rem; }
+    h1 { color: #065f46; }
+    .btn { display: inline-block; margin: 1rem; padding: 1rem 2rem; background: #10b981; color: white; border: none; border-radius: 10px; text-decoration: none; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <img src="logo.png" alt="Logo Pedriixd" class="logo">
-        <h1>Pedriixd alvez</h1>
-        <p>personaliza tu equipo de mate o compu con stickers de tu elección</p>
-        <img src="precios.png" alt="Precios de stickers" class="main-img">
-        <br>
-        <a class="btn" href="https://wa.me/543755298440" target="_blank">Hablame por WhatsApp</a>
-        <br>
-        <img src="qr_whatsapp.png" alt="QR WhatsApp" class="qr">
-    </div>
+  <h1>Pedriixd 💚</h1>
+  <p>Personaliza tu equipo de mate o compu con stickers de tu elección.</p>
+  <a class="btn" href="https://wa.me/543755298440">Enviar pedido por WhatsApp</a>
+  <a class="btn" href="https://instagram.com/pedriixd_stickers">Ir a Instagram</a>
+  <h2>Galería</h2>
+  <div id="galeria"></div>
+  <script>
+    fetch('galeria/')
+      .then(r => r.text())
+      .then(data => {
+        const parser = new DOMParser();
+        const html = parser.parseFromString(data, 'text/html');
+        const links = [...html.querySelectorAll('a')].filter(a => a.href.match(/\.(jpe?g|png|gif)$/i));
+        const galeria = document.getElementById('galeria');
+        links.forEach(link => {
+          const img = document.createElement('img');
+          img.src = 'galeria/' + link.textContent;
+          img.style.width = '100px';
+          img.style.margin = '10px';
+          galeria.appendChild(img);
+        });
+      });
+  </script>
 </body>
 </html>
