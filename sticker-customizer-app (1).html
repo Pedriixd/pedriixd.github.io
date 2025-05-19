@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker Personalizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aqua-green: #7BDCB5;
+            --pastel-green: #A8E6CF;
+            --white: #FFFFFF;
+            --gray: #f0f0f0;
+            --dark-gray: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--white);
+            color: var(--dark-gray);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Navbar */
+        nav {
+            background-color: var(--aqua-green);
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* Sections */
+        section {
+            margin: 30px 0;
+            display: none;
+        }
+        
+        section.active {
+            display: block;
+        }
+        
+        h2 {
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Welcome Section */
+        #welcome {
+            text-align: center;
+            padding: 50px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+        }
+        
+        .welcome-img {
+            width: 150px;
+            height: 150px;
+            background-color: var(--pastel-green);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .welcome-text {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.5;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            background-color: var(--pastel-green);
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--aqua-green);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: var(--aqua-green);
+        }
+        
+        .btn-primary:hover {
+            background-color: #6bcba4;
+        }
+        
+        /* Customize Section */
+        .customize-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sheet-selector {
+            background-color: var(--gray);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .sheet-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .sheet-option {
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .sheet-option.selected {
+            border-color: var(--aqua-green);
+            background-color: rgba(123, 220, 181, 0.1);
+        }
+        
+        .sheet-option h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .sheet-option p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .sheet-option .price {
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-top: 5px;
+        }
+        
+        .design-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .canvas-container {
+            position: relative;
+            margin: 0 auto;
+            background-color: var(--white);
+            border: 2px dashed var(--pastel-green);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .canvas-container.active {
+            border: 2px solid var(--aqua-green);
+        }
+        
+        .sticker-counter {
+            background-color: var(--aqua-green);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .sticker {
+            position: absolute;
+            cursor: move;
+            width: 70px;
+            height: 70px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .sticker.size-5 {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .sticker.size-7 {
+            width: 70px;
+            height: 70px;
+        }
+        
+        .sticker-size-toggle {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .size-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: var(--gray);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .size-btn.active {
+            background-color: var(--pastel-green);
+        }
+        
+        /* Gallery Section */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .sticker-item {
+            aspect-ratio: 1;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sticker-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sticker-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .upload-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 30px;
+            background-color: var(--pastel-green);
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--aqua-green);
+        }
+        
+        #imageUpload {
+            display: none;
+        }
+        
+        /* Pricing Section */
+        .pricing-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .pricing-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pricing-card h3 {
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+        }
+        
+        .pricing-card .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--aqua-green);
+            margin-bottom: 15px;
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card ul li {
+            margin-bottom: 8px;
+        }
+        
+        /* Summary Section */
+        .summary-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .preview-container {
+            max-width: 500px;
+            margin: 0 auto;
+            border: 2px solid var(--pastel-green);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .summary-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--pastel-green);
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .social-link:hover {
+            background-color: var(--aqua-green);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .welcome-img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .sheet-options {
+                flex-direction: column;
+            }
+            
+            .pricing-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">
+                <div class="logo-img">🌟</div>
+                <span>Sticker Personalizer</span>
+            </div>
+            <div class="nav-links">
+                <button class="btn" onclick="showSection('welcome')">Inicio</button>
+                <button class="btn" onclick="showSection('customize')">Personaliza</button>
+                <button class="btn" onclick="showSection('gallery')">Galería</button>
+                <button class="btn" onclick="showSection('pricing')">Precios</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Welcome Section -->
+    <section id="welcome" class="active">
+        <div class="container">
+            <div class="welcome-img">
+                <span>🎨</span>
+            </div>
+            <h1>Bienvenido a Sticker Personalizer</h1>
+            <p class="welcome-text">Personalizá tu equipo de mate o compu con stickers de tu elección.</p>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="showSection('customize')">📌 Personaliza tu plancha</button>
+                <button class="btn" onclick="showSection('gallery')">🖼️ Galería</button>
+                <button class="btn" onclick="showSection('pricing')">📦 Precios</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Customize Section -->
+    <section id="customize">
+        <div class="container customize-container">
+            <h2>Personaliza tu plancha de stickers</h2>
+            
+            <div class="sheet-selector">
+                <h3>Selecciona el tamaño de tu plancha:</h3>
+                <div class="sheet-options">
+                    <div class="sheet-option" data-size="small" data-width="12" data-height="16" data-stickers-5="5" data-stickers-7="3" onclick="selectSheet(this)">
+                        <h3>Plancha Pequeña</h3>
+                        <p>12x16cm</p>
+                        <p>5 stickers de 5cm o 3 de 7cm</p>
+                        <p class="price">$1000</p>
+                    </div>
+                    <div class="sheet-option" data-size="medium" data-width="14" data-height="21" data-stickers-5="9" data-stickers-7="6" onclick="selectSheet(this)">
+                        <h3>Plancha Mediana</h3>
+                        <p>14x21cm</p>
+                        <p>9 stickers de 5cm o 6 de 7cm</p>
+                        <p class="price">$1500</p>
+                    </div>
+                    <div class="sheet-option" data-size="large" data-width="21" data-height="27" data-stickers-5="19" data-stickers-7="12" onclick="selectSheet(this)">
+                        <h3>Plancha Grande</h3>
+                        <p>21x27cm</p>
+                        <p>19 stickers de 5cm o 12 de 7cm</p>
+                        <p class="price">$3000</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="design-area">
+                <div class="sticker-size-toggle">
+                    <button class="size-btn active" data-size="5" onclick="toggleStickerSize(this)">Stickers de 5cm</button>
+                    <button class="size-btn" data-size="7" onclick="toggleStickerSize(this)">Stickers de 7cm</button>
+                </div>
+                
+                <div class="canvas-container" id="canvasContainer">
+                    <div class="sticker-counter">0 / <span id="maxStickers">0</span></div>
+                    <div class="canvas" id="canvas"></div>
+                </div>
+                
+                <div class="sticker-gallery">
+                    <h3>Arrastra los stickers a tu plancha:</h3>
+                    <div class="gallery-container" id="stickerGallery">
+                        <!-- Stickers will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="generatePreview()">Ver Vista Previa</button>
+                    <button class="btn" onclick="resetCanvas()">Limpiar Plancha</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="container">
+            <h2>Galería de Stickers</h2>
+            <div class="gallery-container" id="fullGallery">
+                <!-- Gallery items will be loaded here -->
+            </div>
+            
+            <div class="upload-container">
+                <label for="imageUpload" class="upload-btn">
+                    <span>📤 Sube tu propio sticker</span>
+                </label>
+                <input type="file" id="imageUpload" accept="image/*" onchange="uploadSticker(event)">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <div class="container">
+            <h2>Precios</h2>
+            <div class="pricing-container">
+                <div class="pricing-card">
+                    <h3>Plancha Pequeña</h3>
+                    <div class="price">$1000</div>
+                    <ul>
+                        <li>Tamaño 12x16cm</li>
+                        <li>5 stickers de 5cm</li>
+                        <li>O 3 stickers de 7cm</li>
+                        <li>Alta calidad</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="showSection('customize')">Personalizar</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Plancha Mediana</h3>
+                    <div class="price">$1500</div>
+                    <ul>
+                        <li>Tamaño 14x21cm</li>
+                        <li>9 stickers de 5cm</li>
+                        <li>O 6 stickers de 7cm</li>
+                        <li>Alta calidad</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="showSection('customize')">Personalizar</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Plancha Grande</h3>
+                    <div class="price">$3000</div>
+                    <ul>
+                        <li>Tamaño 21x27cm</li>
+                        <li>19 stickers de 5cm</li>
+                        <li>O 12 stickers de 7cm</li>
+                        <li>Alta calidad</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="showSection('customize')">Personalizar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Summary Section -->
+    <section id="summary">
+        <div class="container summary-container">
+            <h2>Resumen de tu plancha</h2>
+            <div class="preview-container" id="previewContainer">
+                <h3>Vista previa de tu plancha</h3>
+                <div id="previewCanvas" class="canvas"></div>
+            </div>
+            
+            <div class="summary-actions">
+                <button class="btn btn-primary" onclick="downloadPPTX()">Descargar como PPTX</button>
+                <button class="btn" onclick="shareWhatsApp()">Enviar por WhatsApp</button>
+                <button class="btn" onclick="showSection('customize')">Volver a editar</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="social-links">
+                <a href="https://wa.me/543755298440" class="social-link" target="_blank">📱</a>
+                <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" class="social-link" target="_blank">📷</a>
+            </div>
+            <p class="copyright">© 2025 Sticker Personalizer. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let selectedSheet = null;
+        let selectedSize = 5; // Default sticker size (5cm)
+        let stickers = [];
+        let placedStickers = [];
+        let userStickers = [];
+        let maxStickers = 0;
+        
+        // Dummy sticker images (placeholders)
+        const dummyStickers = [
+            { name: 'Emoji Feliz', url: '/api/placeholder/100/100' },
+            { name: 'Emoji Triste', url: '/api/placeholder/100/100' },
+            { name: 'Gato', url: '/api/placeholder/100/100' },
+            { name: 'Perro', url: '/api/placeholder/100/100' },
+            { name: 'Pizza', url: '/api/placeholder/100/100' },
+            { name: 'Estrella', url: '/api/placeholder/100/100' },
+            { name: 'Corazón', url: '/api/placeholder/100/100' },
+            { name: 'Café', url: '/api/placeholder/100/100' },
+            { name: 'Laptop', url: '/api/placeholder/100/100' },
+            { name: 'Mate', url: '/api/placeholder/100/100' },
+            { name: 'Música', url: '/api/placeholder/100/100' },
+            { name: 'Libro', url: '/api/placeholder/100/100' }
+        ];
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStickers();
+            loadGallery();
+        });
+        
+        // Show specific section
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+        }
+        
+        // Load stickers into the gallery
+        function loadStickers() {
+            stickers = [...dummyStickers];
+            const gallery = document.getElementById('stickerGallery');
+            gallery.innerHTML = '';
+            
+            stickers.forEach((sticker, index) => {
+                const stickerItem = document.createElement('div');
+                stickerItem.className = 'sticker-item';
+                stickerItem.setAttribute('draggable', 'true');
+                stickerItem.setAttribute('data-index', index);
+                
+                const img = document.createElement('img');
+                img.src = sticker.url;
+                img.alt = sticker.name;
+                
+                stickerItem.appendChild(img);
+                gallery.appendChild(stickerItem);
+                
+                // Add drag event listeners
+                stickerItem.addEventListener('dragstart', handleDragStart);
+            });
+            
+            // Make canvas droppable
+            const canvas = document.getElementById('canvas');
+            canvas.addEventListener('dragover', handleDragOver);
+            canvas.addEventListener('drop', handleDrop);
+        }
+        
+        // Load stickers into the full gallery
+        function loadGallery() {
+            const gallery = document.getElementById('fullGallery');
+            gallery.innerHTML = '';
+            
+            // Load default stickers
+            dummyStickers.forEach((sticker, index) => {
+                const stickerItem = document.createElement('div');
+                stickerItem.className = 'sticker-item';
+                
+                const img = document.createElement('img');
+                img.src = sticker.url;
+                img.alt = sticker.name;
+                
+                stickerItem.appendChild(img);
+                gallery.appendChild(stickerItem);
+            });
+            
+            // Load user-uploaded stickers
+            userStickers.forEach((sticker, index) => {
+                const stickerItem = document.createElement('div');
+                stickerItem.className = 'sticker-item';
+                
+                const img = document.createElement('img');
+                img.src = sticker.url;
+                img.alt = `User sticker ${index + 1}`;
+                
+                stickerItem.appendChild(img);
+                gallery.appendChild(stickerItem);
+            });
+        }
+        
+        // Select sheet size
+        function selectSheet(element) {
+            // Remove selected class from all options
+            const options = document.querySelectorAll('.sheet-option');
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Get sheet data
+            const width = parseInt(element.getAttribute('data-width'));
+            const height = parseInt(element.getAttribute('data-height'));
+            const stickers5 = parseInt(element.getAttribute('data-stickers-5'));
+            const stickers7 = parseInt(element.getAttribute('data-stickers-7'));
+            
+            selectedSheet = {
+                size: element.getAttribute('data-size'),
+                width: width,
+                height: height,
+                stickers5: stickers5,
+                stickers7: stickers7
+            };
+            
+            // Update max stickers
+            maxStickers = selectedSize === 5 ? stickers5 : stickers7;
+            document.getElementById('maxStickers').textContent = maxStickers;
+            
+            // Update canvas size
+            const canvasContainer = document.getElementById('canvasContainer');
+            canvasContainer.style.width = `${width * 20}px`;
+            canvasContainer.style.height = `${height * 20}px`;
+            canvasContainer.classList.add('active');
+            
+            // Reset placed stickers
+            resetCanvas();
+        }
+        
+        // Toggle sticker size
+        function toggleStickerSize(element) {
+            // Remove active class from all size buttons
+            const sizeButtons = document.querySelectorAll('.size-btn');
+            sizeButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            element.classList.add('active');
+            
+            // Update selected size
+            selectedSize = parseInt(element.getAttribute('data-size'));
+            
+            // Update max stickers if sheet is selected
+            if (selectedSheet) {
+                maxStickers = selectedSize === 5 ? selectedSheet.stickers5 : selectedSheet.stickers7;
+                document.getElementById('maxStickers').textContent = maxStickers;
+                
+                // Update placed stickers sizes
+                updateStickerSizes();
+            }
+        }
+        
+        // Update sticker sizes when toggling between 5cm and 7cm
+        function updateStickerSizes() {
+            const stickerElements = document.querySelectorAll('.sticker');
+            stickerElements.forEach(element => {
+                element.classList.remove('size-5', 'size-7');
+                element.classList.add(`size-${selectedSize}`);
+            });
+        }
+        
+        // Handle drag start
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.getAttribute('data-index'));
+        }
+        
+        // Handle drag over
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+        
+        // Handle drop
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            // Check if we can add more stickers
+            if (placedStickers.length >= maxStickers) {
+                alert(`No puedes agregar más de ${maxStickers} stickers de ${selectedSize}cm a esta plancha.`);
+                return;
+            }
+            
+            // Get sticker index
+            const stickerIndex = e.dataTransfer.getData('text/plain');
+            const sticker = stickers[stickerIndex];
+            
+            if (!sticker) return;
+            
+            // Create sticker element
+            const stickerElement = document.createElement('div');
+            stickerElement.className = `sticker size-${selectedSize}`;
+            stickerElement.style.backgroundImage = `url(${sticker.url})`;
+            
+            // Set position relative to drop position
+            const canvas = document.getElementById('canvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left - (selectedSize === 5 ? 25 : 35);
+            const y = e.clientY - rect.top - (selectedSize === 5 ? 25 : 35);
+            
+            stickerElement.style.left = `${x}px`;
+            stickerElement.style.top = `${y}px`;
+            
+            // Add to canvas
+            canvas.appendChild(stickerElement);
+            
+            // Add to placed stickers
+            placedStickers.push({
+                index: stickerIndex,
+                url: sticker.url,
+                x: x,
+                y: y,
+                size: selectedSize
+            });
+            
+            // Update sticker counter
+            updateStickerCounter();
+            
+            // Make the sticker draggable
+            makeDraggable(stickerElement);
+        }
+        
+        // Make element draggable
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            element.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Get mouse position at startup
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // Call function when cursor moves
+                document.onmousemove = elementDrag;
+            }
+            
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Calculate new position
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // Set element's new position
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+            
+            function closeDragElement() {
+                // Stop moving when mouse button is released
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        
+        // Update sticker counter
+        function updateStickerCounter() {
+            const counter = document.querySelector('.sticker-counter');
+            counter.textContent = `${placedStickers.length} / ${maxStickers}`;
+        }
+        
+        // Reset canvas
+        function resetCanvas() {
+            const canvas = document.getElementById('canvas');
+            canvas.innerHTML = '';
+            placedStickers = [];
+            updateStickerCounter();
+        }
+        
+        // Upload custom sticker
+        function uploadSticker(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                alert('Por favor, sube solo imágenes.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create sticker object
+                const sticker = {
+                    name: `Custom ${userStickers.length + 1}`,
+                    url: e.target.result
+                };
+                
+                // Add to user stickers
+                userStickers.push(sticker);
+                
+                // Add to all stickers
+                stickers.push(sticker);
+                
+                // Add to sticker gallery
+                const gallery = document.getElementById('stickerGallery');
+                const stickerItem = document.createElement('div');
+                stickerItem.className = 'sticker-item';
+                stickerItem.setAttribute('draggable', 'true');
+                stickerItem.setAttribute('data-index', stickers.length - 1);
+                
+                const img = document.createElement('img');
+                img.src = sticker.url;
+                img.alt = sticker.name;
+                
+                stickerItem.appendChild(img);
+                gallery.appendChild(stickerItem);
+                
+                // Add drag event listeners
+                stickerItem.addEventListener('dragstart', handleDragStart);
+                
+                // Update full gallery
+                loadGallery();
+                
+                // Show notification
+                alert('¡Sticker subido exitosamente!');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // Generate preview
+        function generatePreview() {
+            // Check if sheet is selected
+            if (!selectedSheet) {
+                alert('Por favor, selecciona un tamaño de plancha primero.');
+                return;
+            }
+            
+            // Check if there are stickers placed
+            if (placedStickers.length === 0) {
+                alert('Por favor, agrega al menos un sticker a tu plancha.');
+                return;
+            }
+            
+            // Clone the canvas for preview
+            const canvas = document.getElementById('canvas');
+            const previewCanvas = document.getElementById('previewCanvas');
+            previewCanvas.innerHTML = '';
+            previewCanvas.style.width = canvas.style.width;
+            previewCanvas.style.height = canvas.style.height;
+            
+            // Clone each sticker
+            placedStickers.forEach(sticker => {
+                const stickerElement = document.createElement('div');
+                stickerElement.className = `sticker size-${sticker.size}`;
+                stickerElement.style.backgroundImage = `url(${sticker.url})`;
+                stickerElement.style.left = `${sticker.x}px`;
+                stickerElement.style.top = `${sticker.y}px`;
+                
+                previewCanvas.appendChild(stickerElement);
+            });
+            
+            // Show summary section
+            showSection('summary');
+        }
+        
+        // Download as PPTX
+        function downloadPPTX() {
+            // This is a simplified version since we can't actually create PPT files in the browser
+            // In a real application, this would involve sending data to a server to generate the PPTX
+            
+            alert('En una aplicación real, esto generaría un archivo PPTX con tu diseño de plancha de stickers. Para este ejemplo, imagina que has descargado exitosamente tu diseño en formato PowerPoint.');
+            
+            // This could be replaced with actual PPTX generation logic or API call
+            console.log('Downloading PPTX with:', {
+                sheetSize: selectedSheet,
+                stickers: placedStickers
+            });
+        }
+        
+        // Share via WhatsApp
+        function shareWhatsApp() {
+            // Create WhatsApp sharing link
+            const message = encodeURIComponent('¡Hola! Quiero ordenar esta plancha de stickers personalizada.');
+            const whatsappUrl = `https://wa.me/543755298440?text=${message}`;
+            
+            // Open in new tab
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
