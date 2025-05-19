@@ -36,12 +36,17 @@
                 <div class="section">
                     <h3>Tamaño de stickers</h3>
                     <div class="sticker-size-options">
-                        <button class="sticker-size-btn active" data-sticker-size="5cm">5 cm</button>
-                        <button class="sticker-size-btn" data-sticker-size="7cm">7 cm</button>
+                        <button class="sticker-size-btn active" data-sticker-size="small">5 cm</button>
+                        <button class="sticker-size-btn" data-sticker-size="large">7 cm</button>
                     </div>
                 </div>
 
-                
+                <div class="section">
+                    <h3>Precio</h3>
+                    <div class="price-display">
+                        <p>Precio total: <span id="price-display">$1000</span></p>
+                    </div>
+                </div>
 
                 <div class="section">
                     <h3>Imágenes</h3>
@@ -49,7 +54,7 @@
                         <label for="upload-input" class="upload-btn">
                             <i class="fas fa-upload"></i> Subir imagen
                         </label>
-                        <input type="file" id="upload-input" accept="image/*" multiple>
+                        <input type="file" id="upload-input" accept="image/jpeg, image/png" multiple>
                     </div>
                     
                     <div class="gallery-section">
@@ -84,7 +89,7 @@
             <button id="clear-btn" class="action-btn">
                 <i class="fas fa-trash"></i> Limpiar
             </button>
-            <button id="share-btn" class="action-btn primary">
+            <button id="share-btn" class="action-btn primary" onclick="exportCanvasToImage()">
                 <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
             </button>
         </div>
