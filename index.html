@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedriixd - Editor de Stickers</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Pedriixd</h1>
+            <p>Editor de Stickers</p>
+        </div>
+        <div class="social">
+            <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" class="social-btn">
+                <i class="fab fa-instagram"></i> Síguenos
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="editor-container">
+            <div class="sidebar">
+                <div class="section">
+                    <h3>Tamaño de plancha</h3>
+                    <div class="size-options">
+                        <button class="size-btn active" data-size="small">12×16 cm</button>
+                        <button class="size-btn" data-size="medium">14×21 cm</button>
+                        <button class="size-btn" data-size="large">21×27 cm</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Tamaño de stickers</h3>
+                    <div class="sticker-size-options">
+                        <button class="sticker-size-btn active" data-sticker-size="5cm">5 cm</button>
+                        <button class="sticker-size-btn" data-sticker-size="7cm">7 cm</button>
+                    </div>
+                </div>
+
+                
+
+                <div class="section">
+                    <h3>Imágenes</h3>
+                    <div class="image-upload">
+                        <label for="upload-input" class="upload-btn">
+                            <i class="fas fa-upload"></i> Subir imagen
+                        </label>
+                        <input type="file" id="upload-input" accept="image/*" multiple>
+                    </div>
+                    
+                    <div class="gallery-section">
+                        <h4>Galería</h4>
+                        <div class="gallery">
+                            <!-- Las imágenes de la galería se cargarán aquí con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section info-panel">
+                    <h3>Información</h3>
+                    <div class="sticker-count">
+                        <p><span id="current-count">0</span> stickers en plancha</p>
+                        <p>Capacidad máxima: <span id="max-count">--</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-area">
+                <div id="sticker-canvas" class="small">
+                    <!-- Aquí se agregarán los stickers -->
+                    <div class="canvas-message">
+                        <i class="fas fa-arrow-left"></i>
+                        <p>Elige un tamaño y añade stickers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="clear-btn" class="action-btn">
+                <i class="fas fa-trash"></i> Limpiar
+            </button>
+            <button id="share-btn" class="action-btn primary">
+                <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+            </button>
+        </div>
+    </main>
+
+    <div id="tutorial-overlay" class="tutorial">
+        <div class="tutorial-content">
+            <h2>¡Bienvenido a tu Editor de Stickers!</h2>
+            <div class="tutorial-steps">
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-ruler"></i></div>
+                    <div class="step-text">
+                        <h4>Paso 1</h4>
+                        <p>Elige el tamaño de la plancha y de los stickers</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-images"></i></div>
+                    <div class="step-text">
+                        <h4>Paso 2</h4>
+                        <p>Sube tus imágenes o usa nuestra galería</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><i class="fas fa-mouse-pointer"></i></div>
+                    <div class="step-text">
+                        <h4>Paso 3</h4>
+                        <p>Arrastra y acomoda tus stickers</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><i class="fab fa-whatsapp"></i></div>
+                    <div class="step-text">
+                        <h4>Paso 4</h4>
+                        <p>¡Envía tu diseño por WhatsApp!</p>
+                    </div>
+                </div>
+            </div>
+            <button id="start-editing" class="primary">¡Empezar a editar!</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Pedriixd - Todos los derechos reservados</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
