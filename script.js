@@ -6,37 +6,35 @@ const galleryImages = [
     'https://via.placeholder.com/150?text=Sticker4',
     'https://via.placeholder.com/150?text=Sticker5',
     'https://via.placeholder.com/150?text=Sticker6',
-    // Nota: Aquí se podrían agregar más imágenes del Google Drive
-    // Para una implementación real, se necesitaría un método para cargar imágenes 
-    // desde Google Drive usando su API o una lista de URLs directas
 ];
 
 // Configuración de tamaños y precios
-const 
-sizeConfig = {
+const sizeConfig = {
     small: { 
         width: 320, 
         height: 420, 
         maxStickers5cm: 5, 
         maxStickers7cm: 3, 
-        label: '12×16 cm'
+        label: '12×16 cm',
+        price: 1000
     },
     medium: { 
         width: 380, 
         height: 570, 
         maxStickers5cm: 9, 
         maxStickers7cm: 6, 
-        label: '14×21 cm'
+        label: '14×21 cm',
+        price: 1500
     },
     large: { 
         width: 560, 
         height: 720, 
         maxStickers5cm: 19, 
         maxStickers7cm: 12, 
-        label: '21×27 cm'
+        label: '21×27 cm',
+        price: 3000
     }
 };
-
 
 // Variables globales
 let currentSize = 'small';
@@ -57,54 +55,38 @@ const currentCountEl = document.getElementById('current-count');
 const maxCountEl = document.getElementById('max-count');
 const clearBtn = document.getElementById('clear-btn');
 const shareBtn = document.getElementById('share-btn');
-const instagramBtn = document.getElementById('instagram-btn');
+const currentPriceEl = document.getElementById('current-price');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 const startEditingBtn = document.getElementById('start-editing');
 
-// Aplicar tema de colores verde agua y blanco
+// Aplicar tema de colores verde pastel
 function applyThemeColors() {
-    // Agregar estilos directamente a la página
     const style = document.createElement('style');
     style.textContent = `
         body {
-            background-color: #e8f8f5; /* Verde agua muy claro */
-            color: #1a5952; /* Verde oscuro para texto */
+            background-color: #E0FFF0; /* Verde pastel claro */
+            color: #2E8B57; /* Verde oscuro para texto */
         }
         .header, .footer {
-            background-color: #5dbeae; /* Verde agua */
+            background-color: #98FB98; /* Verde pastel */
             color: white;
         }
         .btn, button {
-            background-color: #5dbeae; /* Verde agua */
+            background-color: #98FB98; /* Verde pastel */
             color: white;
             border: none;
             transition: all 0.3s ease;
         }
         .btn:hover, button:hover {
-            background-color: #48a798; /* Verde agua un poco más oscuro */
+            background-color: #66CDAA; /* Verde pastel un poco más oscuro */
         }
         .btn.active, button.active {
-            background-color: #3d8f85; /* Verde agua más oscuro para botones activos */
+            background-color: #3d8f85; /* Verde pastel más oscuro para botones activos */
             box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
         #sticker-canvas {
             background-color: white;
-            border: 2px solid #5dbeae; /* Borde verde agua */
-        }
-        .panel {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(93, 190, 174, 0.1);
-        }
-        .price-tag {
-            background-color: #5dbeae;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-        .sticker-size-btn.active {
-            background-color: #3d8f85;
+            border: 2px solid #98FB98; /* Borde verde pastel */
         }
     `;
     document.head.appendChild(style);
@@ -116,10 +98,8 @@ function init() {
     loadGallery();
     updateStickersCount();
     updateMaxStickersCount();
+    updateCurrentPrice();
     setupEventListeners();
-    
-    // Mostrar tutorial solo la primera vez (en un proyecto real usaríamos localStorage)
-    // localStorage.getItem('tutorialShown') === null ? showTutorial() : hideTutorial();
     showTutorial(); // Por ahora siempre mostramos el tutorial
 }
 
@@ -131,6 +111,17 @@ function loadGallery() {
         img.className = 'gallery-img';
         img.addEventListener('click', () => addStickerFromGallery(src));
         galleryContainer.appendChild(img);
+    });
+}
+
+// Exportar canvas a imagen
+function exportCanvasToImage() {
+    html2canvas(canvas).then(function(canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'sticker_design.png';
+        link.click();
     });
 }
 
@@ -151,13 +142,10 @@ function setupEventListeners() {
 
     // Eventos de botones de acción
     clearBtn.addEventListener('click', clearCanvas);
-    shareBtn.addEventListener('click', shareDesignWhatsApp);
-    if (instagramBtn) {
-        instagramBtn.addEventListener('click', shareDesignInstagram);
-    }
+    shareBtn.addEventListener('click', exportCanvasToImage);
 
     // Eventos de tutorial
-    startEditingBtn.addEventListener('click', hideTutorial);
+    if (startEditingBtn) startEditingBtn.addEventListener('click', hideTutorial);
 
     // Eventos del canvas para interacción con stickers
     canvas.addEventListener('mousedown', handleCanvasMouseDown);
@@ -193,6 +181,8 @@ function changeCanvasSize(size) {
     
     // Actualizar contadores y precio
     updateMaxStickersCount();
+    updateCurrentPrice();
+    
     // Ocultar mensaje si hay stickers
     updateCanvasMessage();
 }
@@ -216,6 +206,10 @@ function changeStickerSize(size) {
 }
 
 // Actualizar precio actual
+function updateCurrentPrice() {
+    if (currentPriceEl) {
+        currentPriceEl.textContent = `$${sizeConfig[currentSize].price}`;
+    }
 }
 
 // Reposicionar stickers al cambiar tamaño
@@ -249,7 +243,7 @@ function handleImageUpload(e) {
     
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (!(file.type === 'image/jpeg' || file.type === 'image/png')) continue;
+        if (!file.type.match('image/jpeg') && !file.type.match('image/png')) continue; // Asegurar formato JPG/PNG
         
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -389,145 +383,4 @@ function updateCanvasMessage() {
 
 // Limpiar canvas
 function clearCanvas() {
-    if (stickers.length === 0) return;
-    
-    if (confirm('¿Estás seguro de querer eliminar todos los stickers?')) {
-        stickers.forEach(sticker => {
-            if (sticker.element.parentNode === canvas) {
-                canvas.removeChild(sticker.element);
-            }
-        });
-        
-        stickers = [];
-        selectedSticker = null;
-        updateStickersCount();
-        updateCanvasMessage();
-    }
-}
-
-// Compartir diseño por WhatsApp
-function shareDesignWhatsApp() {
-    if (stickers.length === 0) {
-        alert('Añade algunos stickers antes de compartir');
-        return;
-    }
-    
-    // En un proyecto real, aquí iría código para generar una imagen del canvas
-    // y exportar a PowerPoint, pero vamos a simplificarlo para la demo
-    
-    const size = sizeConfig[currentSize].label;
-    const price = sizeConfig[currentSize].price;
-    const stickerSize = currentStickerSize;
-    const stickerCount = stickers.length;
-    
-    // Mensaje para enviar
-    const message = encodeURIComponent(`Hola! Quiero hacer un pedido de una plancha de stickers de ${size} con ${stickerCount} stickers de ${stickerSize}. El precio es $${price}.`);
-    
-    // Redirigir a WhatsApp con el número especificado
-    window.open(`https://wa.me/543755298440?text=${message}`);
-}
-
-// Compartir/Redirigir a Instagram
-function shareDesignInstagram() {
-    window.open('https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==');
-}
-
-// Mostrar tutorial
-function showTutorial() {
-    tutorialOverlay.style.display = 'flex';
-}
-
-// Ocultar tutorial
-function hideTutorial() {
-    tutorialOverlay.style.display = 'none';
-    // En un proyecto real:
-    // localStorage.setItem('tutorialShown', 'true');
-}
-
-// Manejo de eventos de ratón
-function handleCanvasMouseDown(e) {
-    const target = e.target.closest('.sticker');
-    
-    if (target) {
-        e.preventDefault();
-        
-        // Seleccionar sticker
-        selectSticker(target);
-        
-        // Iniciar arrastre
-        isDragging = true;
-        
-        const rect = target.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-    } else {
-        // Clic en área vacía, deseleccionar
-        selectSticker(null);
-    }
-}
-
-function handleDocumentMouseMove(e) {
-    if (!isDragging || !selectedSticker) return;
-    
-    e.preventDefault();
-    moveSelectedSticker(e.clientX, e.clientY);
-}
-
-function handleDocumentMouseUp() {
-    isDragging = false;
-}
-
-// Manejo de eventos táctiles
-function handleCanvasTouchStart(e) {
-    const target = e.target.closest('.sticker');
-    
-    if (target) {
-        e.preventDefault(); // Prevenir scroll
-        
-        // Seleccionar sticker
-        selectSticker(target);
-        
-        // Iniciar arrastre
-        isDragging = true;
-        
-        const touch = e.touches[0];
-        const rect = target.getBoundingClientRect();
-        offsetX = touch.clientX - rect.left;
-        offsetY = touch.clientY - rect.top;
-    }
-}
-
-function handleDocumentTouchMove(e) {
-    if (!isDragging || !selectedSticker) return;
-    
-    e.preventDefault(); // Prevenir scroll durante el arrastre
-    
-    const touch = e.touches[0];
-    moveSelectedSticker(touch.clientX, touch.clientY);
-}
-
-function handleDocumentTouchEnd() {
-    isDragging = false;
-}
-
-// Mover el sticker seleccionado
-function moveSelectedSticker(clientX, clientY) {
-    const element = selectedSticker.element;
-    const canvasRect = canvas.getBoundingClientRect();
-    const stickerRect = element.getBoundingClientRect();
-    
-    // Calcular nueva posición relativa al canvas
-    let left = clientX - canvasRect.left - offsetX;
-    let top = clientY - canvasRect.top - offsetY;
-    
-    // Restringir al área del canvas
-    left = Math.max(0, Math.min(left, canvasRect.width - stickerRect.width));
-    top = Math.max(0, Math.min(top, canvasRect.height - stickerRect.height));
-    
-    // Aplicar nueva posición
-    element.style.left = left + 'px';
-    element.style.top = top + 'px';
-}
-
-// Iniciar aplicación cuando se carga la página
-document.addEventListener('DOMContentLoaded', init);
+    if (stickers.length === 0
