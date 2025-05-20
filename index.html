@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personaliza planchas de stickers para tu equipo de mate o computadora. Diseña tu plancha con stickers personalizados y mándala a imprimir.">
+  <title>PEDRIIXD - Personaliza tus Stickers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:title" content="PEDRIIXD - Personaliza tus Stickers">
+  <meta property="og:description" content="Crea planchas de stickers personalizados para mate, computadora y más.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pedriixd.github.io">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
+      </div>
+      <nav class="desktop-nav">
+        <button id="btn-customize" class="btn-nav">
+          📌 Personaliza tu plancha
+        </button>
+        <button id="btn-gallery" class="btn-nav">
+          🖼️ Galería
+        </button>
+        <button id="btn-pricing" class="btn-nav">
+          📦 Precios
+        </button>
+      </nav>
+      <button id="mobile-menu-btn" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="mobile-menu">
+      <div class="mobile-menu-links">
+        <button id="btn-customize-mobile" class="btn-nav">
+          📌 Personaliza tu plancha
+        </button>
+        <button id="btn-gallery-mobile" class="btn-nav">
+          🖼️ Galería
+        </button>
+        <button id="btn-pricing-mobile" class="btn-nav">
+          📦 Precios
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-container">
+    <!-- Welcome Section -->
+    <section id="welcome-section" class="section active">
+      <div class="logo-img">
+        <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
+      </div>
+      <h1>Personalizá tu equipo de mate o compu con stickers de tu elección.</h1>
+      
+      <div class="welcome-buttons">
+        <button id="welcome-customize-btn" class="welcome-btn customize-btn">
+          <span class="emoji">📌</span>
+          <span>Personaliza tu plancha</span>
+        </button>
+        <button id="welcome-gallery-btn" class="welcome-btn gallery-btn">
+          <span class="emoji">🖼️</span>
+          <span>Galería</span>
+        </button>
+        <button id="welcome-pricing-btn" class="welcome-btn pricing-btn">
+          <span class="emoji">📦</span>
+          <span>Precios</span>
+        </button>
+      </div>
+      
+      <div class="welcome-showcase">
+        <div class="showcase-item">
+          <img src="https://pixabay.com/get/ge1de97e4f5f65ae3993c59029b4a430f14045a6a556a525a54e1af5cee11b726f5e446dc058dc495f8b03ccc08a7f506d21e1bcf1181f4428cbcaed4737229d1_1280.jpg" alt="Mate con stickers personalizados">
+        </div>
+        <div class="showcase-item">
+          <img src="https://pixabay.com/get/gb1a0362a24c8d580df453b3bf31f3a63d2bd395e32d6b91a0405261abcb86d5387f7066406937c0f076991ed9b2e61ea296efeb77fce6ba1ac022db131052dd8_1280.jpg" alt="Laptop con stickers">
+        </div>
+        <div class="showcase-item">
+          <img src="https://images.unsplash.com/photo-1572375992501-4b0892d50c69?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" alt="Plancha de stickers personalizados">
+        </div>
+      </div>
+    </section>
+
+    <!-- Customization Section -->
+    <section id="customize-section" class="section">
+      <h2>Personaliza tu plancha</h2>
+      
+      <div class="size-selection">
+        <h3>1. Selecciona el tamaño de tu plancha</h3>
+        <div class="size-cards">
+          <div id="size-small" class="size-card" data-max-stickers-5cm="5" data-max-stickers-7cm="3" data-price="1000">
+            <h4>12x16cm</h4>
+            <p class="size-description">Tamaño pequeño</p>
+            <ul class="size-details">
+              <li>Máx. 5 stickers de 5 cm</li>
+              <li>Máx. 3 stickers de 7 cm</li>
+            </ul>
+            <p class="size-price">$1000</p>
+          </div>
+          
+          <div id="size-medium" class="size-card" data-max-stickers-5cm="9" data-max-stickers-7cm="6" data-price="1500">
+            <h4>14x21cm</h4>
+            <p class="size-description">Tamaño mediano</p>
+            <ul class="size-details">
+              <li>Máx. 9 stickers de 5 cm</li>
+              <li>Máx. 6 stickers de 7 cm</li>
+            </ul>
+            <p class="size-price">$1500</p>
+          </div>
+          
+          <div id="size-large" class="size-card" data-max-stickers-5cm="19" data-max-stickers-7cm="12" data-price="3000">
+            <h4>21x27cm</h4>
+            <p class="size-description">Tamaño grande</p>
+            <ul class="size-details">
+              <li>Máx. 19 stickers de 5 cm</li>
+              <li>Máx. 12 stickers de 7 cm</li>
+            </ul>
+            <p class="size-price">$3000</p>
+          </div>
+        </div>
+      </div>
+      
+      <div id="canvas-container-wrapper" class="canvas-wrapper hidden">
+        <h3>2. Arrastra stickers a tu plancha</h3>
+        <div class="canvas-area">
+          <div class="canvas-main">
+            <div id="canvas-container" class="canvas-container">
+              <!-- Canvas will be filled with stickers via drag and drop -->
+            </div>
+            <div class="canvas-controls">
+              <p id="sticker-count">Stickers: <span>0</span> / <span id="max-stickers">0</span></p>
+              <button id="clear-canvas" class="btn-clear">
+                Limpiar
+              </button>
+            </div>
+          </div>
+          
+          <div class="sticker-selector-container">
+            <h4>Selecciona stickers</h4>
+            <div class="sticker-size-toggle">
+              <button id="btn-sticker-5cm" class="btn-sticker-size active" data-size="5">5 cm</button>
+              <button id="btn-sticker-7cm" class="btn-sticker-size" data-size="7">7 cm</button>
+            </div>
+            
+            <div id="sticker-selector" class="sticker-selector">
+              <!-- Stickers will be loaded here -->
+            </div>
+            
+            <div class="sticker-upload">
+              <label for="upload-sticker">Sube tu imagen</label>
+              <input type="file" id="upload-sticker" accept="image/*">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="canvas-actions" class="canvas-actions hidden">
+        <h3>3. Finaliza tu plancha</h3>
+        <div class="action-buttons">
+          <button id="btn-preview" class="btn-action btn-preview">
+            <i class="fas fa-eye"></i> Ver vista previa
+          </button>
+          <button id="btn-download" class="btn-action btn-download">
+            <i class="fas fa-download"></i> Descargar diseño
+          </button>
+          <a id="btn-whatsapp" href="https://wa.me/543755298440?text=Hola,%20acá%20está%20mi%20diseño%20de%20plancha%20personalizada." target="_blank" class="btn-action btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery-section" class="section">
+      <h2>Galería de Stickers</h2>
+      
+      <div class="gallery-filters">
+        <div class="category-buttons">
+          <button class="category-btn active" data-category="all">Todos</button>
+          <button class="category-btn" data-category="mates">Mates</button>
+          <button class="category-btn" data-category="computadoras">Computadoras</button>
+          <button class="category-btn" data-category="personajes">Personajes</button>
+        </div>
+        <div class="gallery-upload">
+          <label for="upload-gallery-sticker">Sube tu sticker</label>
+          <input type="file" id="upload-gallery-sticker" accept="image/*">
+        </div>
+      </div>
+      
+      <div class="sticker-gallery">
+        <!-- Stickers will be dynamically loaded here -->
+      </div>
+      
+      <div class="gallery-load-more">
+        <button id="load-more-btn" class="btn-load-more">
+          Cargar más stickers
+        </button>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing-section" class="section">
+      <h2>Precios y Opciones</h2>
+      
+      <div class="pricing-plans">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Plancha Pequeña</h3>
+            <p>12x16cm</p>
+          </div>
+          <div class="pricing-body">
+            <p class="price">$1000</p>
+            <ul class="pricing-features">
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 5 stickers de 5 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 3 stickers de 7 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Diseño personalizado</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Alta calidad de impresión</span>
+              </li>
+            </ul>
+            <button class="select-size-btn" data-size="small">
+              Seleccionar
+            </button>
+          </div>
+        </div>
+        
+        <div class="pricing-card popular">
+          <div class="pricing-header">
+            <h3>Plancha Mediana</h3>
+            <p>14x21cm</p>
+            <div class="popular-badge">MÁS POPULAR</div>
+          </div>
+          <div class="pricing-body">
+            <p class="price">$1500</p>
+            <ul class="pricing-features">
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 9 stickers de 5 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 6 stickers de 7 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Diseño personalizado</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Alta calidad de impresión</span>
+              </li>
+            </ul>
+            <button class="select-size-btn" data-size="medium">
+              Seleccionar
+            </button>
+          </div>
+        </div>
+        
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Plancha Grande</h3>
+            <p>21x27cm</p>
+          </div>
+          <div class="pricing-body">
+            <p class="price">$3000</p>
+            <ul class="pricing-features">
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 19 stickers de 5 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Máximo 12 stickers de 7 cm</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Diseño personalizado</span>
+              </li>
+              <li>
+                <i class="fas fa-check"></i>
+                <span>Alta calidad de impresión</span>
+              </li>
+            </ul>
+            <button class="select-size-btn" data-size="large">
+              Seleccionar
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="additional-info">
+        <h3>Información adicional</h3>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <h4>Material de alta calidad</h4>
+            <p>Nuestros stickers están hechos con vinilo de alta calidad, resistentes al agua y a los rayos UV, lo que garantiza una larga duración.</p>
+          </div>
+          
+          <div class="info-item">
+            <h4>Tiempos de entrega</h4>
+            <p>Una vez confirmado tu diseño, el tiempo de producción es de 3-5 días hábiles más el tiempo de envío según tu ubicación.</p>
+          </div>
+          
+          <div class="info-item">
+            <h4>Métodos de pago</h4>
+            <p>Aceptamos transferencias bancarias, Mercado Pago y efectivo (en caso de retiro en persona).</p>
+          </div>
+          
+          <div class="info-item">
+            <h4>¿Necesitas ayuda?</h4>
+            <p>Contáctanos por WhatsApp para cualquier consulta sobre tu diseño o pedido.</p>
+            <a href="https://wa.me/543755298440" target="_blank" class="whatsapp-link">
+              <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Vista previa de tu diseño</h3>
+          <button id="close-preview" class="close-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="preview-container-wrapper">
+          <div id="preview-container" class="preview-container">
+            <!-- Preview content will be added here -->
+          </div>
+        </div>
+        
+        <div id="preview-details" class="preview-details">
+          <h4>Detalles de tu plancha</h4>
+          <ul>
+            <li><span>Tamaño:</span> <span id="preview-size">-</span></li>
+            <li><span>Cantidad de stickers:</span> <span id="preview-sticker-count">0</span></li>
+            <li><span>Precio:</span> <span id="preview-price">$0</span></li>
+          </ul>
+        </div>
+        
+        <div class="preview-actions">
+          <button id="preview-edit" class="btn-preview-action btn-edit">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button id="preview-download" class="btn-preview-action btn-download">
+            <i class="fas fa-download"></i> Descargar
+          </button>
+          <a id="preview-whatsapp" href="https://wa.me/543755298440?text=Hola,%20acá%20está%20mi%20diseño%20de%20plancha%20personalizada." target="_blank" class="btn-preview-action btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
+        </div>
+        
+        <div class="footer-social">
+          <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://wa.me/543755298440" target="_blank" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="footer-copyright">
+        <p>&copy; 2023 PEDRIIXD. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.11.0/dist/pptxgen.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
