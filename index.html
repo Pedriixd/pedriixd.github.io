@@ -1,40 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plancha de Stickers A4</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.15.0/pptxgen.bundle.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plancha de Stickers A4</title>
+
+  <!-- TailwindCSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Konva.js para el lienzo -->
+  <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+  <!-- PptxGenJS para exportar a PowerPoint -->
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.15.0/dist/pptxgen.bundle.js"></script>
+
+  <style>
+    html, body { height: 100%; }
+    body { background: #16a34a; /* verde */ }
+    /* Evitar scroll lateral en móvil */
+    html, body { overflow-x: hidden; }
+    /* Ocultar input file nativo */
+    input[type="file"] { display: none; }
+  </style>
 </head>
-<body class="bg-green-500 text-white font-sans">
+<body class="text-white font-sans min-h-screen flex flex-col">
+  <!-- Encabezado -->
+  <header class="w-full bg-green-700/90 border-b border-white/20 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <!-- Logo: colocar archivo logo.png en el mismo directorio (tiene fallback si no existe) -->
+        <img src="logo.png" alt="Logo" class="w-12 h-12 object-contain rounded-xl ring-2 ring-white/40"
+             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,\
+        <svg xmlns=\'http://www.w3.org/2000/svg\' width=\'96\' height=\'96\'><rect width=\'100%\' height=\'100%\' rx=\'16\' fill=\'%23ffffff\' opacity=\'0.25\'/><text x=\'50%\' y=\'55%\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23ffffff\'>logo.png</text></svg>'">
+        <h1 class="text-lg md:text-xl font-extrabold">Plancha A4 (21 × 29,7 cm) — $3000</h1>
+      </div>
+      <nav class="hidden md:flex items-center gap-2 text-sm">
+        <!-- Sin botón de galería por pedido -->
+        <button id="btnReiniciar" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Reiniciar</button>
+        <button id="btnExportar" class="px-3 py-2 rounded-xl bg-white text-green-800 font-bold">Exportar .PPTX</button>
+        <a href="https://wa.me/543755298440?text=Hola%2C%20te%20env%C3%ADo%20la%20plancha%20A4%20en%20PPTX.%20La%20acabo%20de%20exportar%20desde%20la%20web." target="_blank" rel="noopener" class="px-3 py-2 rounded-xl bg-emerald-200 text-green-900 font-bold">WhatsApp</a>
+        <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" rel="noopener" class="px-3 py-2 rounded-xl bg-pink-200 text-pink-900 font-bold">Instagram</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Encabezado -->
-    <header class="flex justify-between items-center p-4 bg-green-700">
-        <div class="flex items-center gap-3">
-            <img src="logo.png" alt="Logo" class="h-12">
-            <h1 class="text-xl font-bold">Plancha A4 — $3000</h1>
+  <!-- Contenido principal -->
+  <main class="flex-1 w-full">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="mb-2 text-white/90 text-sm">Arrastrá, rotá, escalá. Doble clic para borrar. Botón para eliminar seleccionado abajo.</div>
+
+      <!-- Marco responsivo con relación A4 -->
+      <div id="stageOuter" class="w-full max-w-4xl mx-auto">
+        <div id="stageFrame" class="relative w-full aspect-[210/297] bg-white rounded-2xl shadow-2xl ring-4 ring-white">
+          <!-- Konva inyecta el canvas aquí -->
+          <div id="container" class="absolute inset-0 rounded-2xl overflow-hidden"></div>
         </div>
-        <div class="flex gap-3">
-            <button id="btnReiniciar" class="bg-red-500 px-4 py-2 rounded">Reiniciar</button>
-            <button id="btnExportar" class="bg-blue-500 px-4 py-2 rounded">Exportar PPTX</button>
-            <a href="https://wa.me/543755298440" target="_blank" class="bg-green-600 px-4 py-2 rounded">WhatsApp</a>
-            <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" class="bg-pink-500 px-4 py-2 rounded">Instagram</a>
-        </div>
-    </header>
+      </div>
+    </div>
+  </main>
 
-    <!-- Zona central -->
-    <main class="flex flex-col items-center p-4">
-        <div id="container" class="border-4 border-white" style="width: 210mm; height: 297mm;"></div>
-    </main>
+  <!-- Barra inferior (herramientas) -->
+  <footer class="sticky bottom-0 w-full bg-green-700/95 border-t border-white/20">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-2 justify-center md:justify-between">
+      <div class="flex items-center gap-2">
+        <input id="fileInput" type="file" accept="image/*" multiple>
+        <label for="fileInput" class="cursor-pointer px-4 py-2 rounded-xl bg-yellow-300 text-green-900 font-bold">Subir imagen</label>
+        <button id="btnBorrarSel" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Borrar seleccionado</button>
+        <button id="btnReiniciar2" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Reiniciar</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnExportar2" class="px-4 py-2 rounded-xl bg-white text-green-800 font-bold">Exportar .PPTX</button>
+        <a href="https://wa.me/543755298440?text=Hola%2C%20te%20env%C3%ADo%20la%20plancha%20A4%20en%20PPTX.%20La%20acabo%20de%20exportar%20desde%20la%20web." target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-200 text-green-900 font-bold">WhatsApp</a>
+        <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-pink-200 text-pink-900 font-bold">Instagram</a>
+      </div>
+    </div>
+  </footer>
 
-    <!-- Barra de herramientas -->
-    <footer class="fixed bottom-0 left-0 w-full bg-green-700 p-4 flex justify-center gap-4">
-        <input type="file" id="fileInput" accept="image/*" class="hidden">
-        <button id="btnSubir" class="bg-yellow-500 px-4 py-2 rounded">Subir imagen</button>
-    </footer>
-
-    <script src="app.js"></script>
+  <!-- Script principal -->
+  <script src="app.js"></script>
 </body>
 </html>
