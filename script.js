@@ -1,114 +1,190 @@
 // app.js
 // ===============================
-// CONFIGURACIÓN DEL LIENZO KONVA
+// LIENZO A4 SIN LÍMITES DE STICKERS
+// - Subir múltiples imágenes (PNG/JPG/WebP, etc.)
+// - Mover, rotar, escalar
+// - Borrar (doble clic o botón "Borrar seleccionado")
+// - Reiniciar todo
+// - Exportar a PPTX en tamaño A4
 // ===============================
 
-// Escala para que el A4 (210 x 297 mm) se vea en pantalla en píxeles
-// 1 mm ≈ 3.78 px en pantalla
-const anchoA4px = 210 * 3.78;
-const altoA4px = 297 * 3.78;
+// Referencias a elementos del DOM
+const stageFrame = document.getElementById('stageFrame');
+const fileInput   = document.getElementById('fileInput');
+const btnBorrar   = document.getElementById('btnBorrarSel');
+const btnRein1    = document.getElementById('btnReiniciar');
+const btnRein2    = document.getElementById('btnReiniciar2');
+const btnExp1     = document.getElementById('btnExportar');
+const btnExp2     = document.getElementById('btnExportar2');
 
-// Crear el escenario Konva
-const stage = new Konva.Stage({
-    container: 'container',
-    width: anchoA4px,
-    height: altoA4px
-});
-
-// Capa principal
-const layer = new Konva.Layer();
+// Crear Stage con tamaño inicial (se ajusta responsivo enseguida)
+let stage = new Konva.Stage({ container: 'container', width: stageFrame.clientWidth, height: stageFrame.clientHeight });
+let layer = new Konva.Layer();
 stage.add(layer);
 
-// =====================================
-// FUNCIONALIDAD: SUBIR Y AGREGAR IMAGEN
-// =====================================
-const fileInput = document.getElementById('fileInput');
-const btnSubir = document.getElementById('btnSubir');
+// Fondo blanco (la “hoja” A4 dentro del canvas)
+let bg = new Konva.Rect({ x: 0, y: 0, width: stage.width(), height: stage.height(), fill: 'white', listening: false });
+bg.setAttr('isBackground', true);
+layer.add(bg);
 
-btnSubir.addEventListener('click', () => fileInput.click());
+// Transformer único (aparece al seleccionar)
+const tr = new Konva.Transformer({
+  rotateEnabled: true,
+  keepRatio: true,
+  enabledAnchors: ['top-left','top-right','bottom-left','bottom-right'],
+  anchorSize: 10,
+  borderStroke: '#10b981' // verde
+});
+layer.add(tr);
 
-fileInput.addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) return;
+// Deselect al tocar el fondo
+stage.on('mousedown touchstart', (e) => {
+  if (e.target === stage || e.target.getAttr('isBackground')) {
+    tr.nodes([]);
+    layer.batchDraw();
+  }
+});
 
+// -----------------------
+// Responsivo (A4 visual)
+// -----------------------
+function resizeStageToFrame() {
+  const w = stageFrame.clientWidth;
+  const h = stageFrame.clientHeight;
+  stage.size({ width: w, height: h });
+  bg.size({ width: w, height: h });
+  layer.batchDraw();
+}
+window.addEventListener('resize', resizeStageToFrame);
+resizeStageToFrame();
+
+// -----------------------
+// Subida de imágenes
+// -----------------------
+fileInput.addEventListener('change', async (e) => {
+  const files = Array.from(e.target.files || []);
+  for (const file of files) {
+    await addFileAsSticker(file);
+  }
+  // Permitir volver a elegir la misma imagen después
+  fileInput.value = '';
+});
+
+// Agregar imagen como sticker
+function addFileAsSticker(file) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.onload = function (ev) {
-        const img = new Image();
-        img.onload = function () {
-            const konvaImg = new Konva.Image({
-                image: img,
-                x: stage.width() / 2 - img.width / 4,
-                y: stage.height() / 2 - img.height / 4,
-                width: img.width / 2,
-                height: img.height / 2,
-                draggable: true
-            });
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        // Escala inicial: que entre cómoda en el lienzo
+        const maxW = stage.width() * 0.5;
+        const maxH = stage.height() * 0.5;
+        const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+        const w = img.width * scale;
+        const h = img.height * scale;
 
-            // Habilitar transformaciones (mover, escalar, rotar)
-            konvaImg.on('click', () => {
-                layer.find('Transformer').destroy();
-                const tr = new Konva.Transformer({
-                    nodes: [konvaImg],
-                    rotateEnabled: true,
-                    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
-                });
-                layer.add(tr);
-                layer.draw();
-            });
+        const konvaImg = new Konva.Image({
+          image: img,
+          x: (stage.width() - w) / 2,
+          y: (stage.height() - h) / 2,
+          width: w,
+          height: h,
+          draggable: true
+        });
+        konvaImg.setAttr('isSticker', true);
 
-            // Doble click para borrar
-            konvaImg.on('dblclick', () => {
-                konvaImg.destroy();
-                layer.find('Transformer').destroy();
-                layer.draw();
-            });
+        // Selección
+        konvaImg.on('mousedown touchstart', () => {
+          tr.nodes([konvaImg]);
+          layer.draw();
+        });
 
-            layer.add(konvaImg);
-            layer.draw();
-        };
-        img.src = ev.target.result;
+        // Mantener dentro de la hoja (opcional)
+        konvaImg.on('dragend transformend', () => {
+          const padding = 2;
+          let { x, y } = konvaImg.position();
+          const w2 = konvaImg.width() * konvaImg.scaleX();
+          const h2 = konvaImg.height() * konvaImg.scaleY();
+          x = Math.max(padding, Math.min(x, stage.width() - w2 - padding));
+          y = Math.max(padding, Math.min(y, stage.height() - h2 - padding));
+          konvaImg.position({ x, y });
+          layer.batchDraw();
+        });
+
+        // Doble clic para borrar el sticker
+        konvaImg.on('dblclick dbltap', () => {
+          if (tr.nodes().includes(konvaImg)) tr.nodes([]);
+          konvaImg.destroy();
+          layer.batchDraw();
+        });
+
+        layer.add(konvaImg);
+        layer.draw();
+        resolve();
+      };
+      img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
+  });
+}
 
-    // Reset input para permitir subir la misma imagen otra vez
-    fileInput.value = '';
-});
+// -----------------------
+// Borrar seleccionado
+// -----------------------
+function deleteSelected() {
+  const nodes = tr.nodes();
+  if (!nodes.length) return;
+  nodes.forEach(n => n.destroy());
+  tr.nodes([]);
+  layer.batchDraw();
+}
+btnBorrar.addEventListener('click', deleteSelected);
 
-// ====================================
-// BOTÓN REINICIAR: VACIAR LA PLANCHA
-// ====================================
-document.getElementById('btnReiniciar').addEventListener('click', () => {
-    layer.destroyChildren();
-    layer.draw();
-});
-
-// ================================
-// BOTÓN EXPORTAR: GENERAR .PPTX
-// ================================
-document.getElementById('btnExportar').addEventListener('click', () => {
-    const dataURL = stage.toDataURL({ pixelRatio: 3 });
-
-    const pptx = new PptxGenJS();
-    const slide = pptx.addSlide();
-
-    // Tamaño A4 en pulgadas (21 cm x 29.7 cm)
-    slide.addImage({
-        data: dataURL,
-        x: 0,
-        y: 0,
-        w: 8.27,
-        h: 11.69
-    });
-
-    pptx.writeFile({ fileName: 'plancha_stickers_A4.pptx' });
-});
-
-// ========================================
-// CLIC FUERA DE OBJETO → QUITAR TRANSFORMER
-// ========================================
-stage.on('click', (e) => {
-    if (e.target === stage) {
-        layer.find('Transformer').destroy();
-        layer.draw();
+// Tecla Supr/Backspace (escritorio)
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    // Evitar borrar texto del navegador si estás en un input
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (!['INPUT','TEXTAREA'].includes(tag)) {
+      deleteSelected();
+      e.preventDefault();
     }
+  }
 });
+
+// -----------------------
+// Reiniciar lienzo
+// -----------------------
+function resetCanvas() {
+  layer.getChildren((n) => n.getAttr('isSticker')).forEach((n) => n.destroy());
+  tr.nodes([]);
+  layer.batchDraw();
+}
+btnRein1?.addEventListener('click', resetCanvas);
+btnRein2?.addEventListener('click', resetCanvas);
+
+// -----------------------
+// Exportar PPTX (A4)
+// -----------------------
+async function exportPPTX() {
+  // Imagen del stage: aumentar pixelRatio para buena calidad
+  const dataURL = stage.toDataURL({ pixelRatio: 3 });
+
+  // Tamaño A4 en pulgadas (21 x 29.7 cm)
+  const W_IN = 8.27;
+  const H_IN = 11.69;
+
+  const pptx = new PptxGenJS();
+  pptx.defineLayout({ name: 'A4', width: W_IN, height: H_IN });
+  pptx.layout = 'A4';
+
+  const slide = pptx.addSlide();
+  slide.addImage({ data: dataURL, x: 0, y: 0, w: W_IN, h: H_IN });
+
+  const fileName = `Plancha_A4_${new Date().toISOString().slice(0,10)}.pptx`;
+  await pptx.writeFile({ fileName });
+  // Luego, usá el botón de WhatsApp para abrir el chat y adjuntá el archivo manualmente.
+}
+btnExp1?.addEventListener('click', exportPPTX);
+btnExp2?.addEventListener('click', exportPPTX);
