@@ -1,407 +1,564 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Personaliza planchas de stickers para tu equipo de mate o computadora. Diseña tu plancha con stickers personalizados y mándala a imprimir.">
-  <title>PEDRIIXD - Personaliza tus Stickers</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <meta property="og:title" content="PEDRIIXD - Personaliza tus Stickers">
-  <meta property="og:description" content="Crea planchas de stickers personalizados para mate, computadora y más.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://pedriixd.github.io">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plancha de Stickers 21x27 cm</title>
+  
+  <!-- TailwindCSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Configuración de Tailwind para colores de la marca
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            verdeAgua: '#AEEEEE',
+            verdePastel: '#B8E6C1',
+          },
+          fontFamily: {
+            redondeada: ['Nunito', 'ui-sans-serif', 'system-ui'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fuente moderna y redondeada -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Konva.js para el lienzo -->
+  <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+  
+  <!-- PptxGenJS para exportar a PowerPoint -->
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.11.1/dist/pptxgen.bundle.js"></script>
+
+  <style>
+    /* Estilos complementarios (cuando Tailwind no alcanza) */
+    body { font-family: 'Nunito', ui-sans-serif, system-ui; }
+    /* Ocultar input file nativo */
+    input[type="file"] { display: none; }
+
+    /* Estilos del modal simple */
+    .modal-bg { background: rgba(0,0,0,0.45); }
+
+    /* Evitar scroll lateral en móvil */
+    html, body { overflow-x: hidden; }
+  </style>
 </head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="container header-container">
-      <div class="logo">
-        <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
+<body class="min-h-screen bg-white text-gray-800">
+  <!-- Encabezado -->
+  <header class="w-full sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-emerald-100">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <!-- Logo: colocar archivo logo.png en el mismo directorio -->
+        <img src="logo.png" alt="Logo" class="w-12 h-12 object-contain rounded-2xl ring-2 ring-verdeAgua/60" onerror="this.src='data:image/svg+xml;utf8,\
+        <svg xmlns=\'http://www.w3.org/2000/svg\' width=\'96\' height=\'96\'><rect width=\'100%\' height=\'100%\' fill=\'%23AEEEEE\'/><text x=\'50%\' y=\'55%\' font-size=\'12\' text-anchor=\'middle\' fill=\'%23005555\'>logo.png</text></svg>'">
+        <nav class="hidden md:flex items-center gap-2">
+          <a href="#galeria" class="px-3 py-2 rounded-2xl bg-verdeAgua/60 hover:bg-verdeAgua text-emerald-900 font-semibold shadow-sm transition">Galería</a>
+          <a href="#personaliza" class="px-3 py-2 rounded-2xl bg-verdePastel/70 hover:bg-verdePastel text-emerald-900 font-semibold shadow-sm transition">Personaliza tu plancha</a>
+        </nav>
       </div>
-      <nav class="desktop-nav">
-        <button id="btn-customize" class="btn-nav">
-          📌 Personaliza tu plancha
-        </button>
-        <button id="btn-gallery" class="btn-nav">
-          🖼️ Galería
-        </button>
-        <button id="btn-pricing" class="btn-nav">
-          📦 Precios
-        </button>
-      </nav>
-      <button id="mobile-menu-btn" class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="mobile-menu">
-      <div class="mobile-menu-links">
-        <button id="btn-customize-mobile" class="btn-nav">
-          📌 Personaliza tu plancha
-        </button>
-        <button id="btn-gallery-mobile" class="btn-nav">
-          🖼️ Galería
-        </button>
-        <button id="btn-pricing-mobile" class="btn-nav">
-          📦 Precios
-        </button>
+      <div class="text-right">
+        <p class="text-sm md:text-base font-extrabold text-emerald-900">Plancha 21x27 cm — $3000</p>
       </div>
     </div>
   </header>
 
-  <main class="container main-container">
-    <!-- Welcome Section -->
-    <section id="welcome-section" class="section active">
-      <div class="logo-img">
-        <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
-      </div>
-      <h1>Personalizá tu equipo de mate o compu con stickers de tu elección.</h1>
-      
-      <div class="welcome-buttons">
-        <button id="welcome-customize-btn" class="welcome-btn customize-btn">
-          <span class="emoji">📌</span>
-          <span>Personaliza tu plancha</span>
-        </button>
-        <button id="welcome-gallery-btn" class="welcome-btn gallery-btn">
-          <span class="emoji">🖼️</span>
-          <span>Galería</span>
-        </button>
-        <button id="welcome-pricing-btn" class="welcome-btn pricing-btn">
-          <span class="emoji">📦</span>
-          <span>Precios</span>
-        </button>
-      </div>
-      
-      <div class="welcome-showcase">
-        <div class="showcase-item">
-          <img src="https://pixabay.com/get/ge1de97e4f5f65ae3993c59029b4a430f14045a6a556a525a54e1af5cee11b726f5e446dc058dc495f8b03ccc08a7f506d21e1bcf1181f4428cbcaed4737229d1_1280.jpg" alt="Mate con stickers personalizados">
+  <!-- Contenido principal -->
+  <main id="personaliza" class="max-w-7xl mx-auto px-4 py-4 md:py-6">
+    <!-- Layout responsive: en desktop, barra lateral a la derecha; en móvil, barra inferior fija -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <!-- Zona del lienzo -->
+      <section class="md:col-span-9">
+        <div class="mb-2 flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-extrabold text-emerald-900">Tu plancha</h1>
+          <div class="text-sm text-gray-600">Hoja simulada 21 × 27 cm (escala en pantalla)</div>
         </div>
-        <div class="showcase-item">
-          <img src="https://pixabay.com/get/gb1a0362a24c8d580df453b3bf31f3a63d2bd395e32d6b91a0405261abcb86d5387f7066406937c0f076991ed9b2e61ea296efeb77fce6ba1ac022db131052dd8_1280.jpg" alt="Laptop con stickers">
-        </div>
-        <div class="showcase-item">
-          <img src="https://images.unsplash.com/photo-1572375992501-4b0892d50c69?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" alt="Plancha de stickers personalizados">
-        </div>
-      </div>
-    </section>
-
-    <!-- Customization Section -->
-    <section id="customize-section" class="section">
-      <h2>Personaliza tu plancha</h2>
-      
-      <div class="size-selection">
-        <h3>1. Selecciona el tamaño de tu plancha</h3>
-        <div class="size-cards">
-          <div id="size-small" class="size-card" data-max-stickers-5cm="5" data-max-stickers-7cm="3" data-price="1000">
-            <h4>12x16cm</h4>
-            <p class="size-description">Tamaño pequeño</p>
-            <ul class="size-details">
-              <li>Máx. 5 stickers de 5 cm</li>
-              <li>Máx. 3 stickers de 7 cm</li>
-            </ul>
-            <p class="size-price">$1000</p>
-          </div>
-          
-          <div id="size-medium" class="size-card" data-max-stickers-5cm="9" data-max-stickers-7cm="6" data-price="1500">
-            <h4>14x21cm</h4>
-            <p class="size-description">Tamaño mediano</p>
-            <ul class="size-details">
-              <li>Máx. 9 stickers de 5 cm</li>
-              <li>Máx. 6 stickers de 7 cm</li>
-            </ul>
-            <p class="size-price">$1500</p>
-          </div>
-          
-          <div id="size-large" class="size-card" data-max-stickers-5cm="19" data-max-stickers-7cm="12" data-price="3000">
-            <h4>21x27cm</h4>
-            <p class="size-description">Tamaño grande</p>
-            <ul class="size-details">
-              <li>Máx. 19 stickers de 5 cm</li>
-              <li>Máx. 12 stickers de 7 cm</li>
-            </ul>
-            <p class="size-price">$3000</p>
-          </div>
-        </div>
-      </div>
-      
-      <div id="canvas-container-wrapper" class="canvas-wrapper hidden">
-        <h3>2. Arrastra stickers a tu plancha</h3>
-        <div class="canvas-area">
-          <div class="canvas-main">
-            <div id="canvas-container" class="canvas-container">
-              <!-- Canvas will be filled with stickers via drag and drop -->
-            </div>
-            <div class="canvas-controls">
-              <p id="sticker-count">Stickers: <span>0</span> / <span id="max-stickers">0</span></p>
-              <button id="clear-canvas" class="btn-clear">
-                Limpiar
-              </button>
-            </div>
-          </div>
-          
-          <div class="sticker-selector-container">
-            <h4>Selecciona stickers</h4>
-            <div class="sticker-size-toggle">
-              <button id="btn-sticker-5cm" class="btn-sticker-size active" data-size="5">5 cm</button>
-              <button id="btn-sticker-7cm" class="btn-sticker-size" data-size="7">7 cm</button>
-            </div>
-            
-            <div id="sticker-selector" class="sticker-selector">
-              <!-- Stickers will be loaded here -->
-            </div>
-            
-            <div class="sticker-upload">
-              <label for="upload-sticker">Sube tu imagen</label>
-              <input type="file" id="upload-sticker" accept="image/*">
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div id="canvas-actions" class="canvas-actions hidden">
-        <h3>3. Finaliza tu plancha</h3>
-        <div class="action-buttons">
-          <button id="btn-preview" class="btn-action btn-preview">
-            <i class="fas fa-eye"></i> Ver vista previa
-          </button>
-          <button id="btn-download" class="btn-action btn-download">
-            <i class="fas fa-download"></i> Descargar diseño
-          </button>
-          <a id="btn-whatsapp" href="https://wa.me/543755298440?text=Hola,%20acá%20está%20mi%20diseño%20de%20plancha%20personalizada." target="_blank" class="btn-action btn-whatsapp">
-            <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery-section" class="section">
-      <h2>Galería de Stickers</h2>
-      
-      <div class="gallery-filters">
-        <div class="category-buttons">
-          <button class="category-btn active" data-category="all">Todos</button>
-          <button class="category-btn" data-category="mates">Mates</button>
-          <button class="category-btn" data-category="computadoras">Computadoras</button>
-          <button class="category-btn" data-category="personajes">Personajes</button>
-        </div>
-        <div class="gallery-upload">
-          <label for="upload-gallery-sticker">Sube tu sticker</label>
-          <input type="file" id="upload-gallery-sticker" accept="image/*">
-        </div>
-      </div>
-      
-      <div class="sticker-gallery">
-        <!-- Stickers will be dynamically loaded here -->
-      </div>
-      
-      <div class="gallery-load-more">
-        <button id="load-more-btn" class="btn-load-more">
-          Cargar más stickers
-        </button>
-      </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing-section" class="section">
-      <h2>Precios y Opciones</h2>
-      
-      <div class="pricing-plans">
-        <div class="pricing-card">
-          <div class="pricing-header">
-            <h3>Plancha Pequeña</h3>
-            <p>12x16cm</p>
-          </div>
-          <div class="pricing-body">
-            <p class="price">$1000</p>
-            <ul class="pricing-features">
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 5 stickers de 5 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 3 stickers de 7 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Diseño personalizado</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Alta calidad de impresión</span>
-              </li>
-            </ul>
-            <button class="select-size-btn" data-size="small">
-              Seleccionar
-            </button>
+        <!-- Contenedor del lienzo (se escala automáticamente al ancho disponible) -->
+        <div id="canvasContainer" class="relative w-full bg-[conic-gradient(at_top_left,_#B8E6C1,_#AEEEEE)]/30 rounded-2xl p-3 shadow-md">
+          <div class="relative mx-auto rounded-xl bg-white ring-2 ring-verdeAgua/70 shadow-inner" style="aspect-ratio:21/27; max-width: 100%;">
+            <!-- Konva inyecta un <div> canvas aquí -->
+            <div id="konvaStage" class="absolute inset-2 md:inset-3 rounded-lg overflow-hidden"></div>
           </div>
         </div>
         
-        <div class="pricing-card popular">
-          <div class="pricing-header">
-            <h3>Plancha Mediana</h3>
-            <p>14x21cm</p>
-            <div class="popular-badge">MÁS POPULAR</div>
-          </div>
-          <div class="pricing-body">
-            <p class="price">$1500</p>
-            <ul class="pricing-features">
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 9 stickers de 5 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 6 stickers de 7 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Diseño personalizado</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Alta calidad de impresión</span>
-              </li>
-            </ul>
-            <button class="select-size-btn" data-size="medium">
-              Seleccionar
-            </button>
-          </div>
-        </div>
-        
-        <div class="pricing-card">
-          <div class="pricing-header">
-            <h3>Plancha Grande</h3>
-            <p>21x27cm</p>
-          </div>
-          <div class="pricing-body">
-            <p class="price">$3000</p>
-            <ul class="pricing-features">
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 19 stickers de 5 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Máximo 12 stickers de 7 cm</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Diseño personalizado</span>
-              </li>
-              <li>
-                <i class="fas fa-check"></i>
-                <span>Alta calidad de impresión</span>
-              </li>
-            </ul>
-            <button class="select-size-btn" data-size="large">
-              Seleccionar
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="additional-info">
-        <h3>Información adicional</h3>
-        
-        <div class="info-grid">
-          <div class="info-item">
-            <h4>Material de alta calidad</h4>
-            <p>Nuestros stickers están hechos con vinilo de alta calidad, resistentes al agua y a los rayos UV, lo que garantiza una larga duración.</p>
-          </div>
-          
-          <div class="info-item">
-            <h4>Tiempos de entrega</h4>
-            <p>Una vez confirmado tu diseño, el tiempo de producción es de 3-5 días hábiles más el tiempo de envío según tu ubicación.</p>
-          </div>
-          
-          <div class="info-item">
-            <h4>Métodos de pago</h4>
-            <p>Aceptamos transferencias bancarias, Mercado Pago y efectivo (en caso de retiro en persona).</p>
-          </div>
-          
-          <div class="info-item">
-            <h4>¿Necesitas ayuda?</h4>
-            <p>Contáctanos por WhatsApp para cualquier consulta sobre tu diseño o pedido.</p>
-            <a href="https://wa.me/543755298440" target="_blank" class="whatsapp-link">
-              <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Preview Modal -->
-    <div id="preview-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Vista previa de tu diseño</h3>
-          <button id="close-preview" class="close-modal">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="preview-container-wrapper">
-          <div id="preview-container" class="preview-container">
-            <!-- Preview content will be added here -->
-          </div>
-        </div>
-        
-        <div id="preview-details" class="preview-details">
-          <h4>Detalles de tu plancha</h4>
-          <ul>
-            <li><span>Tamaño:</span> <span id="preview-size">-</span></li>
-            <li><span>Cantidad de stickers:</span> <span id="preview-sticker-count">0</span></li>
-            <li><span>Precio:</span> <span id="preview-price">$0</span></li>
+        <!-- Tips -->
+        <div class="mt-3 text-xs md:text-sm text-gray-600">
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Elegí <span class="font-bold">tamaño de sticker</span> (5 cm o 7 cm) antes de empezar. No se pueden mezclar tamaños.</li>
+            <li>Mové, rotá y escalá los stickers. Para borrar: seleccioná y tocá <span class="font-bold">Borrar seleccionado</span>.</li>
+            <li>El botón <span class="font-bold">Exportar</span> genera un archivo PowerPoint (.pptx) con tu plancha (descarga local). Luego podés <span class="font-bold">enviarlo por WhatsApp</span>.</li>
           </ul>
         </div>
-        
-        <div class="preview-actions">
-          <button id="preview-edit" class="btn-preview-action btn-edit">
-            <i class="fas fa-edit"></i> Editar
-          </button>
-          <button id="preview-download" class="btn-preview-action btn-download">
-            <i class="fas fa-download"></i> Descargar
-          </button>
-          <a id="preview-whatsapp" href="https://wa.me/543755298440?text=Hola,%20acá%20está%20mi%20diseño%20de%20plancha%20personalizada." target="_blank" class="btn-preview-action btn-whatsapp">
-            <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
-          </a>
+      </section>
+
+      <!-- Barra lateral (en desktop) -->
+      <aside class="hidden md:flex md:col-span-3 flex-col gap-3" aria-label="Barra lateral">
+        <!-- Selector de tamaño -->
+        <div class="p-3 rounded-2xl bg-verdePastel/40 border border-emerald-100 shadow-sm">
+          <h2 class="font-bold text-emerald-900 mb-2">Tamaño de sticker</h2>
+          <div class="flex items-center gap-2">
+            <button id="btnSize5" class="flex-1 px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-verdeAgua/40 font-semibold">5 cm</button>
+            <button id="btnSize7" class="flex-1 px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-verdeAgua/40 font-semibold">7 cm</button>
+          </div>
+          <p class="mt-2 text-xs text-gray-600">Máximos: 19 (5 cm) o 12 (7 cm).</p>
         </div>
-      </div>
+
+        <!-- Contador -->
+        <div class="p-3 rounded-2xl bg-verdeAgua/30 border border-emerald-100 shadow-sm">
+          <h2 class="font-bold text-emerald-900">Contador</h2>
+          <p class="mt-1 text-sm"><span id="countUsed" class="font-extrabold">0</span>/<span id="countMax">-</span> stickers</p>
+        </div>
+
+        <!-- Acciones -->
+        <div class="p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm flex flex-col gap-2">
+          <label for="fileInput" class="cursor-pointer px-3 py-2 rounded-xl bg-verdeAgua/80 hover:bg-verdeAgua text-emerald-900 font-semibold text-center">Subir imagen</label>
+          <input id="fileInput" type="file" accept="image/*" multiple>
+
+          <button id="btnOpenGallery" class="px-3 py-2 rounded-xl bg-verdePastel hover:bg-verdePastel/90 text-emerald-900 font-semibold">Galería</button>
+
+          <button id="btnDeleteSelected" class="px-3 py-2 rounded-xl bg-white border border-rose-200 hover:bg-rose-50 text-rose-700 font-semibold">Borrar seleccionado</button>
+
+          <button id="btnReset" class="px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-900 font-semibold">Reiniciar</button>
+
+          <button id="btnExport" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold">Exportar (.pptx)</button>
+
+          <a id="btnWhatsApp" target="_blank" rel="noopener" href="https://wa.me/543755298440?text=Hola%20%F0%9F%91%8B%2C%20te%20env%C3%ADo%20la%20plancha%20de%20stickers.%20Adjunto%20el%20archivo%20PPTX%20que%20acabo%20de%20exportar." class="px-3 py-2 rounded-xl bg-verdeAgua hover:bg-verdeAgua/80 text-emerald-900 font-bold text-center">Enviar por WhatsApp</a>
+
+          <a id="btnInstagram" target="_blank" rel="noopener" href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" class="px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-900 font-semibold text-center">Instagram</a>
+        </div>
+      </aside>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-container">
-      <div class="footer-main">
-        <div class="footer-logo">
-          <img src="imagenes/logo.png" alt="PEDRIIXD Logo">
-        </div>
-        
-        <div class="footer-social">
-          <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://wa.me/543755298440" target="_blank" aria-label="WhatsApp">
-            <i class="fab fa-whatsapp"></i>
-          </a>
-        </div>
+  <!-- Barra inferior (solo móvil) -->
+  <div class="md:hidden fixed bottom-0 inset-x-0 z-40">
+    <div class="mx-2 mb-2 rounded-3xl bg-white border border-emerald-100 shadow-lg p-2 flex items-center justify-between gap-1">
+      <label for="fileInputMobile" class="px-2 py-2 rounded-2xl bg-verdeAgua/80 text-emerald-900 text-xs font-bold">Subir</label>
+      <input id="fileInputMobile" type="file" accept="image/*" multiple>
+
+      <button id="btnOpenGalleryMobile" class="px-2 py-2 rounded-2xl bg-verdePastel text-emerald-900 text-xs font-bold">Galería</button>
+
+      <div class="flex items-center gap-1">
+        <button id="btnSize5m" class="px-2 py-2 rounded-2xl bg-white border border-emerald-200 text-xs font-bold">5 cm</button>
+        <button id="btnSize7m" class="px-2 py-2 rounded-2xl bg-white border border-emerald-200 text-xs font-bold">7 cm</button>
       </div>
-      
-      <div class="footer-copyright">
-        <p>&copy; 2023 PEDRIIXD. Todos los derechos reservados.</p>
+
+      <div class="text-[10px] text-gray-600">(<span id="countUsedM">0</span>/<span id="countMaxM">-</span>)</div>
+
+      <button id="btnDeleteSelectedM" class="px-2 py-2 rounded-2xl bg-white border border-rose-200 text-rose-700 text-xs font-bold">Borrar</button>
+
+      <button id="btnResetM" class="px-2 py-2 rounded-2xl bg-white border border-emerald-200 text-emerald-900 text-xs font-bold">Reiniciar</button>
+
+      <button id="btnExportM" class="px-2 py-2 rounded-2xl bg-emerald-600 text-white text-xs font-extrabold">Exportar</button>
+
+      <a id="btnWhatsAppM" target="_blank" rel="noopener" href="https://wa.me/543755298440?text=Hola%20%F0%9F%91%8B%2C%20te%20env%C3%ADo%20la%20plancha%20de%20stickers.%20Adjunto%20el%20archivo%20PPTX%20que%20acabo%20de%20exportar." class="px-2 py-2 rounded-2xl bg-verdeAgua text-emerald-900 text-xs font-extrabold">WhatsApp</a>
+
+      <a id="btnInstagramM" target="_blank" rel="noopener" href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" class="px-2 py-2 rounded-2xl bg-white border border-emerald-200 text-emerald-900 text-xs font-bold">IG</a>
+    </div>
+  </div>
+
+  <!-- Sección Galería (ancla) -->
+  <section id="galeria" class="max-w-7xl mx-auto px-4 pb-24 md:pb-12">
+    <h2 class="text-xl md:text-2xl font-extrabold text-emerald-900 mb-3">Galería de ejemplo</h2>
+    <p class="text-sm text-gray-600 mb-4">Simulación de imágenes desde carpeta pública de Google Drive. Hacé clic para agregar al lienzo.</p>
+    <div id="galleryGrid" class="grid grid-cols-3 md:grid-cols-6 gap-2"></div>
+  </section>
+
+  <!-- Modal: Elegir tamaño al inicio -->
+  <div id="modalSize" class="fixed inset-0 hidden items-center justify-center modal-bg p-4">
+    <div class="bg-white rounded-3xl p-5 max-w-sm w-full border border-emerald-100 shadow-xl">
+      <h3 class="text-lg font-extrabold text-emerald-900 mb-2">Elegí el tamaño de sticker</h3>
+      <p class="text-sm text-gray-600 mb-4">La plancha 21×27 cm admite <span class="font-bold">solo un tamaño por vez</span>.</p>
+      <div class="flex items-center gap-2">
+        <button data-size="5" class="flex-1 px-4 py-3 rounded-2xl bg-verdeAgua hover:bg-verdeAgua/80 text-emerald-900 font-extrabold">5 cm (máx. 19)</button>
+        <button data-size="7" class="flex-1 px-4 py-3 rounded-2xl bg-verdePastel hover:bg-verdePastel/90 text-emerald-900 font-extrabold">7 cm (máx. 12)</button>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.11.0/dist/pptxgen.bundle.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-  <script src="script.js"></script>
+  <!-- Modal: Galería compacta (en móvil) -->
+  <div id="modalGallery" class="fixed inset-0 hidden items-center justify-center modal-bg p-4">
+    <div class="bg-white rounded-3xl p-5 max-w-4xl w-full border border-emerald-100 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-extrabold text-emerald-900">Galería</h3>
+        <button id="btnCloseGallery" class="px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50">Cerrar</button>
+      </div>
+      <div id="galleryModalGrid" class="grid grid-cols-3 md:grid-cols-6 gap-2 max-h-[60vh] overflow-auto"></div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // Parámetros generales del app
+    // =============================
+    const SIZE_LIMITS = { 5: 19, 7: 12 }; // Máximos por tamaño
+    const SHEET_CM = { w: 21, h: 27 }; // Tamaño de la plancha en centímetros
+    let selectedSizeCm = null; // 5 o 7, se define al iniciar
+
+    // Estado del lienzo / Konva
+    let stage, layer, tr; // stage, layer principal, transformer
+
+    // Llevar cuenta de stickers (nodos de tipo Konva.Image)
+    const getStickerNodes = () => layer ? layer.find(node => node.getAttr('isSticker')) : [];
+
+    // =============================
+    // Inicialización del lienzo
+    // =============================
+    function setupKonva() {
+      const container = document.getElementById('konvaStage');
+      // Definir tamaño del stage para que respete la relación 21:27 y se ajuste al contenedor
+      function resizeStage() {
+        const parent = container.parentElement; // contenedor con aspect-ratio
+        const width = parent.clientWidth - 8; // pequeño padding visual
+        const height = parent.clientHeight - 8;
+        if (!stage) {
+          stage = new Konva.Stage({ container: 'konvaStage', width, height });
+          layer = new Konva.Layer();
+          stage.add(layer);
+
+          // Fondo blanco (para exportado limpio)
+          const bg = new Konva.Rect({ x: 0, y: 0, width: width, height: height, fill: 'white', listening: false });
+          bg.setAttr('isBackground', true);
+          layer.add(bg);
+
+          // Transformer para manipular stickers
+          tr = new Konva.Transformer({
+            rotateEnabled: true,
+            enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+            anchorSize: 10,
+            borderStroke: '#15803d',
+          });
+          layer.add(tr);
+
+          // (UX) Deseleccionar al tocar fondo
+          stage.on('mousedown touchstart', (e) => {
+            if (e.target === stage || e.target.getAttr('isBackground')) {
+              tr.nodes([]);
+              layer.draw();
+            }
+          });
+        } else {
+          stage.width(width);
+          stage.height(height);
+          // Redimensionar el rect de fondo
+          const bg = layer.findOne(node => node.getAttr('isBackground'));
+          if (bg) { bg.width(width); bg.height(height); }
+        }
+        layer.batchDraw();
+      }
+
+      resizeStage();
+      window.addEventListener('resize', resizeStage);
+    }
+
+    // =====================================
+    // Lógica de tamaños y límites de stickers
+    // =====================================
+    function setSelectedSize(cm) {
+      if (selectedSizeCm && selectedSizeCm !== cm && getStickerNodes().length > 0) {
+        alert('No se pueden mezclar tamaños. Reiniciá la plancha para cambiar el tamaño.');
+        return;
+      }
+      selectedSizeCm = cm;
+      updateCounters();
+      highlightSizeButtons();
+    }
+
+    function highlightSizeButtons() {
+      const on = 'bg-emerald-600 text-white border-emerald-600';
+      const off = 'bg-white text-emerald-900 border-emerald-200';
+      const btns = [
+        ['btnSize5', 5], ['btnSize7', 7],
+        ['btnSize5m', 5], ['btnSize7m', 7]
+      ];
+      btns.forEach(([id, cm]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove(...on.split(' '), ...off.split(' '));
+        el.classList.add(cm === selectedSizeCm ? ...on.split(' ') : ...off.split(' '));
+      });
+      // Actualizar máximos visibles
+      document.getElementById('countMax').textContent = selectedSizeCm ? SIZE_LIMITS[selectedSizeCm] : '-';
+      document.getElementById('countMaxM').textContent = selectedSizeCm ? SIZE_LIMITS[selectedSizeCm] : '-';
+    }
+
+    function updateCounters() {
+      const used = getStickerNodes().length;
+      const max = selectedSizeCm ? SIZE_LIMITS[selectedSizeCm] : 0;
+      document.getElementById('countUsed').textContent = used;
+      document.getElementById('countUsedM').textContent = used;
+      document.getElementById('countMax').textContent = selectedSizeCm ? max : '-';
+      document.getElementById('countMaxM').textContent = selectedSizeCm ? max : '-';
+    }
+
+    function canAddAnotherSticker() {
+      if (!selectedSizeCm) { alert('Primero elegí el tamaño de sticker (5 cm o 7 cm).'); return false; }
+      const used = getStickerNodes().length;
+      const max = SIZE_LIMITS[selectedSizeCm];
+      if (used >= max) {
+        alert(`Límite alcanzado: ${max} stickers de ${selectedSizeCm} cm.`);
+        return false;
+      }
+      return true;
+    }
+
+    // =================================================
+    // Conversión de centímetros de la hoja a píxeles UI
+    // =================================================
+    function pxPerCm() {
+      // Basado en el ancho visible del stage: 21 cm => stage.width px
+      const px = stage.width() / SHEET_CM.w;
+      return px;
+    }
+
+    function idealStickerPx() {
+      // Los stickers se ajustan en un cuadro cuadrado de lado = tamaño elegido en cm * pxPorCm
+      const side = selectedSizeCm * pxPerCm();
+      return Math.max(24, side); // mínimo visual
+    }
+
+    // ======================
+    // Agregar imagen/sticker
+    // ======================
+    function addImageToCanvas(imgSrc) {
+      if (!canAddAnotherSticker()) return;
+      const imageObj = new Image();
+      imageObj.crossOrigin = 'anonymous';
+      imageObj.onload = () => {
+        const side = idealStickerPx();
+        // Escalar manteniendo aspecto dentro de un cuadrado de lado "side"
+        const scale = Math.min(side / imageObj.width, side / imageObj.height);
+        const w = imageObj.width * scale;
+        const h = imageObj.height * scale;
+        // Posición inicial al centro
+        const x = (stage.width() - w) / 2;
+        const y = (stage.height() - h) / 2;
+        const sticker = new Konva.Image({ image: imageObj, x, y, width: w, height: h, draggable: true });
+        sticker.setAttr('isSticker', true);
+
+        // Limitar escalado a +-20% del tamaño ideal
+        const minScale = 0.8, maxScale = 1.2;
+        sticker.on('transform', () => {
+          // Mantener proporción y límites de tamaño
+          const currentW = sticker.width() * sticker.scaleX();
+          const currentH = sticker.height() * sticker.scaleY();
+          const base = idealStickerPx();
+          const minW = base * minScale, maxW = base * maxScale;
+          const clampedW = Math.max(minW, Math.min(currentW, maxW));
+          const factor = clampedW / sticker.width();
+          sticker.scale({ x: factor, y: factor });
+        });
+
+        // Mantener dentro de la hoja (opcional)
+        sticker.on('dragend transformend', () => {
+          const padding = 2;
+          let { x, y } = sticker.position();
+          const w2 = sticker.width() * sticker.scaleX();
+          const h2 = sticker.height() * sticker.scaleY();
+          x = Math.max(padding, Math.min(x, stage.width() - w2 - padding));
+          y = Math.max(padding, Math.min(y, stage.height() - h2 - padding));
+          sticker.position({ x, y });
+          layer.batchDraw();
+        });
+
+        // Selección con click/tap
+        sticker.on('mousedown touchstart', () => {
+          tr.nodes([sticker]);
+          layer.draw();
+        });
+
+        layer.add(sticker);
+        layer.draw();
+        updateCounters();
+      };
+      imageObj.src = imgSrc;
+    }
+
+    // ======================
+    // Borrar seleccionado
+    // ======================
+    function deleteSelected() {
+      const nodes = tr.nodes();
+      if (!nodes || nodes.length === 0) return;
+      nodes.forEach(n => n.destroy());
+      tr.nodes([]);
+      layer.draw();
+      updateCounters();
+    }
+
+    // ==========
+    // Reiniciar
+    // ==========
+    function resetCanvas() {
+      // Eliminar todos los stickers
+      getStickerNodes().forEach(n => n.destroy());
+      tr.nodes([]);
+      layer.draw();
+      updateCounters();
+    }
+
+    // ==========
+    // Exportar a PPTX
+    // ==========
+    async function exportToPPTX() {
+      // Render del stage a dataURL con buena resolución
+      const dataURL = stage.toDataURL({ pixelRatio: 2 });
+
+      // Crear PPTX con tamaño personalizado equivalente a 21x27 cm
+      const cmToIn = (cm) => cm / 2.54;
+      const W_IN = cmToIn(SHEET_CM.w); // 8.27 in
+      const H_IN = cmToIn(SHEET_CM.h); // 10.63 in
+
+      const pptx = new PptxGenJS();
+      pptx.defineLayout({ name: 'SHEET_21x27CM', width: W_IN, height: H_IN });
+      pptx.layout = 'SHEET_21x27CM';
+
+      const slide = pptx.addSlide();
+      slide.addImage({ data: dataURL, x: 0, y: 0, w: W_IN, h: H_IN });
+
+      const fileName = `Plancha_21x27_${selectedSizeCm || 'tamaño'}cm_${new Date().toISOString().slice(0,10)}.pptx`;
+      await pptx.writeFile({ fileName });
+
+      // Nota: Por limitaciones del navegador, NO se puede adjuntar automáticamente un archivo a WhatsApp mediante wa.me.
+      // Luego de descargar el PPTX, usá el botón WhatsApp para abrir el chat y adjuntá el archivo manualmente.
+    }
+
+    // ====================
+    // Construcción Galería
+    // ====================
+    const SAMPLE_IMAGES = [
+      // Simulación de imágenes públicas (reemplazar con URLs compartidas de Google Drive)
+      'https://picsum.photos/id/237/600/600',
+      'https://picsum.photos/id/238/600/600',
+      'https://picsum.photos/id/239/600/600',
+      'https://picsum.photos/id/240/600/600',
+      'https://picsum.photos/id/241/600/600',
+      'https://picsum.photos/id/242/600/600',
+      'https://picsum.photos/id/243/600/600',
+      'https://picsum.photos/id/244/600/600',
+      'https://picsum.photos/id/245/600/600',
+      'https://picsum.photos/id/246/600/600',
+      'https://picsum.photos/id/247/600/600',
+      'https://picsum.photos/id/248/600/600',
+    ];
+
+    function buildGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      SAMPLE_IMAGES.forEach((src, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'relative aspect-square rounded-2xl overflow-hidden bg-white ring-1 ring-emerald-100 shadow hover:shadow-md hover:ring-emerald-200 transition';
+        btn.title = 'Agregar al lienzo';
+        btn.innerHTML = `<img src="${src}" alt="img${idx}" class="w-full h-full object-cover">`;
+        btn.addEventListener('click', () => addImageToCanvas(src));
+        grid.appendChild(btn);
+      });
+
+      // Para modal (móvil)
+      const gridM = document.getElementById('galleryModalGrid');
+      if (gridM) {
+        gridM.innerHTML = '';
+        SAMPLE_IMAGES.forEach((src, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'relative aspect-square rounded-2xl overflow-hidden bg-white ring-1 ring-emerald-100 shadow hover:shadow-md hover:ring-emerald-200 transition';
+          btn.title = 'Agregar al lienzo';
+          btn.innerHTML = `<img src="${src}" alt="img${idx}" class="w-full h-full object-cover">`;
+          btn.addEventListener('click', () => { addImageToCanvas(src); toggleGalleryModal(false); });
+          gridM.appendChild(btn);
+        });
+      }
+    }
+
+    // ======================
+    // Cargar imágenes propias
+    // ======================
+    function hookFileInputs() {
+      const commonHandler = (files) => {
+        if (!files) return;
+        for (const f of files) {
+          const reader = new FileReader();
+          reader.onload = (e) => addImageToCanvas(e.target.result);
+          reader.readAsDataURL(f);
+        }
+      };
+      document.getElementById('fileInput').addEventListener('change', (e) => commonHandler(e.target.files));
+      document.getElementById('fileInputMobile').addEventListener('change', (e) => commonHandler(e.target.files));
+    }
+
+    // =============
+    // Modal Gallery
+    // =============
+    function toggleGalleryModal(show) {
+      const m = document.getElementById('modalGallery');
+      m.classList.toggle('hidden', !show);
+      m.classList.toggle('flex', show);
+    }
+
+    // =============
+    // Modal Tamaño
+    // =============
+    function toggleSizeModal(show) {
+      const m = document.getElementById('modalSize');
+      m.classList.toggle('hidden', !show);
+      m.classList.toggle('flex', show);
+    }
+
+    // =====================
+    // Botonera / Listeners
+    // =====================
+    function hookButtons() {
+      // Selector tamaño (desktop)
+      document.getElementById('btnSize5').addEventListener('click', () => setSelectedSize(5));
+      document.getElementById('btnSize7').addEventListener('click', () => setSelectedSize(7));
+      // Selector tamaño (móvil)
+      document.getElementById('btnSize5m').addEventListener('click', () => setSelectedSize(5));
+      document.getElementById('btnSize7m').addEventListener('click', () => setSelectedSize(7));
+
+      // Borrar
+      document.getElementById('btnDeleteSelected').addEventListener('click', deleteSelected);
+      document.getElementById('btnDeleteSelectedM').addEventListener('click', deleteSelected);
+
+      // Reiniciar
+      document.getElementById('btnReset').addEventListener('click', resetCanvas);
+      document.getElementById('btnResetM').addEventListener('click', resetCanvas);
+
+      // Exportar
+      document.getElementById('btnExport').addEventListener('click', exportToPPTX);
+      document.getElementById('btnExportM').addEventListener('click', exportToPPTX);
+
+      // Galería: abrir modal en móvil / abrir modal también desde desktop (además de la sección ancla)
+      document.getElementById('btnOpenGallery').addEventListener('click', () => toggleGalleryModal(true));
+      document.getElementById('btnOpenGalleryMobile').addEventListener('click', () => toggleGalleryModal(true));
+      document.getElementById('btnCloseGallery').addEventListener('click', () => toggleGalleryModal(false));
+    }
+
+    // ====================
+    // Inicio de la aplicación
+    // ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      setupKonva();
+      buildGallery();
+      hookFileInputs();
+      hookButtons();
+
+      // Abrir modal de tamaño al inicio
+      toggleSizeModal(true);
+      document.querySelectorAll('#modalSize [data-size]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const cm = parseInt(btn.getAttribute('data-size'), 10);
+          setSelectedSize(cm);
+          toggleSizeModal(false);
+        });
+      });
+
+      // Actualizar contadores iniciales
+      updateCounters();
+      highlightSizeButtons();
+    });
+  </script>
 </body>
 </html>
