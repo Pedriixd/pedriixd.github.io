@@ -1,85 +1,494 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plancha de Stickers A4</title>
-
-  <!-- TailwindCSS (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Konva.js para el lienzo -->
-  <script src="https://unpkg.com/konva@9/konva.min.js"></script>
-  <!-- PptxGenJS para exportar a PowerPoint -->
-  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.15.0/dist/pptxgen.bundle.js"></script>
-
-  <style>
-    html, body { height: 100%; }
-    body { background: #16a34a; /* verde */ }
-    /* Evitar scroll lateral en móvil */
-    html, body { overflow-x: hidden; }
-    /* Ocultar input file nativo */
-    input[type="file"] { display: none; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Hojas Carta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLPD7yG52hLdFj9yP4vI7zC3pW6hS5F5E5M5Q5S5C5S5L5N5T5R5E5I5G5A5P5C5Q5U5Y5D5R5C5R5S5N5G5I5T5A5K5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g5h5i5j5k5l5m5n5o5p5q5r5s5t5u5v5w5x5y5z5A5B5C5D5E5F5G5H5I5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5p6" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .modal {
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-inactive {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body class="text-white font-sans min-h-screen flex flex-col">
-  <!-- Encabezado -->
-  <header class="w-full bg-green-700/90 border-b border-white/20 backdrop-blur sticky top-0 z-30">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <!-- Logo: colocar archivo logo.png en el mismo directorio (tiene fallback si no existe) -->
-        <img src="logo.png" alt="Logo" class="w-12 h-12 object-contain rounded-xl ring-2 ring-white/40"
-             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,\
-        <svg xmlns=\'http://www.w3.org/2000/svg\' width=\'96\' height=\'96\'><rect width=\'100%\' height=\'100%\' rx=\'16\' fill=\'%23ffffff\' opacity=\'0.25\'/><text x=\'50%\' y=\'55%\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23ffffff\'>logo.png</text></svg>'">
-        <h1 class="text-lg md:text-xl font-extrabold">Plancha A4 (21 × 29,7 cm) — $3000</h1>
-      </div>
-      <nav class="hidden md:flex items-center gap-2 text-sm">
-        <!-- Sin botón de galería por pedido -->
-        <button id="btnReiniciar" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Reiniciar</button>
-        <button id="btnExportar" class="px-3 py-2 rounded-xl bg-white text-green-800 font-bold">Exportar .PPTX</button>
-        <a href="https://wa.me/543755298440?text=Hola%2C%20te%20env%C3%ADo%20la%20plancha%20A4%20en%20PPTX.%20La%20acabo%20de%20exportar%20desde%20la%20web." target="_blank" rel="noopener" class="px-3 py-2 rounded-xl bg-emerald-200 text-green-900 font-bold">WhatsApp</a>
-        <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" rel="noopener" class="px-3 py-2 rounded-xl bg-pink-200 text-pink-900 font-bold">Instagram</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-gray-100 flex flex-col h-screen">
 
-  <!-- Contenido principal -->
-  <main class="flex-1 w-full">
-    <div class="max-w-6xl mx-auto px-4 py-4">
-      <div class="mb-2 text-white/90 text-sm">Arrastrá, rotá, escalá. Doble clic para borrar. Botón para eliminar seleccionado abajo.</div>
-
-      <!-- Marco responsivo con relación A4 -->
-      <div id="stageOuter" class="w-full max-w-4xl mx-auto">
-        <div id="stageFrame" class="relative w-full aspect-[210/297] bg-white rounded-2xl shadow-2xl ring-4 ring-white">
-          <!-- Konva inyecta el canvas aquí -->
-          <div id="container" class="absolute inset-0 rounded-2xl overflow-hidden"></div>
+    <!-- Modal para mensajes -->
+    <div id="message-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-inactive">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <div id="modal-buttons" class="flex flex-col gap-2">
+                <button onclick="hideModal()" class="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition">
+                    Cerrar
+                </button>
+            </div>
         </div>
-      </div>
     </div>
-  </main>
 
-  <!-- Barra inferior (herramientas) -->
-  <footer class="sticky bottom-0 w-full bg-green-700/95 border-t border-white/20">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-2 justify-center md:justify-between">
-      <div class="flex items-center gap-2">
-        <input id="fileInput" type="file" accept="image/*" multiple>
-        <label for="fileInput" class="cursor-pointer px-4 py-2 rounded-xl bg-yellow-300 text-green-900 font-bold">Subir imagen</label>
-        <button id="btnBorrarSel" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Borrar seleccionado</button>
-        <button id="btnReiniciar2" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20">Reiniciar</button>
-      </div>
-      <div class="flex items-center gap-2">
-        <button id="btnExportar2" class="px-4 py-2 rounded-xl bg-white text-green-800 font-bold">Exportar .PPTX</button>
-        <a href="https://wa.me/543755298440?text=Hola%2C%20te%20env%C3%ADo%20la%20plancha%20A4%20en%20PPTX.%20La%20acabo%20de%20exportar%20desde%20la%20web." target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-200 text-green-900 font-bold">WhatsApp</a>
-        <a href="https://www.instagram.com/pedriixd.alvez?igsh=MWxyYnY2d2ZjY3k5dw==" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-pink-200 text-pink-900 font-bold">Instagram</a>
-      </div>
+    <!-- Encabezado -->
+    <header class="flex items-center justify-between bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md">
+        <div class="flex items-center space-x-3">
+            <!-- Logo de la empresa -->
+            <img src="https://i.postimg.cc/Qx78s9p9/image-13d0ba-recortada.jpg" alt="PEDRiiXD ALVEZ Logo" class="h-10 w-auto rounded-full">
+            <span class="font-bold text-xl select-none">PEDRiiXD ALVEZ</span>
+        </div>
+        <nav class="flex items-center space-x-3">
+            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-2 rounded hover:bg-green-700 transition">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-2 rounded hover:bg-green-700 transition">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <button id="newPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+                <i class="fa-solid fa-file-circle-plus"></i>
+                Nueva hoja Carta
+            </button>
+            <button id="saveProjectBtn" class="p-2 rounded hover:bg-green-700 transition" type="button" title="Guardar proyecto en un archivo">
+                <i class="fa-solid fa-save"></i>
+            </button>
+            <label for="loadProjectInput" class="p-2 rounded hover:bg-green-700 transition cursor-pointer" title="Cargar proyecto desde un archivo">
+                <i class="fa-solid fa-upload"></i>
+            </label>
+            <input type="file" id="loadProjectInput" class="hidden" accept=".json">
+        </nav>
+    </header>
+
+    <div class="flex flex-col md:flex-row flex-1 overflow-hidden p-2 md:p-4">
+        <!-- Editor principal y barra de herramientas -->
+        <div class="flex-1 flex flex-col items-center p-2 md:p-4 bg-gray-200 rounded-lg shadow-inner">
+            <div class="flex flex-wrap items-center justify-center gap-2 bg-green-800 p-2 rounded-t-md shadow-inner text-white w-full">
+                <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition select-none">
+                    <i class="fa-solid fa-image"></i>
+                    Subir imágenes
+                    <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
+                </label>
+                <button id="clearPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Limpiar página
+                </button>
+                <button id="addPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    Agregar página
+                </button>
+                <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
+                    <i class="fa-solid fa-times"></i>
+                    Eliminar selección
+                </button>
+                <button id="addTextBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
+                    <i class="fa-solid fa-font"></i>
+                    Añadir Texto
+                </button>
+                <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Exportar PDF
+                </button>
+            </div>
+            
+            <div id="canvas-container" class="flex-1 flex items-center justify-center overflow-auto p-4 w-full">
+                <canvas id="canvas" class="page-shadow border-4 border-cyan-400"></canvas>
+            </div>
+
+            <div class="flex items-center justify-center gap-3 p-2 bg-green-900 text-white rounded-b-md shadow-inner w-full">
+                <button id="prevPageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <span id="pageInfo" class="select-none"></span>
+                <button id="nextPageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <button id="duplicatePageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
+                    <i class="fa-solid fa-copy"></i>
+                </button>
+                <button id="deletePageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>
     </div>
-  </footer>
 
-  <!-- Script principal -->
-  <script src="app.js"></script>
+    <script>
+        // Funciones del modal
+        function showModal(message, showWhatsappButton = false) {
+            const modal = document.getElementById('message-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalButtons = document.getElementById('modal-buttons');
+
+            modalMessage.textContent = message;
+            modalButtons.innerHTML = ''; // Limpiar botones anteriores
+
+            // Botón de cerrar
+            const closeBtn = document.createElement('button');
+            closeBtn.onclick = hideModal;
+            closeBtn.className = "bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition";
+            closeBtn.textContent = "Cerrar";
+            modalButtons.appendChild(closeBtn);
+
+            // Botón de WhatsApp
+            if (showWhatsappButton) {
+                const waBtn = document.createElement('a');
+                const encodedMessage = encodeURIComponent("hola😊, queria solicitarte esta plancha");
+                waBtn.href = `https://wa.me/543755298440?text=${encodedMessage}`;
+                waBtn.target = "_blank";
+                waBtn.className = "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center justify-center gap-2";
+                waBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Enviar por WhatsApp';
+                modalButtons.insertBefore(waBtn, modalButtons.firstChild);
+            }
+            
+            modal.classList.add('modal-active');
+            modal.classList.remove('modal-inactive');
+        }
+
+        function hideModal() {
+            const modal = document.getElementById('message-modal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('modal-inactive');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const LETTER_ASPECT_RATIO = 215.9 / 279.4;
+            const DPI = 96; // Standard DPI for web
+            const MM_IN_INCH = 25.4;
+            
+            let canvas, pages = [], currentPageIndex = 0;
+            const canvasContainer = document.getElementById('canvas-container');
+            const pageInfoSpan = document.getElementById('pageInfo');
+            const addTextBtn = document.getElementById('addTextBtn');
+            const loadProjectInput = document.getElementById('loadProjectInput');
+
+            // Inicializar Fabric.js
+            canvas = new fabric.Canvas('canvas');
+            let dimensionText = null;
+
+            // Establecer el fondo del canvas en blanco
+            canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+
+            // Ajustar el tamaño del canvas al contenedor
+            function resizeCanvas() {
+                const containerWidth = canvasContainer.clientWidth;
+                const containerHeight = canvasContainer.clientHeight;
+                let newWidth, newHeight;
+                if (containerWidth / containerHeight > LETTER_ASPECT_RATIO) {
+                    newHeight = containerHeight - 16;
+                    newWidth = newHeight * LETTER_ASPECT_RATIO;
+                } else {
+                    newWidth = containerWidth - 16;
+                    newHeight = newWidth / LETTER_ASPECT_RATIO;
+                }
+                const zoom = newWidth / (215.9 * DPI / MM_IN_INCH); // Calculate zoom based on physical size and DPI
+                canvas.setDimensions({ width: newWidth, height: newHeight });
+                canvas.setZoom(zoom);
+                canvas.renderAll();
+            }
+
+            // Renderizar la página actual en el lienzo
+            function renderCurrentPage() {
+                if (pages.length === 0) {
+                    pages.push({ id: crypto.randomUUID(), objects: [] });
+                    currentPageIndex = 0;
+                }
+                canvas.clear();
+                const page = pages[currentPageIndex];
+                if (page.objects && page.objects.length > 0) {
+                    fabric.util.enlivenObjects(page.objects, (objs) => {
+                        canvas.add(...objs);
+                        canvas.renderAll();
+                    });
+                }
+                updatePageInfo();
+                resizeCanvas(); 
+            }
+
+            // Actualizar la información de la paginación
+            function updatePageInfo() {
+                pageInfoSpan.textContent = `Página ${currentPageIndex + 1} de ${pages.length}`;
+                document.getElementById('prevPageBtn').disabled = currentPageIndex === 0;
+                document.getElementById('nextPageBtn').disabled = currentPageIndex === pages.length - 1;
+                document.getElementById('deletePageBtn').disabled = pages.length <= 1;
+            }
+
+            // Manejar la adición de imágenes, ahora escalando el tamaño y poniéndolas encima
+            function addImageToCanvas(url) {
+                fabric.Image.fromURL(url, (img) => {
+                    const canvasCenter = canvas.getCenter();
+                    
+                    // Escalar la imagen si es demasiado grande
+                    const maxImgWidth = canvas.getWidth() * 0.7;
+                    const maxImgHeight = canvas.getHeight() * 0.7;
+
+                    if (img.width > maxImgWidth || img.height > maxImgHeight) {
+                        if (img.width / maxImgWidth > img.height / maxImgHeight) {
+                            img.scaleToWidth(maxImgWidth);
+                        } else {
+                            img.scaleToHeight(maxImgHeight);
+                        }
+                    }
+
+                    img.set({
+                        left: canvasCenter.left,
+                        top: canvasCenter.top,
+                        originX: 'center',
+                        originY: 'center',
+                    });
+                    canvas.add(img);
+                    canvas.bringToFront(img);
+                    canvas.renderAll();
+
+                    // Forzar la actualización del estado para guardar el orden de las capas
+                    pages[currentPageIndex].objects = canvas.toJSON().objects;
+                });
+            }
+
+            // Event Listeners
+            document.getElementById('newPageBtn').addEventListener('click', () => {
+                pages.push({ id: crypto.randomUUID(), objects: [] });
+                currentPageIndex = pages.length - 1;
+                renderCurrentPage();
+            });
+
+            document.getElementById('addPageBtn').addEventListener('click', () => {
+                pages.push({ id: crypto.randomUUID(), objects: [] });
+                currentPageIndex = pages.length - 1;
+                renderCurrentPage();
+            });
+
+            document.getElementById('duplicatePageBtn').addEventListener('click', () => {
+                const currentPage = pages[currentPageIndex];
+                if (currentPage) {
+                    const newPage = { id: crypto.randomUUID(), objects: JSON.parse(JSON.stringify(currentPage.objects)) };
+                    pages.splice(currentPageIndex + 1, 0, newPage);
+                    currentPageIndex++;
+                    renderCurrentPage();
+                }
+            });
+
+            document.getElementById('deletePageBtn').addEventListener('click', () => {
+                if (pages.length <= 1) {
+                    showModal("No puedes eliminar la única página.");
+                    return;
+                }
+                pages.splice(currentPageIndex, 1);
+                currentPageIndex = Math.min(currentPageIndex, pages.length - 1);
+                renderCurrentPage();
+            });
+
+            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    renderCurrentPage();
+                }
+            });
+
+            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                if (currentPageIndex < pages.length - 1) {
+                    currentPageIndex++;
+                    renderCurrentPage();
+                }
+            });
+
+            document.getElementById('upload-images').addEventListener('change', (e) => {
+                const files = e.target.files;
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const url = event.target.result;
+                        addImageToCanvas(url);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            document.getElementById('clearPageBtn').addEventListener('click', () => {
+                canvas.clear();
+                pages[currentPageIndex].objects = [];
+                canvas.renderAll();
+            });
+
+            document.getElementById('deleteSelectionBtn').addEventListener('click', () => {
+                canvas.remove(...canvas.getActiveObjects());
+                canvas.renderAll();
+            });
+            
+            addTextBtn.addEventListener('click', () => {
+                const text = new fabric.IText('Haz clic para editar', {
+                    left: canvas.getWidth() / 2,
+                    top: canvas.getHeight() / 2,
+                    originX: 'center',
+                    originY: 'center',
+                    fontSize: 24,
+                    fontFamily: 'Inter',
+                    fill: '#000',
+                });
+                canvas.add(text);
+                canvas.setActiveObject(text);
+                canvas.renderAll();
+            });
+
+            document.getElementById('exportPdfBtn').addEventListener('click', () => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ unit: "mm", format: "letter" });
+
+                async function exportPage(index) {
+                    if (index >= pages.length) {
+                        pdf.save("diseno.pdf");
+                        showModal("El archivo PDF se ha descargado. Ahora puedes enviarlo por WhatsApp.", true);
+                        return;
+                    }
+
+                    const pageData = pages[index];
+                    const tempCanvas = document.createElement('canvas');
+                    const tempFabricCanvas = new fabric.Canvas(tempCanvas, {
+                        width: 215.9 * DPI / MM_IN_INCH,
+                        height: 279.4 * DPI / MM_IN_INCH
+                    });
+
+                    // Establecer el fondo en blanco antes de renderizar y exportar
+                    tempFabricCanvas.setBackgroundColor('#FFFFFF', async () => {
+                        await new Promise(resolve => {
+                            fabric.util.enlivenObjects(pageData.objects, (enlived) => {
+                                enlived.forEach(o => tempFabricCanvas.add(o));
+                                resolve();
+                            });
+                        });
+    
+                        const imgData = tempFabricCanvas.toDataURL({ format: 'jpeg', quality: 1.0 });
+                        if (index > 0) pdf.addPage();
+                        pdf.addImage(imgData, "JPEG", 0, 0, 215.9, 279.4);
+    
+                        exportPage(index + 1);
+                    });
+                }
+                
+                showModal("Exportando a PDF... Por favor, espera.", false);
+                exportPage(0);
+            });
+
+            document.getElementById('saveProjectBtn').addEventListener('click', () => {
+                const project = { pages };
+                const blob = new Blob([JSON.stringify(project)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `proyecto-diseno-${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showModal("Proyecto guardado como un archivo JSON. ¡Ya puedes descargarlo!");
+            });
+
+            loadProjectInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const project = JSON.parse(event.target.result);
+                        pages = project.pages || [{ id: "page1", objects: [] }];
+                        currentPageIndex = 0;
+                        
+                        renderCurrentPage();
+                        showModal("Proyecto cargado con éxito. Por favor, vuelve a subir las imágenes.");
+                    } catch (error) {
+                        console.error("Error al cargar el proyecto:", error);
+                        showModal("Error al cargar el archivo. Asegúrate de que es un archivo de proyecto válido.");
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Sincronizar cambios del lienzo con el estado
+            canvas.on('object:modified', () => {
+                pages[currentPageIndex].objects = canvas.toJSON().objects;
+            });
+            canvas.on('object:added', () => {
+                pages[currentPageIndex].objects = canvas.toJSON().objects;
+            });
+            canvas.on('object:removed', () => {
+                pages[currentPageIndex].objects = canvas.toJSON().objects;
+            });
+            
+            // Función para mostrar las medidas de un objeto
+            function showDimensionText(obj) {
+                // Remove existing text if any
+                if (dimensionText) {
+                    canvas.remove(dimensionText);
+                }
+
+                if (obj.type === 'image') {
+                    const zoom = canvas.getZoom();
+                    const widthCm = (obj.getScaledWidth() / (DPI / MM_IN_INCH) / zoom).toFixed(1);
+                    const heightCm = (obj.getScaledHeight() / (DPI / MM_IN_INCH) / zoom).toFixed(1);
+                    const dimensions = `${widthCm} x ${heightCm} cm`;
+                    
+                    dimensionText = new fabric.Text(dimensions, {
+                        fontSize: 14,
+                        fill: '#FFFFFF',
+                        backgroundColor: '#333333',
+                        padding: 5,
+                        selectable: false,
+                        evented: false,
+                    });
+                    
+                    canvas.add(dimensionText);
+                    updateDimensionTextPosition(obj);
+                }
+            }
+            
+            // Función para actualizar la posición del texto de medidas
+            function updateDimensionTextPosition(obj) {
+                if (dimensionText) {
+                    const objCenter = obj.getCenterPoint();
+                    dimensionText.set({
+                        left: objCenter.x,
+                        top: obj.top - dimensionText.height / 2 - 10,
+                        originX: 'center',
+                    });
+                    canvas.renderAll();
+                }
+            }
+
+            // Ocultar las medidas
+            function hideDimensionText() {
+                if (dimensionText) {
+                    canvas.remove(dimensionText);
+                    dimensionText = null;
+                    canvas.renderAll();
+                }
+            }
+
+            // Eventos para mostrar y ocultar las medidas
+            canvas.on('object:scaling', (e) => showDimensionText(e.target));
+            canvas.on('object:moving', (e) => showDimensionText(e.target));
+            canvas.on('mouse:down', (e) => {
+                if (!e.target || e.target.type !== 'image') {
+                    hideDimensionText();
+                }
+            });
+            canvas.on('object:modified', hideDimensionText);
+            canvas.on('selection:cleared', hideDimensionText);
+            canvas.on('object:removed', hideDimensionText);
+            
+            // Inicialización de la aplicación
+            pages = [{ id: crypto.randomUUID(), objects: [] }];
+            resizeCanvas();
+            renderCurrentPage();
+
+            window.addEventListener('resize', resizeCanvas);
+        });
+    </script>
 </body>
 </html>
-<!-- Botón subir imagen -->
-<label for="fileInput" class="bg-white px-4 py-2 rounded shadow cursor-pointer">
-  Subir imagen
-</label>
-<input id="fileInput" type="file" accept="image/*" multiple class="hidden">
