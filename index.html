@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLPD7yG52hLdFj9yP4vI7zC3pW6hS5F5E5M5Q5S5C5S5L5N5T5R5E5I5G5A5P5C5Q5U5Y5D5R5C5R5S5N5G5I5T5A5K5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g5h5i5j5k5l5m5n5o5p5q5r5s5t5u5v5w5x5y5z5A5B5C5D5E5F5G5H5I5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5p6" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -200,9 +200,7 @@
             const closeTextPanelBtn = document.getElementById('close-panel');
             const layerPanel = document.getElementById('layer-panel');
             const closeLayerPanelBtn = document.getElementById('close-layer-panel');
-            const bringForwardBtn = document.getElementById('bringForwardBtn');
-            const sendBackwardBtn = document.getElementById('sendBackwardBtn');
-
+            
             // Botones del panel de texto
             const fontBtn = document.getElementById('fontBtn');
             const fontOptions = document.getElementById('font-options');
@@ -211,11 +209,13 @@
             const boldBtn = document.getElementById('boldBtn');
             const italicBtn = document.getElementById('italicBtn');
             const underlineBtn = document.getElementById('underlineBtn');
+            const bringForwardBtn = document.getElementById('bringForwardBtn');
+            const sendBackwardBtn = document.getElementById('sendBackwardBtn');
 
             // Inicializar Fabric.js
             canvas = new fabric.Canvas('canvas');
             let dimensionText = null;
-
+            
             // Establecer el fondo del canvas en blanco
             canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
 
@@ -247,7 +247,6 @@
                 }
                 canvas.clear();
                 
-                // Add the white background rectangle first
                 const whiteBackground = new fabric.Rect({
                     left: 0,
                     top: 0,
@@ -256,7 +255,7 @@
                     height: EXPORT_HEIGHT_PX,
                     selectable: false,
                     evented: false,
-                    excludeFromExport: true // This is just a safeguard, the color option on toDataURL is now the main solution
+                    excludeFromExport: true
                 });
                 canvas.add(whiteBackground);
                 canvas.sendToBack(whiteBackground);
@@ -274,7 +273,6 @@
             // Manejar la adición de imágenes, ahora con un tamaño inicial GIGANTE
             function addImageToCanvas(url) {
                 fabric.Image.fromURL(url, (img) => {
-                    // Nuevo escalado: ajustar la imagen a un 300% del ancho del lienzo.
                     img.scaleToWidth(canvas.getWidth() * 3);
 
                     img.set({
@@ -306,7 +304,6 @@
 
             document.getElementById('clearPageBtn').addEventListener('click', () => {
                 canvas.clear();
-                // Re-add the white background after clearing
                 const whiteBackground = new fabric.Rect({
                     left: 0,
                     top: 0,
@@ -315,7 +312,7 @@
                     height: EXPORT_HEIGHT_PX,
                     selectable: false,
                     evented: false,
-                    excludeFromExport: true // This is just a safeguard
+                    excludeFromExport: true
                 });
                 canvas.add(whiteBackground);
                 canvas.sendToBack(whiteBackground);
@@ -335,7 +332,7 @@
                     top: canvas.getHeight() / 2,
                     originX: 'center',
                     originY: 'center',
-                    fontSize: Math.round(canvas.getHeight() * 0.3), // Tamaño de fuente dinámico y ENORME
+                    fontSize: Math.round(canvas.getHeight() * 0.3),
                     fontFamily: 'Inter',
                     fill: '#000',
                 });
@@ -349,15 +346,14 @@
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ unit: "mm", format: "a4" });
                 
-                showModal("Exportando a PDF... Por favor, espera.");
+                // Muestra un modal de espera mientras se genera el PDF
+                showModal("Generando tu plancha... Por favor, espera un momento. Se descargará automáticamente.");
 
-                // Guardar estado original
                 const originalWidth = canvas.getWidth();
                 const originalHeight = canvas.getHeight();
                 const originalZoom = canvas.getZoom();
 
                 try {
-                    // Temporarily set canvas to high-res for export
                     canvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
                     canvas.setZoom(1);
                     canvas.renderAll();
@@ -366,16 +362,20 @@
                         format: 'jpeg',
                         quality: 1.0,
                         multiplier: 1,
-                        backgroundColor: '#FFFFFF'
+                        backgroundColor: '#FFFFFF',
                     });
                     
                     pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
-                    pdf.save("diseno.pdf");
                     
+                    // Descargar el archivo
+                    pdf.save("plancha_stickers.pdf");
+
+                    // Mostrar el modal de confirmación y envío
                     hideModal();
-                    showModal('¡Tu diseño se ha descargado!<br>Ahora puedes enviarlo por WhatsApp. Solo tienes que adjuntar el archivo que acabas de descargar.',
-                        `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Aquí te envío el diseño de STICKEAME.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition shadow-md text-center">
-                            <i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp
+                    showModal(
+                        '¡Tu plancha se ha descargado!<br>Ahora puedes adjuntar el archivo que acabas de guardar y enviarlo por WhatsApp.',
+                        `<a href="https://wa.me/543755298440?text=${encodeURIComponent('Hola, aquí te envío mi diseño de stickers para imprimir.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition shadow-md text-center">
+                            <i class="fa-brands fa-whatsapp mr-2"></i>Ir a WhatsApp
                         </a>
                         <button onclick="hideModal()" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400 transition shadow-md">
                             Cerrar
@@ -386,7 +386,6 @@
                     showModal("Ocurrió un error al generar el PDF. Por favor, inténtalo de nuevo.");
                     console.error("PDF generation error:", e);
                 } finally {
-                    // Restore original canvas state and size
                     canvas.setDimensions({ width: originalWidth, height: originalHeight });
                     canvas.setZoom(originalZoom);
                     canvas.renderAll();
@@ -408,11 +407,12 @@
                 if (dimensionText) {
                     canvas.remove(dimensionText);
                 }
+                const mmToPx = DPI / MM_IN_INCH;
                 if (obj.type === 'image') {
                     const zoom = canvas.getZoom();
-                    const widthCm = ((obj.getScaledWidth() / zoom) * (25.4 / 96)).toFixed(1);
-                    const heightCm = ((obj.getScaledHeight() / zoom) * (25.4 / 96)).toFixed(1);
-                    const dimensions = `${widthCm} x ${heightCm} cm`;
+                    const widthMm = (obj.getScaledWidth() / (zoom * mmToPx)).toFixed(1);
+                    const heightMm = (obj.getScaledHeight() / (zoom * mmToPx)).toFixed(1);
+                    const dimensions = `${widthMm} x ${heightMm} mm`;
                     
                     dimensionText = new fabric.Text(dimensions, {
                         fontSize: 14,
@@ -491,7 +491,7 @@
                 canvas.discardActiveObject();
                 canvas.renderAll();
             });
-
+            
             fontBtn.addEventListener('click', () => {
                 const activeObject = canvas.getActiveObject();
                 if (activeObject && activeObject.type === 'i-text') {
