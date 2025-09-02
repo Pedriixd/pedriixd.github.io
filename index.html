@@ -38,11 +38,9 @@
         </div>
     </div>
 
-    <!-- Encabezado -->
+    <!-- Encabezado simplificado para móvil -->
     <header class="flex items-center justify-between bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md">
         <div class="flex items-center space-x-3">
-            <!-- Logo de la empresa -->
-            <!-- Se cambió la URL del logo por una ruta local para su uso en GitHub -->
             <img src="logo.png" alt="PEDRiiXD ALVEZ Logo" class="h-10 w-auto rounded-full">
             <span class="font-bold text-xl select-none">PEDRiiXD ALVEZ</span>
         </div>
@@ -53,77 +51,51 @@
             <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-2 rounded hover:bg-green-700 transition">
                 <i class="fa-brands fa-whatsapp"></i>
             </a>
-            <button id="newPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
-                <i class="fa-solid fa-file-circle-plus"></i>
-                Nueva hoja Carta
-            </button>
-            <button id="saveProjectBtn" class="p-2 rounded hover:bg-green-700 transition" type="button" title="Guardar proyecto en un archivo">
-                <i class="fa-solid fa-save"></i>
-            </button>
-            <label for="loadProjectInput" class="p-2 rounded hover:bg-green-700 transition cursor-pointer" title="Cargar proyecto desde un archivo">
-                <i class="fa-solid fa-upload"></i>
-            </label>
-            <input type="file" id="loadProjectInput" class="hidden" accept=".json">
         </nav>
     </header>
 
-    <div class="flex flex-col md:flex-row flex-1 overflow-hidden p-2 md:p-4">
-        <!-- Editor principal y barra de herramientas -->
+    <div class="flex flex-col flex-1 overflow-hidden p-2 md:p-4">
+        <!-- Editor principal -->
         <div class="flex-1 flex flex-col items-center p-2 md:p-4 bg-gray-200 rounded-lg shadow-inner">
-            <div class="flex flex-wrap items-center justify-center gap-2 bg-green-800 p-2 rounded-t-md shadow-inner text-white w-full">
-                <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition select-none">
-                    <i class="fa-solid fa-image"></i>
-                    Subir imágenes
-                    <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
-                </label>
-                <button id="clearPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
-                    <i class="fa-solid fa-trash-can"></i>
-                    Limpiar página
-                </button>
-                <button id="addPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
-                    <i class="fa-solid fa-file-circle-plus"></i>
-                    Agregar página
-                </button>
-                <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
-                    <i class="fa-solid fa-times"></i>
-                    Eliminar selección
-                </button>
-                <button id="addTextBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
-                    <i class="fa-solid fa-font"></i>
-                    Añadir Texto
-                </button>
-                <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-900 px-3 py-1 rounded transition" type="button">
-                    <i class="fa-solid fa-file-pdf"></i>
-                    Exportar PDF
-                </button>
-            </div>
-            
             <!-- Nueva descripción sobre cómo exportar -->
             <div class="text-center p-4">
-                <p class="text-lg text-gray-700">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Exportar PDF" para descargar el archivo. Después, puedes usar el botón de WhatsApp para enviarlo.</p>
+                <p class="text-lg text-gray-700">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo. Después, puedes usar el botón de WhatsApp para enviarlo.</p>
             </div>
-
+            
             <div id="canvas-container" class="flex-1 flex items-center justify-center overflow-auto p-4 w-full">
                 <canvas id="canvas" class="page-shadow border-4 border-cyan-400"></canvas>
             </div>
-
-            <div class="flex items-center justify-center gap-3 p-2 bg-green-900 text-white rounded-b-md shadow-inner w-full">
-                <button id="prevPageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <span id="pageInfo" class="select-none"></span>
-                <button id="nextPageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button id="duplicatePageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
-                    <i class="fa-solid fa-copy"></i>
-                </button>
-                <button id="deletePageBtn" class="p-2 rounded hover:bg-green-700 transition" type="button">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            </div>
         </div>
     </div>
+
+    <!-- Botones de acción en la parte inferior, con nuevo color -->
+    <footer class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-2 bg-green-900 p-2 md:p-4 rounded-t-md shadow-inner text-white">
+        <button id="newPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+            <i class="fa-solid fa-file-circle-plus"></i>
+            Nueva hoja
+        </button>
+        <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition select-none">
+            <i class="fa-solid fa-image"></i>
+            Subir imágenes
+            <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
+        </label>
+        <button id="addTextBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+            <i class="fa-solid fa-font"></i>
+            Añadir Texto
+        </button>
+        <button id="clearPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+            <i class="fa-solid fa-trash-can"></i>
+            Limpiar página
+        </button>
+        <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+            <i class="fa-solid fa-times"></i>
+            Eliminar selección
+        </button>
+        <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+            <i class="fa-solid fa-file-pdf"></i>
+            Descargar y enviar
+        </button>
+    </footer>
 
     <script>
         // Funciones del modal
@@ -170,7 +142,6 @@
             
             let canvas, pages = [], currentPageIndex = 0;
             const canvasContainer = document.getElementById('canvas-container');
-            const pageInfoSpan = document.getElementById('pageInfo');
             const addTextBtn = document.getElementById('addTextBtn');
             const loadProjectInput = document.getElementById('loadProjectInput');
 
@@ -213,16 +184,7 @@
                         canvas.renderAll();
                     });
                 }
-                updatePageInfo();
                 resizeCanvas(); 
-            }
-
-            // Actualizar la información de la paginación
-            function updatePageInfo() {
-                pageInfoSpan.textContent = `Página ${currentPageIndex + 1} de ${pages.length}`;
-                document.getElementById('prevPageBtn').disabled = currentPageIndex === 0;
-                document.getElementById('nextPageBtn').disabled = currentPageIndex === pages.length - 1;
-                document.getElementById('deletePageBtn').disabled = pages.length <= 1;
             }
 
             // Manejar la adición de imágenes, ahora escalando el tamaño y poniéndolas encima
@@ -259,49 +221,10 @@
 
             // Event Listeners
             document.getElementById('newPageBtn').addEventListener('click', () => {
-                pages.push({ id: crypto.randomUUID(), objects: [] });
-                currentPageIndex = pages.length - 1;
+                canvas.clear();
+                pages = [{ id: crypto.randomUUID(), objects: [] }];
+                currentPageIndex = 0;
                 renderCurrentPage();
-            });
-
-            document.getElementById('addPageBtn').addEventListener('click', () => {
-                pages.push({ id: crypto.randomUUID(), objects: [] });
-                currentPageIndex = pages.length - 1;
-                renderCurrentPage();
-            });
-
-            document.getElementById('duplicatePageBtn').addEventListener('click', () => {
-                const currentPage = pages[currentPageIndex];
-                if (currentPage) {
-                    const newPage = { id: crypto.randomUUID(), objects: JSON.parse(JSON.stringify(currentPage.objects)) };
-                    pages.splice(currentPageIndex + 1, 0, newPage);
-                    currentPageIndex++;
-                    renderCurrentPage();
-                }
-            });
-
-            document.getElementById('deletePageBtn').addEventListener('click', () => {
-                if (pages.length <= 1) {
-                    showModal("No puedes eliminar la única página.");
-                    return;
-                }
-                pages.splice(currentPageIndex, 1);
-                currentPageIndex = Math.min(currentPageIndex, pages.length - 1);
-                renderCurrentPage();
-            });
-
-            document.getElementById('prevPageBtn').addEventListener('click', () => {
-                if (currentPageIndex > 0) {
-                    currentPageIndex--;
-                    renderCurrentPage();
-                }
-            });
-
-            document.getElementById('nextPageBtn').addEventListener('click', () => {
-                if (currentPageIndex < pages.length - 1) {
-                    currentPageIndex++;
-                    renderCurrentPage();
-                }
             });
 
             document.getElementById('upload-images').addEventListener('change', (e) => {
@@ -379,41 +302,6 @@
                 
                 showModal("Exportando a PDF... Por favor, espera.", false);
                 exportPage(0);
-            });
-
-            document.getElementById('saveProjectBtn').addEventListener('click', () => {
-                const project = { pages };
-                const blob = new Blob([JSON.stringify(project)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `proyecto-diseno-${new Date().toISOString().slice(0, 10)}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showModal("Proyecto guardado como un archivo JSON. ¡Ya puedes descargarlo!");
-            });
-
-            loadProjectInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const project = JSON.parse(event.target.result);
-                        pages = project.pages || [{ id: "page1", objects: [] }];
-                        currentPageIndex = 0;
-                        
-                        renderCurrentPage();
-                        showModal("Proyecto cargado con éxito. Por favor, vuelve a subir las imágenes.");
-                    } catch (error) {
-                        console.error("Error al cargar el proyecto:", error);
-                        showModal("Error al cargar el archivo. Asegúrate de que es un archivo de proyecto válido.");
-                    }
-                };
-                reader.readAsText(file);
             });
 
             // Sincronizar cambios del lienzo con el estado
