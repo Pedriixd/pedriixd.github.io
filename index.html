@@ -68,28 +68,28 @@
         </div>
     </div>
 
-    <!-- Botones de acción en la parte inferior, con nuevo color -->
-    <footer class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-2 bg-green-900 p-2 md:p-4 rounded-t-md shadow-inner text-white">
-        <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition select-none">
+    <!-- Botones de acción en la parte inferior, con nuevo color y sombra -->
+    <footer class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-green-900 p-2 md:p-4 rounded-t-md shadow-inner text-white">
+        <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
+            <i class="fa-solid fa-file-pdf"></i>
+            Descargar y enviar
+        </button>
+        <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition select-none shadow-md">
             <i class="fa-solid fa-image"></i>
             Subir imágenes
             <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
         </label>
-        <button id="addTextBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+        <button id="addTextBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
             <i class="fa-solid fa-font"></i>
             Añadir Texto
         </button>
-        <button id="clearPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+        <button id="clearPageBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
             <i class="fa-solid fa-trash-can"></i>
             Limpiar página
         </button>
-        <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
+        <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
             <i class="fa-solid fa-times"></i>
             Eliminar selección
-        </button>
-        <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
-            <i class="fa-solid fa-file-pdf"></i>
-            Descargar y enviar
         </button>
     </footer>
 
@@ -106,7 +106,7 @@
             // Botón de cerrar
             const closeBtn = document.createElement('button');
             closeBtn.onclick = hideModal;
-            closeBtn.className = "bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition";
+            closeBtn.className = "bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition";
             closeBtn.textContent = "Cerrar";
             modalButtons.appendChild(closeBtn);
 
