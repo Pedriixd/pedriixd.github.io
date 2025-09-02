@@ -1,31 +1,28 @@
 <!-- Encabezado -->
-<header class="flex flex-col sm:flex-row items-center justify-between 
-    bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md gap-2 sm:gap-0">
+<header class="flex items-center justify-between bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md">
     <div class="flex items-center space-x-3">
-        <!-- Logo dinámico -->
-        <img src="/logo.png"
-             alt="PEDRiiXD ALVEZ Logo" 
-             class="h-12 w-auto rounded-full"
+        <!-- Logo de la empresa -->
+        <img src="/logo.png" alt="PEDRiiXD ALVEZ Logo" class="h-10 w-auto rounded-full"
              onerror="this.style.display='none'; document.getElementById('brandText').style.display='inline';">
-        <!-- Texto fallback si no carga el logo -->
-        <span id="brandText" class="font-bold text-lg sm:text-xl select-none hidden">
-            PEDRiiXD ALVEZ
-        </span>
+        <span id="brandText" class="font-bold text-xl select-none hidden">PEDRiiXD ALVEZ</span>
     </div>
-    <nav class="flex flex-wrap items-center justify-center gap-2">
-        <a href="https://www.instagram.com/pedriixd.alvez" target="_blank"
-           class="p-2 rounded hover:bg-green-700 transition">
+    <nav class="flex items-center space-x-3">
+        <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-2 rounded hover:bg-green-700 transition">
             <i class="fa-brands fa-instagram"></i>
         </a>
-        <a href="https://wa.me/543755298440" target="_blank"
-           class="p-2 rounded hover:bg-green-700 transition">
+        <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-2 rounded hover:bg-green-700 transition">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
-        <button id="newPageBtn" 
-            class="flex items-center gap-1 bg-green-700 hover:bg-green-800 
-            px-2 py-1 sm:px-3 rounded text-sm sm:text-base">
+        <button id="newPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
             <i class="fa-solid fa-file-circle-plus"></i>
-            Nueva hoja
+            Nueva hoja Carta
         </button>
+        <button id="saveProjectBtn" class="p-2 rounded hover:bg-green-700 transition" type="button" title="Guardar proyecto en un archivo">
+            <i class="fa-solid fa-save"></i>
+        </button>
+        <label for="loadProjectInput" class="p-2 rounded hover:bg-green-700 transition cursor-pointer" title="Cargar proyecto desde un archivo">
+            <i class="fa-solid fa-upload"></i>
+        </label>
+        <input type="file" id="loadProjectInput" class="hidden" accept=".json">
     </nav>
 </header>
