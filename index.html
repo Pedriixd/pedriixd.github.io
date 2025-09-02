@@ -54,15 +54,15 @@
         </nav>
     </header>
 
-    <div class="flex flex-col flex-1 overflow-hidden p-2 md:p-4">
+    <div class="flex flex-col flex-1 p-2 md:p-4">
         <!-- Editor principal -->
-        <div class="flex-1 flex flex-col items-center p-2 md:p-4 bg-gray-200 rounded-lg shadow-inner">
+        <div class="flex-1 flex flex-col items-center bg-gray-200 rounded-lg shadow-inner">
             <!-- Nueva descripción sobre cómo exportar -->
             <div class="text-center p-2">
                 <p class="text-lg text-gray-700">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo. Después, puedes usar el botón de WhatsApp para enviarlo.</p>
             </div>
             
-            <div id="canvas-container" class="flex-1 flex items-center justify-center overflow-auto p-4 w-full">
+            <div id="canvas-container" class="flex-1 flex items-center justify-center w-full">
                 <canvas id="canvas" class="page-shadow border-4 border-cyan-400"></canvas>
             </div>
         </div>
@@ -70,10 +70,6 @@
 
     <!-- Botones de acción en la parte inferior, con nuevo color -->
     <footer class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-2 bg-green-900 p-2 md:p-4 rounded-t-md shadow-inner text-white">
-        <button id="newPageBtn" class="flex items-center gap-1 bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition" type="button">
-            <i class="fa-solid fa-file-circle-plus"></i>
-            Nueva hoja
-        </button>
         <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-700 hover:bg-green-800 px-3 py-1 rounded transition select-none">
             <i class="fa-solid fa-image"></i>
             Subir imágenes
@@ -159,14 +155,19 @@
                 const containerWidth = canvasContainer.clientWidth;
                 const containerHeight = canvasContainer.clientHeight;
                 let newWidth, newHeight;
-                if (containerWidth / containerHeight > LETTER_ASPECT_RATIO) {
-                    newHeight = containerHeight - 16;
+                
+                // Calcula el ancho y alto máximos manteniendo la proporción de una hoja carta
+                const containerAspectRatio = containerWidth / containerHeight;
+                if (containerAspectRatio > LETTER_ASPECT_RATIO) {
+                    newHeight = containerHeight;
                     newWidth = newHeight * LETTER_ASPECT_RATIO;
                 } else {
-                    newWidth = containerWidth - 16;
+                    newWidth = containerWidth;
                     newHeight = newWidth / LETTER_ASPECT_RATIO;
                 }
-                const zoom = newWidth / (215.9 * DPI / MM_IN_INCH); // Calculate zoom based on physical size and DPI
+                
+                // Calcula el zoom para que el canvas llene el contenedor sin desbordarse
+                const zoom = newWidth / (215.9 * DPI / MM_IN_INCH); 
                 canvas.setDimensions({ width: newWidth, height: newHeight });
                 canvas.setZoom(zoom);
                 canvas.renderAll();
@@ -222,13 +223,6 @@
             }
 
             // Event Listeners
-            document.getElementById('newPageBtn').addEventListener('click', () => {
-                canvas.clear();
-                pages = [{ id: crypto.randomUUID(), objects: [] }];
-                currentPageIndex = 0;
-                renderCurrentPage();
-            });
-
             document.getElementById('upload-images').addEventListener('change', (e) => {
                 const files = e.target.files;
                 Array.from(files).forEach(file => {
