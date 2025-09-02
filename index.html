@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor de Hojas Carta</title>
+    <title>STICKEAME</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" xintegrity="sha512-z3gLPD7yG52hLdFj9yP4vI7zC3pW6hS5F5E5M5Q5S5C5S5L5N5T5R5E5I5G5A5P5C5Q5U5Y5D5R5C5R5S5N5G5I5T5A5K5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g5h5i5j5k5l5m5n5o5p5q5r5s5t5u5v5w5x5y5z5A5B5C5D5E5F5G5H5I5J5K5L5M5N5O5P5Q5R5S5T5U5V5W5X5Y5Z5p6" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .modal {
             transition: all 0.3s ease-in-out;
@@ -24,14 +24,14 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col h-screen">
+<body class="bg-slate-50 text-gray-900 flex flex-col h-screen">
 
     <!-- Modal para mensajes -->
     <div id="message-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-inactive">
         <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
             <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
             <div id="modal-buttons" class="flex flex-col gap-2">
-                <button onclick="hideModal()" class="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition">
+                <button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition">
                     Cerrar
                 </button>
             </div>
@@ -39,87 +39,139 @@
     </div>
 
     <!-- Encabezado simplificado para móvil -->
-    <header class="flex items-center justify-between bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md">
+    <header class="flex items-center justify-between bg-emerald-300 text-gray-900 px-4 py-2 shadow-md rounded-b-md">
         <div class="flex items-center space-x-3">
-            <img src="logo.png" alt="PEDRiiXD ALVEZ Logo" class="h-10 w-auto rounded-full">
-            <span class="font-bold text-xl select-none">PEDRiiXD ALVEZ</span>
+            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full">
+            <span class="font-bold text-xl select-none">STICKEAME</span>
         </div>
         <nav class="flex items-center space-x-3">
-            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-3 rounded hover:bg-green-700 transition text-xl">
-                <i class="fa-brands fa-instagram"></i>
+            <!-- Botón de "Galería" en la parte superior con texto -->
+            <a href="https://drive.google.com/drive/folders/1ZeBNXXJZZ4RfSIYu_DnhULqT3hNFUrs5" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded-md transition shadow-md">
+                <i class="fa-solid fa-folder-open text-white"></i>
+                <span class="font-semibold text-white">Galería</span>
             </a>
-            <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-3 rounded hover:bg-green-700 transition text-xl">
-                <i class="fa-brands fa-whatsapp"></i>
+            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" 
+               class="p-4 rounded-lg bg-gradient-to-tr from-yellow-300 via-pink-500 to-purple-600 text-white shadow-lg 
+                      hover:scale-110 transition-transform duration-300 text-2xl font-semibold">
+                <i class="fa-brands fa-instagram"></i>
             </a>
         </nav>
     </header>
 
     <div class="flex flex-col flex-1 p-2 md:p-4">
         <!-- Editor principal -->
-        <div class="flex-1 flex flex-col items-center bg-gray-200 rounded-lg shadow-inner">
+        <div class="flex-1 flex flex-col md:flex-row items-stretch bg-white rounded-lg shadow-inner">
             <!-- Nueva descripción sobre cómo exportar -->
-            <div class="text-center p-2">
-                <p class="text-lg text-gray-700">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo. Después, puedes usar el botón de WhatsApp para enviarlo.</p>
+            <div class="text-center p-2 md:hidden">
+                <p class="text-lg text-gray-800">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo.</p>
             </div>
             
             <div id="canvas-container" class="flex-1 flex items-center justify-center w-full">
-                <canvas id="canvas" class="page-shadow border-4 border-cyan-400"></canvas>
+                <canvas id="canvas" class="shadow-2xl"></canvas>
             </div>
+
+            <!-- Panel de opciones para texto -->
+            <div id="text-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-l border-gray-200 bg-gray-50 rounded-r-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">Editar Texto</h2>
+                    <button id="close-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <button id="fontBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-font mr-2"></i>Fuentes
+                    </button>
+                    <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-gray-100 rounded-md">
+                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Inter">Inter</button>
+                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Arial">Arial</button>
+                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Times New Roman">Times New Roman</button>
+                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Comic Neue">Comic Sans</button>
+                    </div>
+                    
+                    <button id="colorBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-palette mr-2"></i>Colores
+                    </button>
+                    <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-gray-100 rounded-md">
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #000000;" data-color="#000000"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FF0000;" data-color="#FF0000"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #008000;" data-color="#008000"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #0000FF;" data-color="#0000FF"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFA500;" data-color="#FFA500"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #800080;" data-color="#800080"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #00CED1;" data-color="#00CED1"></div>
+                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #A52A2A;" data-color="#A52A2A"></div>
+                    </div>
+                    
+                    <button id="boldBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-bold mr-2"></i>Negrita
+                    </button>
+                    <button id="italicBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-italic mr-2"></i>Cursiva
+                    </button>
+                    <button id="underlineBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-underline mr-2"></i>Subrayado
+                    </button>
+                </div>
+            </div>
+
+            <!-- Nuevo panel de capas para imágenes -->
+            <div id="layer-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-l border-gray-200 bg-gray-50 rounded-r-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">Capas de Imagen</h2>
+                    <button id="close-layer-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <button id="bringForwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-arrow-up-long mr-2"></i>Subir capa
+                    </button>
+                    <button id="sendBackwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-arrow-down-long mr-2"></i>Bajar capa
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- Botones de acción en la parte inferior, con nuevo color y sombra -->
-    <footer class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-green-900 p-2 md:p-4 rounded-t-md shadow-inner text-white">
-        <button id="exportPdfBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
+    <footer class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-emerald-300 p-2 md:p-4 rounded-t-md shadow-inner text-gray-900">
+        <button id="exportPdfBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
             <i class="fa-solid fa-file-pdf"></i>
             Descargar y enviar
         </button>
-        <label for="upload-images" class="flex items-center gap-1 cursor-pointer bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition select-none shadow-md">
+        <label for="upload-images" class="flex items-center justify-center gap-1 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition select-none shadow-xl">
             <i class="fa-solid fa-image"></i>
             Subir imágenes
             <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
         </label>
-        <button id="addTextBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
+        <button id="addTextBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
             <i class="fa-solid fa-font"></i>
             Añadir Texto
         </button>
-        <button id="clearPageBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
+        <button id="clearPageBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
             <i class="fa-solid fa-trash-can"></i>
             Limpiar página
         </button>
-        <button id="deleteSelectionBtn" class="flex items-center gap-1 bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition shadow-md" type="button">
+        <button id="deleteSelectionBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
             <i class="fa-solid fa-times"></i>
-            Eliminar selección
+            Eliminar elemento
         </button>
     </footer>
 
     <script>
         // Funciones del modal
-        function showModal(message, showWhatsappButton = false) {
+        function showModal(message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition">Cerrar</button>') {
             const modal = document.getElementById('message-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalButtons = document.getElementById('modal-buttons');
 
-            modalMessage.textContent = message;
-            modalButtons.innerHTML = ''; // Limpiar botones anteriores
-
-            // Botón de cerrar
-            const closeBtn = document.createElement('button');
-            closeBtn.onclick = hideModal;
-            closeBtn.className = "bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition";
-            closeBtn.textContent = "Cerrar";
-            modalButtons.appendChild(closeBtn);
-
-            // Botón de WhatsApp
-            if (showWhatsappButton) {
-                const waBtn = document.createElement('a');
-                const encodedMessage = encodeURIComponent("hola😊, queria solicitarte esta plancha");
-                waBtn.href = `https://wa.me/543755298440?text=${encodedMessage}`;
-                waBtn.target = "_blank";
-                waBtn.className = "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center justify-center gap-2";
-                waBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Enviar por WhatsApp';
-                modalButtons.insertBefore(waBtn, modalButtons.firstChild);
-            }
+            modalMessage.innerHTML = message;
+            modalButtons.innerHTML = buttonsHtml;
             
             modal.classList.add('modal-active');
             modal.classList.remove('modal-inactive');
@@ -132,14 +184,33 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const LETTER_ASPECT_RATIO = 215.9 / 279.4;
-            const DPI = 96; // Standard DPI for web
+            // Constantes para formato A4
+            const A4_ASPECT_RATIO = 210 / 297;
+            const A4_WIDTH_MM = 210;
+            const A4_HEIGHT_MM = 297;
+            const DPI = 300; // High DPI for printing
             const MM_IN_INCH = 25.4;
-            
+            const EXPORT_WIDTH_PX = Math.round((A4_WIDTH_MM * DPI) / MM_IN_INCH);
+            const EXPORT_HEIGHT_PX = Math.round((A4_HEIGHT_MM * DPI) / MM_IN_INCH);
+
             let canvas, pages = [], currentPageIndex = 0;
             const canvasContainer = document.getElementById('canvas-container');
             const addTextBtn = document.getElementById('addTextBtn');
-            const loadProjectInput = document.getElementById('loadProjectInput');
+            const textPanel = document.getElementById('text-panel');
+            const closeTextPanelBtn = document.getElementById('close-panel');
+            const layerPanel = document.getElementById('layer-panel');
+            const closeLayerPanelBtn = document.getElementById('close-layer-panel');
+            const bringForwardBtn = document.getElementById('bringForwardBtn');
+            const sendBackwardBtn = document.getElementById('sendBackwardBtn');
+
+            // Botones del panel de texto
+            const fontBtn = document.getElementById('fontBtn');
+            const fontOptions = document.getElementById('font-options');
+            const colorBtn = document.getElementById('colorBtn');
+            const colorOptions = document.getElementById('color-options');
+            const boldBtn = document.getElementById('boldBtn');
+            const italicBtn = document.getElementById('italicBtn');
+            const underlineBtn = document.getElementById('underlineBtn');
 
             // Inicializar Fabric.js
             canvas = new fabric.Canvas('canvas');
@@ -149,27 +220,22 @@
             canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
 
             // Ajustar el tamaño del canvas al contenedor
-            // El canvas se ajusta dinámicamente para ocupar el máximo espacio disponible
-            // mientras mantiene las proporciones de una hoja carta (215.9 x 279.4 mm).
             function resizeCanvas() {
                 const containerWidth = canvasContainer.clientWidth;
                 const containerHeight = canvasContainer.clientHeight;
                 let newWidth, newHeight;
                 
-                // Calcula el ancho y alto máximos manteniendo la proporción de una hoja carta
                 const containerAspectRatio = containerWidth / containerHeight;
-                if (containerAspectRatio > LETTER_ASPECT_RATIO) {
+                if (containerAspectRatio > A4_ASPECT_RATIO) {
                     newHeight = containerHeight;
-                    newWidth = newHeight * LETTER_ASPECT_RATIO;
+                    newWidth = newHeight * A4_ASPECT_RATIO;
                 } else {
                     newWidth = containerWidth;
-                    newHeight = newWidth / LETTER_ASPECT_RATIO;
+                    newHeight = newWidth / A4_ASPECT_RATIO;
                 }
                 
-                // Calcula el zoom para que el canvas llene el contenedor sin desbordarse
-                const zoom = newWidth / (215.9 * DPI / MM_IN_INCH); 
                 canvas.setDimensions({ width: newWidth, height: newHeight });
-                canvas.setZoom(zoom);
+                canvas.setZoom(newWidth / EXPORT_WIDTH_PX);
                 canvas.renderAll();
             }
 
@@ -180,6 +246,21 @@
                     currentPageIndex = 0;
                 }
                 canvas.clear();
+                
+                // Add the white background rectangle first
+                const whiteBackground = new fabric.Rect({
+                    left: 0,
+                    top: 0,
+                    fill: '#FFFFFF',
+                    width: EXPORT_WIDTH_PX,
+                    height: EXPORT_HEIGHT_PX,
+                    selectable: false,
+                    evented: false,
+                    excludeFromExport: true // This is just a safeguard, the color option on toDataURL is now the main solution
+                });
+                canvas.add(whiteBackground);
+                canvas.sendToBack(whiteBackground);
+
                 const page = pages[currentPageIndex];
                 if (page.objects && page.objects.length > 0) {
                     fabric.util.enlivenObjects(page.objects, (objs) => {
@@ -190,34 +271,22 @@
                 resizeCanvas(); 
             }
 
-            // Manejar la adición de imágenes, ahora escalando el tamaño y poniéndolas encima
+            // Manejar la adición de imágenes, ahora con un tamaño inicial GIGANTE
             function addImageToCanvas(url) {
                 fabric.Image.fromURL(url, (img) => {
-                    const canvasCenter = canvas.getCenter();
-                    
-                    // Escalar la imagen si es demasiado grande
-                    const maxImgWidth = canvas.getWidth() * 0.7;
-                    const maxImgHeight = canvas.getHeight() * 0.7;
-
-                    if (img.width > maxImgWidth || img.height > maxImgHeight) {
-                        if (img.width / maxImgWidth > img.height / maxImgHeight) {
-                            img.scaleToWidth(maxImgWidth);
-                        } else {
-                            img.scaleToHeight(maxImgHeight);
-                        }
-                    }
+                    // Nuevo escalado: ajustar la imagen a un 300% del ancho del lienzo.
+                    img.scaleToWidth(canvas.getWidth() * 3);
 
                     img.set({
-                        left: canvasCenter.left,
-                        top: canvasCenter.top,
+                        left: canvas.getWidth() / 2,
+                        top: canvas.getHeight() / 2,
                         originX: 'center',
                         originY: 'center',
                     });
                     canvas.add(img);
-                    canvas.bringToFront(img);
+                    canvas.setActiveObject(img);
                     canvas.renderAll();
 
-                    // Forzar la actualización del estado para guardar el orden de las capas
                     pages[currentPageIndex].objects = canvas.toJSON().objects;
                 });
             }
@@ -237,6 +306,20 @@
 
             document.getElementById('clearPageBtn').addEventListener('click', () => {
                 canvas.clear();
+                // Re-add the white background after clearing
+                const whiteBackground = new fabric.Rect({
+                    left: 0,
+                    top: 0,
+                    fill: '#FFFFFF',
+                    width: EXPORT_WIDTH_PX,
+                    height: EXPORT_HEIGHT_PX,
+                    selectable: false,
+                    evented: false,
+                    excludeFromExport: true // This is just a safeguard
+                });
+                canvas.add(whiteBackground);
+                canvas.sendToBack(whiteBackground);
+                
                 pages[currentPageIndex].objects = [];
                 canvas.renderAll();
             });
@@ -252,52 +335,62 @@
                     top: canvas.getHeight() / 2,
                     originX: 'center',
                     originY: 'center',
-                    fontSize: 24,
+                    fontSize: Math.round(canvas.getHeight() * 0.3), // Tamaño de fuente dinámico y ENORME
                     fontFamily: 'Inter',
                     fill: '#000',
                 });
                 canvas.add(text);
                 canvas.setActiveObject(text);
                 canvas.renderAll();
+                togglePanels(text);
             });
 
-            document.getElementById('exportPdfBtn').addEventListener('click', () => {
+            document.getElementById('exportPdfBtn').addEventListener('click', async () => {
                 const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ unit: "mm", format: "letter" });
-
-                async function exportPage(index) {
-                    if (index >= pages.length) {
-                        pdf.save("diseno.pdf");
-                        showModal("El archivo PDF se ha descargado. Ahora puedes enviarlo por WhatsApp.", true);
-                        return;
-                    }
-
-                    const pageData = pages[index];
-                    const tempCanvas = document.createElement('canvas');
-                    const tempFabricCanvas = new fabric.Canvas(tempCanvas, {
-                        width: 215.9 * DPI / MM_IN_INCH,
-                        height: 279.4 * DPI / MM_IN_INCH
-                    });
-
-                    // Establecer el fondo en blanco antes de renderizar y exportar
-                    tempFabricCanvas.setBackgroundColor('#FFFFFF', async () => {
-                        await new Promise(resolve => {
-                            fabric.util.enlivenObjects(pageData.objects, (enlived) => {
-                                enlived.forEach(o => tempFabricCanvas.add(o));
-                                resolve();
-                            });
-                        });
-    
-                        const imgData = tempFabricCanvas.toDataURL({ format: 'jpeg', quality: 1.0 });
-                        if (index > 0) pdf.addPage();
-                        pdf.addImage(imgData, "JPEG", 0, 0, 215.9, 279.4);
-    
-                        exportPage(index + 1);
-                    });
-                }
+                const pdf = new jsPDF({ unit: "mm", format: "a4" });
                 
-                showModal("Exportando a PDF... Por favor, espera.", false);
-                exportPage(0);
+                showModal("Exportando a PDF... Por favor, espera.");
+
+                // Guardar estado original
+                const originalWidth = canvas.getWidth();
+                const originalHeight = canvas.getHeight();
+                const originalZoom = canvas.getZoom();
+
+                try {
+                    // Temporarily set canvas to high-res for export
+                    canvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
+                    canvas.setZoom(1);
+                    canvas.renderAll();
+                    
+                    const imgData = canvas.toDataURL({
+                        format: 'jpeg',
+                        quality: 1.0,
+                        multiplier: 1,
+                        backgroundColor: '#FFFFFF'
+                    });
+                    
+                    pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
+                    pdf.save("diseno.pdf");
+                    
+                    hideModal();
+                    showModal('¡Tu diseño se ha descargado!<br>Ahora puedes enviarlo por WhatsApp. Solo tienes que adjuntar el archivo que acabas de descargar.',
+                        `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Aquí te envío el diseño de STICKEAME.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition shadow-md text-center">
+                            <i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp
+                        </a>
+                        <button onclick="hideModal()" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400 transition shadow-md">
+                            Cerrar
+                        </button>`
+                    );
+
+                } catch (e) {
+                    showModal("Ocurrió un error al generar el PDF. Por favor, inténtalo de nuevo.");
+                    console.error("PDF generation error:", e);
+                } finally {
+                    // Restore original canvas state and size
+                    canvas.setDimensions({ width: originalWidth, height: originalHeight });
+                    canvas.setZoom(originalZoom);
+                    canvas.renderAll();
+                }
             });
 
             // Sincronizar cambios del lienzo con el estado
@@ -311,17 +404,14 @@
                 pages[currentPageIndex].objects = canvas.toJSON().objects;
             });
             
-            // Función para mostrar las medidas de un objeto
             function showDimensionText(obj) {
-                // Remove existing text if any
                 if (dimensionText) {
                     canvas.remove(dimensionText);
                 }
-
                 if (obj.type === 'image') {
                     const zoom = canvas.getZoom();
-                    const widthCm = (obj.getScaledWidth() / (DPI / MM_IN_INCH) / zoom).toFixed(1);
-                    const heightCm = (obj.getScaledHeight() / (DPI / MM_IN_INCH) / zoom).toFixed(1);
+                    const widthCm = ((obj.getScaledWidth() / zoom) * (25.4 / 96)).toFixed(1);
+                    const heightCm = ((obj.getScaledHeight() / zoom) * (25.4 / 96)).toFixed(1);
                     const dimensions = `${widthCm} x ${heightCm} cm`;
                     
                     dimensionText = new fabric.Text(dimensions, {
@@ -338,7 +428,6 @@
                 }
             }
             
-            // Función para actualizar la posición del texto de medidas
             function updateDimensionTextPosition(obj) {
                 if (dimensionText) {
                     const objCenter = obj.getCenterPoint();
@@ -351,7 +440,6 @@
                 }
             }
 
-            // Ocultar las medidas
             function hideDimensionText() {
                 if (dimensionText) {
                     canvas.remove(dimensionText);
@@ -360,7 +448,6 @@
                 }
             }
 
-            // Eventos para mostrar y ocultar las medidas
             canvas.on('object:scaling', (e) => showDimensionText(e.target));
             canvas.on('object:moving', (e) => showDimensionText(e.target));
             canvas.on('mouse:down', (e) => {
@@ -371,8 +458,133 @@
             canvas.on('object:modified', hideDimensionText);
             canvas.on('selection:cleared', hideDimensionText);
             canvas.on('object:removed', hideDimensionText);
+
+            function togglePanels(obj) {
+                textPanel.classList.add('hidden');
+                layerPanel.classList.add('hidden');
+                fontOptions.classList.add('hidden');
+                colorOptions.classList.add('hidden');
+                hideDimensionText();
+
+                if (obj) {
+                    if (obj.type === 'i-text') {
+                        textPanel.classList.remove('hidden');
+                    } else if (obj.type === 'image') {
+                        layerPanel.classList.remove('hidden');
+                        showDimensionText(obj);
+                    }
+                }
+            }
+
+            canvas.on('selection:created', (e) => togglePanels(e.target));
+            canvas.on('selection:updated', (e) => togglePanels(e.target));
+            canvas.on('selection:cleared', () => togglePanels(null));
+
+            closeTextPanelBtn.addEventListener('click', () => {
+                textPanel.classList.add('hidden');
+                canvas.discardActiveObject();
+                canvas.renderAll();
+            });
+
+            closeLayerPanelBtn.addEventListener('click', () => {
+                layerPanel.classList.add('hidden');
+                canvas.discardActiveObject();
+                canvas.renderAll();
+            });
+
+            fontBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'i-text') {
+                    fontOptions.classList.toggle('hidden');
+                    colorOptions.classList.add('hidden');
+                } else {
+                    showModal("Por favor, selecciona un elemento de texto primero para editarlo.");
+                }
+            });
             
-            // Inicialización de la aplicación
+            colorBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'i-text') {
+                    colorOptions.classList.toggle('hidden');
+                    fontOptions.classList.add('hidden');
+                } else {
+                    showModal("Por favor, selecciona un elemento de texto primero para editarlo.");
+                }
+            });
+            
+            boldBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'i-text') {
+                    const newWeight = activeObject.fontWeight === 'bold' ? 'normal' : 'bold';
+                    activeObject.set({ fontWeight: newWeight });
+                    canvas.renderAll();
+                } else {
+                    showModal("Por favor, selecciona un elemento de texto primero para editarlo.");
+                }
+            });
+
+            italicBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'i-text') {
+                    const newStyle = activeObject.fontStyle === 'italic' ? 'normal' : 'italic';
+                    activeObject.set({ fontStyle: newStyle });
+                    canvas.renderAll();
+                } else {
+                    showModal("Por favor, selecciona un elemento de texto primero para editarlo.");
+                }
+            });
+
+            underlineBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'i-text') {
+                    const newUnderline = !activeObject.underline;
+                    activeObject.set({ underline: newUnderline });
+                    canvas.renderAll();
+                } else {
+                    showModal("Por favor, selecciona un elemento de texto primero para editarlo.");
+                }
+            });
+
+            document.querySelectorAll('.font-option').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const fontName = e.target.dataset.font;
+                    const activeObject = canvas.getActiveObject();
+                    if (activeObject && activeObject.type === 'i-text') {
+                        activeObject.set({ fontFamily: fontName });
+                        canvas.renderAll();
+                    }
+                    fontOptions.classList.add('hidden');
+                });
+            });
+
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.addEventListener('click', (e) => {
+                    const color = e.target.dataset.color;
+                    const activeObject = canvas.getActiveObject();
+                    if (activeObject && activeObject.type === 'i-text') {
+                        activeObject.set({ fill: color });
+                        canvas.renderAll();
+                    }
+                    colorOptions.classList.add('hidden');
+                });
+            });
+
+            bringForwardBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'image') {
+                    activeObject.bringForward();
+                    canvas.renderAll();
+                }
+            });
+
+            sendBackwardBtn.addEventListener('click', () => {
+                const activeObject = canvas.getActiveObject();
+                if (activeObject && activeObject.type === 'image') {
+                    activeObject.sendBackward();
+                    canvas.renderAll();
+                }
+            });
+
             pages = [{ id: crypto.randomUUID(), objects: [] }];
             resizeCanvas();
             renderCurrentPage();
