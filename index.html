@@ -45,10 +45,10 @@
             <span class="font-bold text-xl select-none">PEDRiiXD ALVEZ</span>
         </div>
         <nav class="flex items-center space-x-3">
-            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-2 rounded hover:bg-green-700 transition">
+            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-3 rounded hover:bg-green-700 transition text-xl">
                 <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-2 rounded hover:bg-green-700 transition">
+            <a href="https://wa.me/543755298440" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="p-3 rounded hover:bg-green-700 transition text-xl">
                 <i class="fa-brands fa-whatsapp"></i>
             </a>
         </nav>
@@ -58,7 +58,7 @@
         <!-- Editor principal -->
         <div class="flex-1 flex flex-col items-center p-2 md:p-4 bg-gray-200 rounded-lg shadow-inner">
             <!-- Nueva descripción sobre cómo exportar -->
-            <div class="text-center p-4">
+            <div class="text-center p-2">
                 <p class="text-lg text-gray-700">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo. Después, puedes usar el botón de WhatsApp para enviarlo.</p>
             </div>
             
@@ -153,6 +153,8 @@
             canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
 
             // Ajustar el tamaño del canvas al contenedor
+            // El canvas se ajusta dinámicamente para ocupar el máximo espacio disponible
+            // mientras mantiene las proporciones de una hoja carta (215.9 x 279.4 mm).
             function resizeCanvas() {
                 const containerWidth = canvasContainer.clientWidth;
                 const containerHeight = canvasContainer.clientHeight;
