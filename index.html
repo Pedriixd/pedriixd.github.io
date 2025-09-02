@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', sans-serif;
+        }
         .modal {
             transition: all 0.3s ease-in-out;
         }
@@ -24,112 +26,111 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-gray-900 flex flex-col h-screen">
+<body class="bg-slate-100 text-gray-900 flex flex-col h-screen">
 
     <!-- Modal para mensajes -->
     <div id="message-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-inactive">
-        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center border border-gray-200">
             <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
             <div id="modal-buttons" class="flex flex-col gap-2">
-                <button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition">
+                <button onclick="hideModal()" class="bg-teal-500 text-white px-4 py-2 rounded-xl hover:bg-teal-600 transition shadow-lg">
                     Cerrar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Encabezado simplificado para móvil -->
-    <header class="flex items-center justify-between bg-emerald-300 text-gray-900 px-4 py-2 shadow-md rounded-b-md">
+    <!-- Encabezado con mejor diseño -->
+    <header class="flex items-center justify-between bg-teal-500 text-white px-4 py-3 shadow-lg rounded-b-xl md:px-6">
         <div class="flex items-center space-x-3">
-            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full">
-            <span class="font-bold text-xl select-none">STICKEAME</span>
+            <img src="https://placehold.co/40x40/2dd4bf/ffffff?text=S" alt="STICKEAME Logo" class="h-10 w-10 rounded-full">
+            <span class="font-bold text-2xl select-none">STICKEAME</span>
         </div>
-        <nav class="flex items-center space-x-3">
-            <!-- Botón de "Galería" en la parte superior con texto -->
-            <a href="https://drive.google.com/drive/folders/1ZeBNXXJZZ4RfSIYu_DnhULqT3hNFUrs5" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded-md transition shadow-md">
+        <nav class="flex items-center space-x-4">
+            <a href="https://drive.google.com/drive/folders/1ZeBNXXJZZ4RfSIYu_DnhULqT3hNFUrs5" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-2 rounded-xl transition shadow-md">
                 <i class="fa-solid fa-folder-open text-white"></i>
-                <span class="font-semibold text-white">Galería</span>
+                <span class="font-semibold text-sm md:text-base text-white">Galería</span>
             </a>
             <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" 
-               class="p-4 rounded-lg bg-gradient-to-tr from-yellow-300 via-pink-500 to-purple-600 text-white shadow-lg 
-                      hover:scale-110 transition-transform duration-300 text-2xl font-semibold">
-                <i class="fa-brands fa-instagram"></i>
+               class="p-2 rounded-lg bg-gradient-to-tr from-yellow-300 via-pink-500 to-purple-600 text-white shadow-lg 
+                      hover:scale-110 transition-transform duration-300">
+                <i class="fa-brands fa-instagram text-xl"></i>
             </a>
         </nav>
     </header>
 
-    <div class="flex flex-col flex-1 p-2 md:p-4">
+    <div class="flex flex-col flex-1 p-4 md:p-8">
         <!-- Editor principal -->
-        <div class="flex-1 flex flex-col md:flex-row items-stretch bg-white rounded-lg shadow-inner">
-            <!-- Nueva descripción sobre cómo exportar -->
-            <div class="text-center p-2 md:hidden">
-                <p class="text-lg text-gray-800">¡Genial! Una vez que tu plancha esté terminada, haz clic en "Descargar y enviar" para obtener el archivo.</p>
+        <div class="flex-1 flex flex-col md:flex-row items-stretch bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
+            <!-- Nueva descripción sobre cómo exportar para móvil -->
+            <div class="text-center p-4 md:hidden">
+                <p class="text-lg text-gray-800">¡Genial! Una vez que tu plancha esté lista, haz clic en "Descargar y enviar".</p>
             </div>
             
-            <div id="canvas-container" class="flex-1 flex items-center justify-center w-full">
-                <canvas id="canvas" class="shadow-2xl"></canvas>
+            <div id="canvas-container" class="flex-1 flex items-center justify-center p-4 w-full">
+                <canvas id="canvas" class="shadow-2xl rounded-xl border border-gray-300"></canvas>
             </div>
 
             <!-- Panel de opciones para texto -->
-            <div id="text-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-l border-gray-200 bg-gray-50 rounded-r-lg">
+            <div id="text-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-t md:border-t-0 md:border-l border-gray-200 bg-gray-50 rounded-b-2xl md:rounded-l-none md:rounded-r-3xl">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-gray-800">Editar Texto</h2>
-                    <button id="close-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200">
+                    <button id="close-panel" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 transition">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                <div class="flex flex-col space-y-2">
-                    <button id="fontBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                <div class="flex flex-col space-y-3">
+                    <button id="fontBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-font mr-2"></i>Fuentes
                     </button>
-                    <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-gray-100 rounded-md">
-                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Inter">Inter</button>
-                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Arial">Arial</button>
-                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Times New Roman">Times New Roman</button>
-                        <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Comic Neue">Comic Sans</button>
+                    <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-gray-100 rounded-xl">
+                        <button class="font-option text-left p-1 rounded-lg hover:bg-gray-200 transition" data-font="Inter">Inter</button>
+                        <button class="font-option text-left p-1 rounded-lg hover:bg-gray-200 transition" data-font="Arial">Arial</button>
+                        <button class="font-option text-left p-1 rounded-lg hover:bg-gray-200 transition" data-font="Times New Roman">Times New Roman</button>
+                        <button class="font-option text-left p-1 rounded-lg hover:bg-gray-200 transition" data-font="Comic Neue">Comic Sans</button>
                     </div>
                     
-                    <button id="colorBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                    <button id="colorBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-palette mr-2"></i>Colores
                     </button>
-                    <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-gray-100 rounded-md">
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #000000;" data-color="#000000"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FF0000;" data-color="#FF0000"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #008000;" data-color="#008000"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #0000FF;" data-color="#0000FF"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFA500;" data-color="#FFA500"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #800080;" data-color="#800080"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #00CED1;" data-color="#00CED1"></div>
-                        <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #A52A2A;" data-color="#A52A2A"></div>
+                    <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-gray-100 rounded-xl">
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #000000;" data-color="#000000"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #FF0000;" data-color="#FF0000"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #008000;" data-color="#008000"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #0000FF;" data-color="#0000FF"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #FFA500;" data-color="#FFA500"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #800080;" data-color="#800080"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #00CED1;" data-color="#00CED1"></div>
+                        <div class="color-swatch w-8 h-8 rounded-full cursor-pointer shadow-sm hover:scale-110 transition" style="background-color: #A52A2A;" data-color="#A52A2A"></div>
                     </div>
                     
-                    <button id="boldBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                    <button id="boldBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-bold mr-2"></i>Negrita
                     </button>
-                    <button id="italicBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                    <button id="italicBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-italic mr-2"></i>Cursiva
                     </button>
-                    <button id="underlineBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                    <button id="underlineBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-underline mr-2"></i>Subrayado
                     </button>
                 </div>
             </div>
 
             <!-- Nuevo panel de capas para imágenes -->
-            <div id="layer-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-l border-gray-200 bg-gray-50 rounded-r-lg">
+            <div id="layer-panel" class="hidden flex-shrink-0 w-full md:w-64 p-4 border-t md:border-t-0 md:border-l border-gray-200 bg-gray-50 rounded-b-2xl md:rounded-l-none md:rounded-r-3xl">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-gray-800">Capas de Imagen</h2>
-                    <button id="close-layer-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200">
+                    <button id="close-layer-panel" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 transition">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                <div class="flex flex-col space-y-2">
-                    <button id="bringForwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                <div class="flex flex-col space-y-3">
+                    <button id="bringForwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-arrow-up-long mr-2"></i>Subir capa
                     </button>
-                    <button id="sendBackwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-md shadow-sm border border-gray-300 hover:bg-gray-100 transition">
+                    <button id="sendBackwardBtn" class="bg-white text-gray-700 font-semibold py-2 px-4 rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 transition">
                         <i class="fa-solid fa-arrow-down-long mr-2"></i>Bajar capa
                     </button>
                 </div>
@@ -138,26 +139,26 @@
         </div>
     </div>
 
-    <!-- Botones de acción en la parte inferior, con nuevo color y sombra -->
-    <footer class="grid grid-cols-2 md:grid-cols-5 gap-2 bg-emerald-300 p-2 md:p-4 rounded-t-md shadow-inner text-gray-900">
-        <button id="exportPdfBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
-            <i class="fa-solid fa-file-pdf"></i>
+    <!-- Botones de acción con estilo mejorado -->
+    <footer class="grid grid-cols-2 md:grid-cols-5 gap-3 bg-teal-500 p-4 rounded-t-3xl shadow-inner text-white">
+        <button id="exportPdfBtn" class="flex items-center justify-center gap-1 bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-500 hover:to-emerald-600 px-4 py-3 rounded-2xl transition-all duration-300 shadow-xl" type="button">
+            <i class="fa-solid fa-paper-plane mr-2"></i>
             Descargar y enviar
         </button>
-        <label for="upload-images" class="flex items-center justify-center gap-1 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition select-none shadow-xl">
+        <label for="upload-images" class="flex items-center justify-center gap-1 cursor-pointer bg-white/20 hover:bg-white/30 px-4 py-3 rounded-2xl transition shadow-xl select-none">
             <i class="fa-solid fa-image"></i>
             Subir imágenes
             <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
         </label>
-        <button id="addTextBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
+        <button id="addTextBtn" class="flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-3 rounded-2xl transition shadow-xl" type="button">
             <i class="fa-solid fa-font"></i>
             Añadir Texto
         </button>
-        <button id="clearPageBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
+        <button id="clearPageBtn" class="flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-3 rounded-2xl transition shadow-xl" type="button">
             <i class="fa-solid fa-trash-can"></i>
             Limpiar página
         </button>
-        <button id="deleteSelectionBtn" class="flex items-center justify-center gap-1 bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded transition shadow-xl" type="button">
+        <button id="deleteSelectionBtn" class="flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 px-4 py-3 rounded-2xl transition shadow-xl" type="button">
             <i class="fa-solid fa-times"></i>
             Eliminar elemento
         </button>
@@ -165,7 +166,7 @@
 
     <script>
         // Funciones del modal
-        function showModal(message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition">Cerrar</button>') {
+        function showModal(message, buttonsHtml = '<button onclick="hideModal()" class="bg-teal-500 text-white px-4 py-2 rounded-xl hover:bg-teal-600 transition shadow-md">Cerrar</button>') {
             const modal = document.getElementById('message-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalButtons = document.getElementById('modal-buttons');
@@ -227,7 +228,7 @@
                 
                 const containerAspectRatio = containerWidth / containerHeight;
                 if (containerAspectRatio > A4_ASPECT_RATIO) {
-                    newHeight = containerHeight;
+                    newHeight = containerHeight - 64; // Adjust for footer
                     newWidth = newHeight * A4_ASPECT_RATIO;
                 } else {
                     newWidth = containerWidth;
@@ -374,10 +375,10 @@
                     hideModal();
                     showModal(
                         '¡Tu plancha se ha descargado!<br>Ahora puedes adjuntar el archivo que acabas de guardar y enviarlo por WhatsApp.',
-                        `<a href="https://wa.me/543755298440?text=${encodeURIComponent('Hola, aquí te envío mi diseño de stickers para imprimir.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition shadow-md text-center">
+                        `<a href="https://wa.me/543755298440?text=${encodeURIComponent('Hola, aquí te envío mi diseño de stickers para imprimir.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-xl hover:bg-green-600 transition shadow-md text-center">
                             <i class="fa-brands fa-whatsapp mr-2"></i>Ir a WhatsApp
                         </a>
-                        <button onclick="hideModal()" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400 transition shadow-md">
+                        <button onclick="hideModal()" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-400 transition shadow-md">
                             Cerrar
                         </button>`
                     );
