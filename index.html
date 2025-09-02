@@ -2,10 +2,15 @@
 <header class="flex flex-col sm:flex-row items-center justify-between 
     bg-green-900 text-white px-4 py-2 shadow-md rounded-b-md gap-2 sm:gap-0">
     <div class="flex items-center space-x-3">
-        <img src="https://i.postimg.cc/Qx78s9p9/image-13d0ba-recortada.jpg"
+        <!-- Logo dinámico -->
+        <img src="/logo.png"
              alt="PEDRiiXD ALVEZ Logo" 
-             class="h-10 w-auto rounded-full">
-        <span class="font-bold text-lg sm:text-xl select-none">PEDRiiXD ALVEZ</span>
+             class="h-12 w-auto rounded-full"
+             onerror="this.style.display='none'; document.getElementById('brandText').style.display='inline';">
+        <!-- Texto fallback si no carga el logo -->
+        <span id="brandText" class="font-bold text-lg sm:text-xl select-none hidden">
+            PEDRiiXD ALVEZ
+        </span>
     </div>
     <nav class="flex flex-wrap items-center justify-center gap-2">
         <a href="https://www.instagram.com/pedriixd.alvez" target="_blank"
@@ -24,38 +29,3 @@
         </button>
     </nav>
 </header>
-
-<!-- Toolbar superior -->
-<div class="flex flex-wrap items-center justify-center gap-2 bg-green-800 
-    p-2 rounded-t-md shadow-inner text-white w-full overflow-x-auto">
-    <label for="upload-images" 
-        class="flex items-center gap-1 cursor-pointer bg-green-700 
-        hover:bg-green-900 px-2 py-1 sm:px-3 rounded transition select-none text-sm">
-        <i class="fa-solid fa-image"></i>
-        Subir
-        <input id="upload-images" type="file" accept="image/*" multiple class="hidden">
-    </label>
-    <button id="clearPageBtn" class="bg-green-700 hover:bg-green-900 px-2 py-1 rounded text-sm">
-        <i class="fa-solid fa-trash-can"></i>
-        Limpiar
-    </button>
-    <!-- demás botones igual pero con px-2 py-1 text-sm -->
-</div>
-
-<!-- Canvas -->
-<div id="canvas-container" 
-     class="flex-1 flex items-center justify-center overflow-auto p-2 w-full">
-    <canvas id="canvas" class="max-w-full h-auto border-4 border-cyan-400"></canvas>
-</div>
-
-<!-- Toolbar inferior -->
-<div class="flex items-center justify-center gap-3 p-2 bg-green-900 text-white 
-    rounded-b-md shadow-inner w-full overflow-x-auto">
-    <button id="prevPageBtn" class="p-2 rounded hover:bg-green-700 transition">
-        <i class="fa-solid fa-arrow-left"></i>
-    </button>
-    <span id="pageInfo" class="text-sm sm:text-base"></span>
-    <button id="nextPageBtn" class="p-2 rounded hover:bg-green-700 transition">
-        <i class="fa-solid fa-arrow-right"></i>
-    </button>
-</div>
