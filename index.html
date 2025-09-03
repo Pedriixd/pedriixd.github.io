@@ -29,11 +29,12 @@
 
     <header class="flex items-center justify-between bg-emerald-300 text-gray-900 px-4 py-2 shadow-md rounded-b-md z-20">
         <div class="flex items-center space-x-3">
-            <button id="toggle-gallery-btn" class="md:hidden p-2 rounded-md hover:bg-emerald-400">
+            <button id="toggle-gallery-btn" class="md:hidden flex items-center gap-2 bg-white text-emerald-700 font-semibold px-3 py-1 rounded-md shadow hover:bg-gray-200 transition">
                 <i class="fa-solid fa-images"></i>
+                <span>Galería</span>
             </button>
-            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full">
-            <span class="font-bold text-xl select-none">STICKEAME</span>
+            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full hidden sm:block">
+            <span class="font-bold text-xl select-none hidden sm:inline">STICKEAME</span>
         </div>
         <nav class="flex items-center space-x-3">
             <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-4 rounded-lg bg-gradient-to-tr from-yellow-300 via-pink-500 to-purple-600 text-white shadow-lg hover:scale-110 transition-transform duration-300 text-2xl">
@@ -126,7 +127,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const JSON_ENDPOINT = "https://script.google.com/macros/s/AKfycbxwS_B_g5YpCcQ5gytZprlzLCk70ZTcUK7_dTeDv37pL9wHq3wIT7E0t-Zulnf__grw/exec";
+            const JSON_ENDPOINT = "https://script.google.com/macros/s/AKfycbxwS_B_g5YpCcQ5gytZprlzLCk70ZTcUK7_dTeDv37pL9wHq3IT7E0t-Zulnf__grw/exec";
             const CATEGORIES_JSON_PATH = "categorias.json";
             const A4_ASPECT_RATIO = 210 / 297;
             const A4_WIDTH_MM = 210;
@@ -156,7 +157,7 @@
                     localStorage.setItem('stickeameState', JSON.stringify(state));
                 } catch (error) {
                     console.error("Error al guardar el estado:", error);
-                    showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento esté lleno.");
+                    showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento del navegador esté lleno.");
                 }
             };
             
@@ -302,23 +303,33 @@
                 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
                     syncAndSave();
                     const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF({ unit: "mm", format: "a4" });
+                    const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
                     showModal("Exportando... Por favor, espera.");
                     try {
                         for (let i = 0; i < pages.length; i++) {
                             const tempCanvas = new fabric.StaticCanvas(null);
-                            await new Promise(resolve => tempCanvas.loadFromJSON({ objects: pages[i].objects }, () => {
-                                tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
-                                tempCanvas.setBackgroundColor('#FFFFFF', resolve);
-                            }));
+                            
+                            // Carga los objetos en el canvas temporal de alta resolución
+                            await new Promise(resolve => {
+                                tempCanvas.loadFromJSON({ objects: pages[i].objects }, () => {
+                                    tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
+                                    tempCanvas.setBackgroundColor('#FFFFFF', resolve);
+                                });
+                            });
+
                             const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
                             if (i > 0) pdf.addPage();
+                            
+                            // ================= MODIFICADO: Lógica de tamaño de PDF =================
+                            // Se asegura que la imagen ocupe exactamente las dimensiones de una hoja A4 en el PDF.
                             pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
+                            // =====================================================================
                         }
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
                         showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp</a><button onclick="hideModal()" class="mt-2 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400">Cerrar</button>`);
                     } catch (err) {
+                        console.error("Error al exportar:", err);
                         showModal("Hubo un error al exportar el PDF.");
                     }
                 });
@@ -354,7 +365,6 @@
                 
                 canvas.on({ 'object:added': syncAndSave, 'object:removed': syncAndSave, 'object:modified': syncAndSave, 'selection:created': e => togglePanels(e.target), 'selection:updated': e => togglePanels(e.target), 'selection:cleared': () => togglePanels(null) });
                 
-                // --- Lógica para el panel de texto ---
                 const textPanel = document.getElementById('text-panel');
                 const layerPanel = document.getElementById('layer-panel');
                 document.getElementById('close-panel').addEventListener('click', () => textPanel.classList.add('hidden'));
@@ -376,8 +386,8 @@
                 document.getElementById('italicBtn').addEventListener('click', () => setTextProperty('fontStyle', canvas.getActiveObject()?.fontStyle === 'italic' ? 'normal' : 'italic'));
                 document.getElementById('underlineBtn').addEventListener('click', () => setTextProperty('underline', !canvas.getActiveObject()?.underline));
 
-                document.querySelectorAll('.font-option').forEach(btn => btn.addEventListener('click', () => setTextProperty('fontFamily', btn.dataset.font)));
-                document.querySelectorAll('.color-swatch').forEach(swatch => swatch.addEventListener('click', () => setTextProperty('fill', swatch.dataset.color)));
+                document.querySelectorAll('.font-option').forEach(btn => btn.addEventListener('click', () => {setTextProperty('fontFamily', btn.dataset.font); btn.parentElement.classList.add('hidden');}));
+                document.querySelectorAll('.color-swatch').forEach(swatch => swatch.addEventListener('click', () => {setTextProperty('fill', swatch.dataset.color); swatch.parentElement.classList.add('hidden');}));
                 
                 window.addEventListener('resize', resizeCanvas);
             }
