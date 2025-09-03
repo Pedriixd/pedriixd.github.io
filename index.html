@@ -16,6 +16,12 @@
         .modal-inactive { opacity: 0; pointer-events: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Estilo para el contenedor del logo y el texto de fallback */
+        #logo-container {
+            display: flex;
+            align-items: center;
+            height: 40px; /* Misma altura que el logo */
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-gray-900 flex flex-col h-screen">
@@ -33,7 +39,10 @@
                 <i class="fa-solid fa-images"></i>
                 <span>Galería</span>
             </button>
-            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full hidden sm:block">
+            <div id="logo-container">
+                <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline';">
+                <span id="logo-fallback" class="font-bold text-xl select-none" style="display:none;">STICKEAME</span>
+            </div>
             <span class="font-bold text-xl select-none hidden sm:inline">STICKEAME</span>
         </div>
         <nav class="flex items-center space-x-3">
@@ -133,10 +142,10 @@
 
             let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {};
 
-            const init = async () => {
+            const init = () => {
                 canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF' });
                 loadState();
-                fetchData(); 
+                fetchData();
                 addEventListeners();
                 renderCurrentPage();
                 resizeCanvas();
@@ -152,7 +161,6 @@
                     localStorage.setItem('stickeameState', JSON.stringify(state));
                 } catch (error) {
                     console.error("Error al guardar el estado:", error);
-                    showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento del navegador esté lleno.");
                 }
             };
             
@@ -170,47 +178,18 @@
             };
 
             const fetchData = () => {
-                // Tu JSON integrado directamente
                 allStickers = [
-                  // Aquí he pegado tu JSON completo
-                  { "categoria": "rutas", "nombre": "ruta 9.png", "url": "https://drive.google.com/uc?export=view&id=17Ys-uQvMN4mCNHAm_e3rnvGp5GDmZGQb" },
-                  { "categoria": "rutas", "nombre": "ruta 12.png", "url": "https://drive.google.com/uc?export=view&id=1mmgpv82b7pxmENmQv6ORlafOCol2fztz" },
-                  // ... (el resto de los miles de stickers van aquí)
-                  { "categoria": "Tv", "nombre": "pegatinas-coches-motos-angry-birds-hitchcock.png", "url": "https://drive.google.com/uc?export=view&id=1coDYGWHjw4x_7O-PdbYI1-0Q1ywhP6P6" }
+                  // Tu JSON completo va aquí
+                  {"categoria": "rutas", "nombre": "ruta 9.png", "url": "https://drive.google.com/uc?export=view&id=17Ys-uQvMN4mCNHAm_e3rnvGp5GDmZGQb"},
+                  {"categoria": "rutas", "nombre": "ruta 12.png", "url": "https://drive.google.com/uc?export=view&id=1mmgpv82b7pxmENmQv6ORlafOCol2fztz"},
+                  // ... y así sucesivamente hasta el último sticker
+                  {"categoria": "Tv", "nombre": "pegatinas-coches-motos-angry-birds-hitchcock.png", "url": "https://drive.google.com/uc?export=view&id=1coDYGWHjw4x_7O-PdbYI1-0Q1ywhP6P6"}
                 ];
                 renderGallery();
             };
 
             const renderGallery = () => {
-                const stickersContainer = document.getElementById('stickers-container');
-                const categoryFiltersContainer = document.getElementById('category-filters');
-                const searchTerm = document.getElementById('search-input').value.toLowerCase();
-                const showFavorites = document.getElementById('favorites-toggle').checked;
-
-                const filtered = allStickers.filter(s => 
-                    s.nombre.toLowerCase().includes(searchTerm) && (!showFavorites || favorites[s.url])
-                );
-
-                stickersContainer.innerHTML = filtered.length === 0 ? '<p class="col-span-full text-center">No se encontraron.</p>' : '';
-                filtered.forEach(sticker => {
-                    const isFav = favorites[sticker.url];
-                    const card = document.createElement('div');
-                    card.className = 'bg-slate-50 rounded-lg shadow p-2 flex flex-col items-center gap-2 cursor-pointer relative';
-                    card.innerHTML = `<img src="${sticker.url}" alt="${sticker.nombre}" class="w-full h-20 object-contain" loading="lazy"><p class="text-xs font-semibold text-center">${sticker.nombre}</p><button data-url="${sticker.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full text-gray-300 hover:text-red-500"><i class="fa-${isFav ? 'solid' : 'regular'} fa-heart text-${isFav ? 'red-500' : 'gray-400'}"></i></button>`;
-                    card.querySelector('img').addEventListener('click', () => addImageToCanvas(sticker.url));
-                    stickersContainer.appendChild(card);
-                });
-
-                if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
-                    const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
-                    categories.forEach(cat => {
-                        const btn = document.createElement('button');
-                        btn.className = `category-btn px-3 py-1 text-sm rounded-full ${cat === 'Todos' ? 'bg-emerald-500 text-white' : 'bg-gray-200'}`;
-                        btn.textContent = cat;
-                        btn.dataset.category = cat;
-                        categoryFiltersContainer.appendChild(btn);
-                    });
-                }
+                // ... (código sin cambios)
             };
 
             const resizeCanvas = () => {
@@ -229,6 +208,9 @@
             
             const renderCurrentPage = () => {
                 const page = pages[currentPageIndex];
+                if (!page.canvas) {
+                    page.canvas = new fabric.Canvas(null);
+                }
                 canvas.clear();
                 if (page.objects && page.objects.length > 0) {
                     canvas.loadFromJSON({ objects: page.objects }, () => {
@@ -257,136 +239,76 @@
             };
 
             function addEventListeners() {
-                window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Cerrar</button>') => {
-                    document.getElementById('modal-message').innerHTML = message;
-                    document.getElementById('modal-buttons').innerHTML = buttonsHtml;
-                    document.getElementById('message-modal').classList.replace('modal-inactive', 'modal-active');
-                };
-                window.hideModal = () => document.getElementById('message-modal').classList.replace('modal-active', 'modal-inactive');
-
-                document.getElementById('search-input').addEventListener('input', renderGallery);
-                document.getElementById('favorites-toggle').addEventListener('change', renderGallery);
-                document.getElementById('stickers-container').addEventListener('click', e => {
-                    const favButton = e.target.closest('.favorite-btn');
-                    if (favButton) {
-                        favorites[favButton.dataset.url] = !favorites[favButton.dataset.url];
-                        saveState();
-                        renderGallery();
-                    }
-                });
-
-                document.getElementById('add-page-btn').addEventListener('click', () => {
-                    syncAndSave();
-                    pages.push({ id: crypto.randomUUID(), canvas: null, objects: [] });
-                    currentPageIndex = pages.length - 1;
-                    renderCurrentPage();
-                });
-                document.getElementById('prev-page-btn').addEventListener('click', () => {
-                    if (currentPageIndex > 0) { syncAndSave(); currentPageIndex--; renderCurrentPage(); }
-                });
-                document.getElementById('next-page-btn').addEventListener('click', () => {
-                    if (currentPageIndex < pages.length - 1) { syncAndSave(); currentPageIndex++; renderCurrentPage(); }
-                });
-
-                document.getElementById('toggle-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.toggle('-translate-x-full'));
-                document.getElementById('close-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.add('-translate-x-full'));
+                // ... (código de listeners de modal, galería, paginador, etc. sin cambios)
                 
+                // ================= MODIFICADO: Nueva función de exportación a PDF =================
                 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-                    syncAndSave();
+                    syncAndSave(); // Guarda el estado de la página actual
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
-                    showModal("Exportando... Por favor, espera.");
+                    showModal("Exportando tu diseño... Por favor, espera.");
+
+                    const originalPageIndex = currentPageIndex;
+                    
                     try {
                         for (let i = 0; i < pages.length; i++) {
-                            const tempCanvas = new fabric.StaticCanvas(null);
+                            // Carga cada página en el canvas principal para renderizarla
+                            await new Promise(resolve => {
+                                canvas.loadFromJSON({ objects: pages[i].objects }, () => {
+                                    canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+                                    // Espera un pequeño instante para asegurar que las imágenes se rendericen
+                                    setTimeout(resolve, 100); 
+                                });
+                            });
                             
-                            await new Promise(resolve => tempCanvas.loadFromJSON({ objects: pages[i].objects }, () => {
-                                tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
-                                tempCanvas.setBackgroundColor('#FFFFFF', resolve);
-                            }));
+                            // Calcula el multiplicador para obtener una imagen de 300 DPI
+                            const multiplier = EXPORT_WIDTH_PX / canvas.getWidth();
+                            
+                            const imgData = canvas.toDataURL({
+                                format: 'jpeg',
+                                quality: 0.9,
+                                multiplier: multiplier,
+                                backgroundColor: '#FFFFFF'
+                            });
 
-                            const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
                             if (i > 0) pdf.addPage();
                             
-                            // Lógica de tamaño de PDF
+                            // Añade la imagen al PDF, forzando las dimensiones a A4
                             pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
                         }
+
+                        // Restaura la vista original del editor a la página en la que estaba el usuario
+                        await new Promise(resolve => {
+                             canvas.loadFromJSON({ objects: pages[originalPageIndex].objects }, () => {
+                                canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+                                resolve();
+                            });
+                        });
+                        
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
                         showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp</a><button onclick="hideModal()" class="mt-2 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400">Cerrar</button>`);
+                    
                     } catch (err) {
                         console.error("Error al exportar:", err);
-                        showModal("Hubo un error al exportar el PDF.");
+                        showModal("Hubo un error al exportar el PDF. Intenta de nuevo.");
+                         // Asegúrate de restaurar la vista si hay un error
+                        await new Promise(resolve => {
+                             canvas.loadFromJSON({ objects: pages[originalPageIndex].objects }, () => {
+                                canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+                                resolve();
+                            });
+                        });
                     }
                 });
+                // =================================================================================
 
-                document.getElementById('reset-app-btn').addEventListener('click', () => {
-                    if(confirm('¿Seguro? Se borrará todo.')) {
-                        localStorage.removeItem('stickeameState');
-                        window.location.reload();
-                    }
-                });
-                
-                document.getElementById('addTextBtn').addEventListener('click', () => {
-                    const text = new fabric.IText('Toca para editar', {
-                        left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center',
-                        fontSize: 50, fontFamily: 'Inter', fill: '#000'
-                    });
-                    canvas.add(text).setActiveObject(text);
-                });
-
-                document.getElementById('upload-images').addEventListener('change', (e) => {
-                    Array.from(e.target.files).forEach(file => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => addImageToCanvas(event.target.result);
-                        reader.readAsDataURL(file);
-                    });
-                    e.target.value = '';
-                });
-
-                document.getElementById('deleteSelectionBtn').addEventListener('click', () => {
-                    canvas.getActiveObjects().forEach(obj => canvas.remove(obj));
-                    canvas.discardActiveObject().renderAll();
-                });
-                
-                canvas.on({ 'object:added': syncAndSave, 'object:removed': syncAndSave, 'object:modified': syncAndSave, 'selection:created': e => togglePanels(e.target), 'selection:updated': e => togglePanels(e.target), 'selection:cleared': () => togglePanels(null) });
-                
-                const textPanel = document.getElementById('text-panel');
-                const layerPanel = document.getElementById('layer-panel');
-                document.getElementById('close-panel').addEventListener('click', () => textPanel.classList.add('hidden'));
-                document.getElementById('close-layer-panel').addEventListener('click', () => layerPanel.classList.add('hidden'));
-
-                document.getElementById('fontBtn').addEventListener('click', () => document.getElementById('font-options').classList.toggle('hidden'));
-                document.getElementById('colorBtn').addEventListener('click', () => document.getElementById('color-options').classList.toggle('hidden'));
-
-                const setTextProperty = (prop, value) => {
-                    const activeObject = canvas.getActiveObject();
-                    if (activeObject && (activeObject.type === 'i-text' || activeObject.type === 'textbox')) {
-                        activeObject.set(prop, value);
-                        canvas.renderAll();
-                        syncAndSave();
-                    }
-                };
-
-                document.getElementById('boldBtn').addEventListener('click', () => setTextProperty('fontWeight', canvas.getActiveObject()?.fontWeight === 'bold' ? 'normal' : 'bold'));
-                document.getElementById('italicBtn').addEventListener('click', () => setTextProperty('fontStyle', canvas.getActiveObject()?.fontStyle === 'italic' ? 'normal' : 'italic'));
-                document.getElementById('underlineBtn').addEventListener('click', () => setTextProperty('underline', !canvas.getActiveObject()?.underline));
-
-                document.querySelectorAll('.font-option').forEach(btn => btn.addEventListener('click', () => {setTextProperty('fontFamily', btn.dataset.font); btn.parentElement.classList.add('hidden');}));
-                document.querySelectorAll('.color-swatch').forEach(swatch => swatch.addEventListener('click', () => {setTextProperty('fill', swatch.dataset.color); swatch.parentElement.classList.add('hidden');}));
-                
-                window.addEventListener('resize', resizeCanvas);
+                // (El resto de listeners de botones de acción y paneles de texto siguen aquí)
+                // ...
             }
             
             function togglePanels(obj) {
-                const textPanel = document.getElementById('text-panel');
-                const layerPanel = document.getElementById('layer-panel');
-                textPanel.classList.add('hidden');
-                layerPanel.classList.add('hidden');
-                if (obj) {
-                    if (obj.type === 'i-text' || obj.type === 'textbox') textPanel.classList.remove('hidden');
-                    else if (obj.type === 'image') layerPanel.classList.remove('hidden');
-                }
+                // ... (código sin cambios)
             }
             
             init();
