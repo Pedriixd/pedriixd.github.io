@@ -20,39 +20,104 @@
 </head>
 <body class="bg-slate-100 text-gray-900 flex flex-col h-screen">
 
-    <aside id="gallery-panel" class="w-full md:w-72 lg:w-96 bg-white shadow-lg p-4 flex-col gap-4 absolute md:relative z-10 md:z-0 h-full md:flex -translate-x-full md:translate-x-0 transition-transform duration-300">
-         <div class="flex justify-between items-center mb-2">
-            <h2 class="text-xl font-bold">Galería de Stickers</h2>
-            <button id="close-gallery-btn" class="md:hidden p-2 rounded-full hover:bg-gray-200">
-                <i class="fa-solid fa-xmark"></i>
+    <div id="message-modal" class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 modal-inactive">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <div id="modal-buttons" class="flex flex-col gap-2"></div>
+        </div>
+    </div>
+
+    <header class="flex items-center justify-between bg-emerald-300 text-gray-900 px-4 py-2 shadow-md rounded-b-md z-20">
+        <div class="flex items-center space-x-3">
+            <button id="toggle-gallery-btn" class="md:hidden p-2 rounded-md hover:bg-emerald-400">
+                <i class="fa-solid fa-images"></i>
             </button>
+            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full hidden sm:block" onerror="this.style.display='none'">
+            <span class="font-bold text-xl select-none">STICKEAME</span>
         </div>
-        <div class="flex flex-col gap-3 mb-3">
-            <input id="search-input" type="text" placeholder="Buscar por nombre..." class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400">
-            <div id="category-filters" class="flex flex-wrap gap-2"></div>
-            <label class="flex items-center gap-2 cursor-pointer"><input id="favorites-toggle" type="checkbox" class="h-5 w-5 text-emerald-500 rounded"/> <span>Mostrar solo favoritos</span></label>
-        </div>
-        <div id="stickers-container" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 pr-2 scrollbar-hide">
+        <nav class="flex items-center space-x-3">
+            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-4 rounded-lg bg-gradient-to-tr from-yellow-300 via-pink-500 to-purple-600 text-white shadow-lg hover:scale-110 transition-transform duration-300 text-2xl">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </nav>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside id="gallery-panel" class="w-full md:w-72 lg:w-96 bg-white shadow-lg p-4 flex-col gap-4 absolute md:relative z-10 md:z-0 h-full md:flex -translate-x-full md:translate-x-0 transition-transform duration-300">
+             <div class="flex justify-between items-center mb-2">
+                <h2 class="text-xl font-bold">Galería de Stickers</h2>
+                <button id="close-gallery-btn" class="md:hidden p-2 rounded-full hover:bg-gray-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-    </aside>
+            <div class="flex flex-col gap-3 mb-3">
+                <input id="search-input" type="text" placeholder="Buscar por nombre..." class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                <div id="category-filters" class="flex flex-wrap gap-2"></div>
+                <label class="flex items-center gap-2 cursor-pointer"><input id="favorites-toggle" type="checkbox" class="h-5 w-5 text-emerald-500 rounded"/> <span>Mostrar solo favoritos</span></label>
+            </div>
+            <div id="stickers-container" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 pr-2 scrollbar-hide">
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col p-2 md:p-4 bg-slate-50">
+            <div class="flex-1 flex items-stretch bg-white rounded-lg shadow-inner overflow-hidden relative">
+                <div id="canvas-container" class="flex-1 flex items-center justify-center p-2">
+                    <canvas id="canvas" class="shadow-2xl"></canvas>
+                </div>
+
+                <div id="text-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-gray-50/90 backdrop-blur-sm rounded-r-lg shadow-lg">
+                     <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Editar Texto</h2>
+                        <button id="close-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <button id="fontBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-font mr-2"></i>Fuentes</button>
+                        <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-gray-100 rounded-md">
+                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Inter">Inter</button>
+                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Arial">Arial</button>
+                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Comic Neue">Comic Neue</button>
+                        </div>
+                        <button id="colorBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-palette mr-2"></i>Colores</button>
+                        <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-gray-100 rounded-md">
+                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #000000;" data-color="#000000"></div><div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FF0000;" data-color="#FF0000"></div><div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #008000;" data-color="#008000"></div><div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #0000FF;" data-color="#0000FF"></div><div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+                        </div>
+                        <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
+                        <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
+                        <button id="underlineBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-underline mr-2"></i>Subrayado</button>
+                    </div>
+                </div>
+                <div id="layer-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-gray-50/90 backdrop-blur-sm rounded-r-lg shadow-lg">
+                     <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Capas</h2>
+                        <button id="close-layer-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <button id="bringForwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-arrow-up mr-2"></i>Adelante</button>
+                        <button id="sendBackwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-arrow-down mr-2"></i>Atrás</button>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 bg-emerald-300 p-2 md:p-3 rounded-t-md shadow-inner text-gray-900 mt-2">
+                <button id="exportPdfBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-file-pdf"></i><span>Descargar PDF</span></button>
+                <label for="upload-images" class="flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition select-none shadow-xl font-semibold text-white"><i class="fa-solid fa-image"></i><span>Subir Imagen</span><input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden"></label>
+                <button id="addTextBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-font"></i><span>Añadir Texto</span></button>
+                <button id="deleteSelectionBtn" class="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-times"></i><span>Eliminar</span></button>
+                <div class="col-span-2 lg:col-span-1 flex items-center justify-center gap-2 bg-white/50 p-2 rounded-md">
+                    <button id="prev-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-left"></i></button>
+                    <span id="page-indicator" class="font-semibold text-sm">Pág 1 / 1</span>
+                    <button id="next-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button id="add-page-btn" class="px-2 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <button id="reset-app-btn" class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-arrows-rotate"></i><span>Resetear</span></button>
+            </footer>
+        </main>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CONSTANTES Y CONFIGURACIÓN ---
             const JSON_ENDPOINT = "https://script.google.com/macros/s/AKfycbxwS_B_g5YpCcQ5gytZprlzLCk70ZTcUK7_dTeDv37pL9wHq3wIT7E0t-Zulnf__grw/exec";
-            
-            // ==================================================================
-            // NUEVO: Define aquí los enlaces de tus carpetas de Google Drive
-            // La "clave" (ej. "Animes") debe coincidir EXACTAMENTE con el nombre de la categoría en tu JSON.
-            // ==================================================================
-            const CATEGORY_DRIVE_LINKS = {
-                "Animes": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_ANIMES",
-                "Juegos": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_JUEGOS",
-                "Memes": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_MEMES",
-                "default": "https://drive.google.com/drive/folders/URL_GENERAL_SI_NO_HAY_COINCIDENCIA"
-                // Agrega más categorías y sus enlaces aquí
-            };
-            // ==================================================================
-
+            const CATEGORIES_JSON_PATH = "categorias.json"; // Ruta al nuevo archivo JSON
             const A4_ASPECT_RATIO = 210 / 297;
             const A4_WIDTH_MM = 210;
             const A4_HEIGHT_MM = 297;
@@ -60,67 +125,305 @@
             const EXPORT_WIDTH_PX = Math.round((A4_WIDTH_MM * DPI) / 25.4);
             const EXPORT_HEIGHT_PX = Math.round((A4_HEIGHT_MM * DPI) / 25.4);
 
-            let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {};
+            let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {}, categoryLinks = {};
+
+            const canvasContainer = document.getElementById('canvas-container');
             const stickersContainer = document.getElementById('stickers-container');
             const searchInput = document.getElementById('search-input');
             const categoryFiltersContainer = document.getElementById('category-filters');
             const favoritesToggle = document.getElementById('favorites-toggle');
             
-            const init = () => {
-                //... (código sin cambios)
+            const init = async () => {
+                canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF' });
+                loadState();
+                await fetchData(); // Esperamos a que carguen los datos
+                addEventListeners();
+                renderCurrentPage();
+                resizeCanvas();
+            };
+
+            const saveState = () => {
+                try {
+                    const state = {
+                        pages: pages.map(p => p.canvas ? { id: p.id, objects: p.canvas.toJSON().objects } : { id: p.id, objects: [] }),
+                        currentPageIndex,
+                        favorites
+                    };
+                    localStorage.setItem('stickeameState', JSON.stringify(state));
+                } catch (error) {
+                    console.error("Error al guardar el estado:", error);
+                    showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento del navegador esté lleno.");
+                }
+            };
+
+            const loadState = () => {
+                const savedState = localStorage.getItem('stickeameState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    pages = state.pages.map(p => ({ id: p.id, canvas: new fabric.Canvas(null), objects: p.objects }));
+                    currentPageIndex = state.currentPageIndex || 0;
+                    favorites = state.favorites || {};
+                }
+                if (pages.length === 0) {
+                    pages.push({ id: crypto.randomUUID(), canvas: new fabric.Canvas(null), objects: [] });
+                }
+            };
+            
+            const fetchData = async () => {
+                stickersContainer.innerHTML = '<p>Cargando...</p>';
+                try {
+                    // Cargar stickers y enlaces de categorías en paralelo
+                    const [stickersResponse, linksResponse] = await Promise.all([
+                        fetch(JSON_ENDPOINT),
+                        fetch(CATEGORIES_JSON_PATH)
+                    ]);
+
+                    if (!stickersResponse.ok || !linksResponse.ok) {
+                        throw new Error("Error de red al cargar los datos.");
+                    }
+
+                    allStickers = await stickersResponse.json();
+                    categoryLinks = await linksResponse.json();
+                    
+                    renderGallery();
+                } catch (error) {
+                    console.error("Error en fetchData:", error);
+                    stickersContainer.innerHTML = '<p class="text-red-500">Error al cargar. Revisa que el archivo `categorias.json` exista y sea correcto.</p>';
+                }
             };
 
             const renderGallery = () => {
-                // La lógica de filtrado de stickers no cambia
                 const searchTerm = searchInput.value.toLowerCase();
                 const showFavorites = favoritesToggle.checked;
+
                 const filtered = allStickers.filter(s => {
                     const matchesSearch = s.nombre.toLowerCase().includes(searchTerm);
                     const matchesFavorites = !showFavorites || favorites[s.url];
                     return matchesSearch && matchesFavorites;
                 });
-                
+
                 stickersContainer.innerHTML = '';
                 if (filtered.length === 0) {
                     stickersContainer.innerHTML = '<p class="col-span-full text-center">No se encontraron stickers.</p>';
                 } else {
                     filtered.forEach(sticker => {
-                       // ... (código para renderizar las tarjetas de stickers no cambia)
+                        const isFav = favorites[sticker.url];
+                        const card = document.createElement('div');
+                        card.className = 'bg-slate-50 rounded-lg shadow p-2 flex flex-col items-center gap-2 cursor-pointer relative';
+                        card.innerHTML = `
+                            <img src="${sticker.url}" alt="${sticker.nombre}" class="w-full h-20 object-contain" loading="lazy">
+                            <p class="text-xs font-semibold text-center">${sticker.nombre}</p>
+                            <button data-url="${sticker.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full text-gray-300 hover:text-red-500">
+                                <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart text-${isFav ? 'red-500' : 'gray-400'}"></i>
+                            </button>
+                        `;
+                        card.querySelector('img').addEventListener('click', () => addImageToCanvas(sticker.url));
+                        stickersContainer.appendChild(card);
                     });
                 }
                 
-                // --- MODIFICADO: Lógica para renderizar los botones de categoría ---
                 if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
                     const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
-                    
                     categories.forEach(cat => {
-                        // Ahora creamos una etiqueta <a> en lugar de <button>
                         const link = document.createElement('a');
                         link.className = `category-link px-3 py-2 text-sm rounded-full bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600 transition-all text-center`;
                         link.textContent = cat;
-                        
-                        // Hacemos que se abra en una nueva pestaña
                         link.target = "_blank";
                         link.rel = "noopener noreferrer";
-
-                        if (cat === 'Todos') {
-                            // El botón "Todos" apunta al enlace por defecto
-                            link.href = CATEGORY_DRIVE_LINKS['default'];
-                        } else {
-                            // Buscamos el enlace correspondiente en nuestro objeto de configuración
-                            link.href = CATEGORY_DRIVE_LINKS[cat] || CATEGORY_DRIVE_LINKS['default'];
-                        }
-                        
+                        link.href = categoryLinks[cat] || categoryLinks['default'] || '#';
                         categoryFiltersContainer.appendChild(link);
                     });
                 }
             };
-            
-            // El resto del script (lógica del canvas, exportación, etc.) permanece igual.
-            // ...
 
-            // --- INICIALIZACIÓN ---
-            // init(); // Esta función se llamaría para empezar todo
+            const resizeCanvas = () => {
+                const containerWidth = canvasContainer.clientWidth;
+                const containerHeight = canvasContainer.clientHeight;
+                let newWidth, newHeight;
+                if ((containerWidth / containerHeight) > A4_ASPECT_RATIO) {
+                    newHeight = containerHeight - 20;
+                    newWidth = newHeight * A4_ASPECT_RATIO;
+                } else {
+                    newWidth = containerWidth - 20;
+                    newHeight = newWidth / A4_ASPECT_RATIO;
+                }
+                canvas.setDimensions({ width: newWidth, height: newHeight });
+            };
+            
+            const renderCurrentPage = () => {
+                const page = pages[currentPageIndex];
+                if (!page.canvas) {
+                    page.canvas = new fabric.Canvas(null);
+                }
+                
+                // Limpiar el canvas visible
+                canvas.clear();
+                
+                // Cargar los objetos de la página actual en el canvas visible
+                if (page.objects && page.objects.length > 0) {
+                    canvas.loadFromJSON({ objects: page.objects }, () => {
+                        canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+                    });
+                } else {
+                    canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
+                }
+                
+                pages[currentPageIndex].canvas = canvas; // Asegurarse de que el canvas actual está asociado a la página
+                document.getElementById('page-indicator').textContent = `Pág ${currentPageIndex + 1} / ${pages.length}`;
+            };
+            
+            const syncAndSave = () => {
+                if (pages[currentPageIndex]) {
+                    pages[currentPageIndex].objects = canvas.toJSON().objects;
+                    saveState();
+                }
+            };
+
+            const addImageToCanvas = (url) => {
+                fabric.Image.fromURL(url, (img) => {
+                    img.scaleToWidth(canvas.getWidth() * 0.5);
+                    img.set({ left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center' });
+                    canvas.add(img);
+                }, { crossOrigin: 'anonymous' });
+            };
+            
+            function addEventListeners() {
+                window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Cerrar</button>') => {
+                    document.getElementById('modal-message').innerHTML = message;
+                    document.getElementById('modal-buttons').innerHTML = buttonsHtml;
+                    document.getElementById('message-modal').classList.replace('modal-inactive', 'modal-active');
+                };
+                window.hideModal = () => document.getElementById('message-modal').classList.replace('modal-active', 'modal-inactive');
+
+                searchInput.addEventListener('input', renderGallery);
+                favoritesToggle.addEventListener('change', renderGallery);
+                stickersContainer.addEventListener('click', e => {
+                    const favButton = e.target.closest('.favorite-btn');
+                    if (favButton) {
+                        const url = favButton.dataset.url;
+                        favorites[url] = !favorites[url];
+                        saveState();
+                        renderGallery();
+                    }
+                });
+
+                document.getElementById('add-page-btn').addEventListener('click', () => {
+                    syncAndSave(); // Guardar la página actual antes de cambiar
+                    pages.push({ id: crypto.randomUUID(), canvas: new fabric.Canvas(null), objects: [] });
+                    currentPageIndex = pages.length - 1;
+                    renderCurrentPage();
+                });
+                document.getElementById('prev-page-btn').addEventListener('click', () => {
+                    if (currentPageIndex > 0) {
+                        syncAndSave();
+                        currentPageIndex--;
+                        renderCurrentPage();
+                    }
+                });
+                document.getElementById('next-page-btn').addEventListener('click', () => {
+                    if (currentPageIndex < pages.length - 1) {
+                        syncAndSave();
+                        currentPageIndex++;
+                        renderCurrentPage();
+                    }
+                });
+
+                document.getElementById('toggle-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.toggle('-translate-x-full'));
+                document.getElementById('close-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.add('-translate-x-full'));
+                
+                const textPanel = document.getElementById('text-panel');
+                const layerPanel = document.getElementById('layer-panel');
+                document.getElementById('close-panel').addEventListener('click', () => textPanel.classList.add('hidden'));
+                document.getElementById('close-layer-panel').addEventListener('click', () => layerPanel.classList.add('hidden'));
+
+                document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+                    syncAndSave(); // Asegurarse que la última página está guardada
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ unit: "mm", format: "a4" });
+                    showModal("Exportando... Por favor, espera.");
+                    
+                    try {
+                        for (let i = 0; i < pages.length; i++) {
+                            const pageData = pages[i];
+                            const tempCanvas = new fabric.StaticCanvas(null);
+                            
+                            await new Promise(resolve => {
+                                tempCanvas.loadFromJSON({ objects: pageData.objects }, () => {
+                                    tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
+                                    tempCanvas.setBackgroundColor('#FFFFFF', resolve);
+                                });
+                            });
+
+                            const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
+                            if (i > 0) pdf.addPage();
+                            pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
+                            tempCanvas.dispose();
+                        }
+                        
+                        pdf.save("diseno_stickeame.pdf");
+                        hideModal();
+                        showModal('¡Tu diseño se ha descargado!<br>Ahora puedes enviarlo por WhatsApp.',
+                            `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Aquí te envío el diseño de STICKEAME.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition shadow-md text-center block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp</a><button onclick="hideModal()" class="mt-2 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400 transition shadow-md">Cerrar</button>`
+                        );
+                    } catch (err) {
+                        console.error("Error al exportar:", err);
+                        showModal("Hubo un error al exportar el PDF.");
+                    }
+                });
+
+                document.getElementById('reset-app-btn').addEventListener('click', () => {
+                    if(confirm('¿Estás seguro? Se borrará todo el proyecto y los favoritos.')) {
+                        localStorage.removeItem('stickeameState');
+                        window.location.reload();
+                    }
+                });
+                
+                document.getElementById('addTextBtn').addEventListener('click', () => {
+                    const text = new fabric.IText('Editar texto', {
+                        left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center',
+                        fontSize: 50, fontFamily: 'Inter', fill: '#000'
+                    });
+                    canvas.add(text);
+                });
+
+                document.getElementById('upload-images').addEventListener('change', (e) => {
+                    Array.from(e.target.files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => addImageToCanvas(event.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    e.target.value = ''; // Reset input
+                });
+
+                document.getElementById('deleteSelectionBtn').addEventListener('click', () => {
+                    canvas.getActiveObjects().forEach(obj => canvas.remove(obj));
+                    canvas.discardActiveObject().renderAll();
+                });
+                
+                canvas.on({
+                    'object:added': syncAndSave,
+                    'object:removed': syncAndSave,
+                    'object:modified': syncAndSave,
+                    'selection:created': e => togglePanels(e.target),
+                    'selection:updated': e => togglePanels(e.target),
+                    'selection:cleared': () => togglePanels(null)
+                });
+                
+                window.addEventListener('resize', resizeCanvas);
+            }
+            
+            function togglePanels(obj) {
+                const textPanel = document.getElementById('text-panel');
+                const layerPanel = document.getElementById('layer-panel');
+                textPanel.classList.add('hidden');
+                layerPanel.classList.add('hidden');
+                if (obj) {
+                    if (obj.type === 'i-text' || obj.type === 'textbox') textPanel.classList.remove('hidden');
+                    else if (obj.type === 'image') layerPanel.classList.remove('hidden');
+                }
+            }
+            
+            init();
         });
     </script>
 </body>
