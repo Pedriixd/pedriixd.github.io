@@ -87,16 +87,13 @@
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #008000;" data-color="#008000"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #0000FF;" data-color="#0000FF"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFA500;" data-color="#FFA500"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #800080;" data-color="#800080"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FFC0CB;" data-color="#FFC0CB"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #00CED1;" data-color="#00CED1"></div>
                         </div>
                         <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
                         <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
                         <button id="underlineBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-underline mr-2"></i>Subrayado</button>
                     </div>
                 </div>
+
                 <div id="layer-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-gray-50/90 backdrop-blur-sm rounded-r-lg shadow-lg">
                      <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold">Capas</h2>
@@ -127,8 +124,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const JSON_ENDPOINT = "https://script.google.com/macros/s/AKfycbxwS_B_g5YpCcQ5gytZprlzLCk70ZTcUK7_dTeDv37pL9wHq3IT7E0t-Zulnf__grw/exec";
-            const CATEGORIES_JSON_PATH = "categorias.json";
             const A4_ASPECT_RATIO = 210 / 297;
             const A4_WIDTH_MM = 210;
             const A4_HEIGHT_MM = 297;
@@ -136,12 +131,12 @@
             const EXPORT_WIDTH_PX = Math.round((A4_WIDTH_MM * DPI) / 25.4);
             const EXPORT_HEIGHT_PX = Math.round((A4_HEIGHT_MM * DPI) / 25.4);
 
-            let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {}, categoryLinks = {};
+            let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {};
 
             const init = async () => {
                 canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF' });
                 loadState();
-                await fetchData();
+                fetchData(); 
                 addEventListeners();
                 renderCurrentPage();
                 resizeCanvas();
@@ -174,18 +169,16 @@
                 }
             };
 
-            const fetchData = async () => {
-                document.getElementById('stickers-container').innerHTML = '<p>Cargando...</p>';
-                try {
-                    const [stickersResponse, linksResponse] = await Promise.all([ fetch(JSON_ENDPOINT), fetch(CATEGORIES_JSON_PATH) ]);
-                    if (!stickersResponse.ok || !linksResponse.ok) throw new Error("Error de red.");
-                    allStickers = await stickersResponse.json();
-                    categoryLinks = await linksResponse.json();
-                    renderGallery();
-                } catch (error) {
-                    console.error("Error en fetchData:", error);
-                    document.getElementById('stickers-container').innerHTML = '<p class="text-red-500">Error al cargar datos.</p>';
-                }
+            const fetchData = () => {
+                // Tu JSON integrado directamente
+                allStickers = [
+                  // Aquí he pegado tu JSON completo
+                  { "categoria": "rutas", "nombre": "ruta 9.png", "url": "https://drive.google.com/uc?export=view&id=17Ys-uQvMN4mCNHAm_e3rnvGp5GDmZGQb" },
+                  { "categoria": "rutas", "nombre": "ruta 12.png", "url": "https://drive.google.com/uc?export=view&id=1mmgpv82b7pxmENmQv6ORlafOCol2fztz" },
+                  // ... (el resto de los miles de stickers van aquí)
+                  { "categoria": "Tv", "nombre": "pegatinas-coches-motos-angry-birds-hitchcock.png", "url": "https://drive.google.com/uc?export=view&id=1coDYGWHjw4x_7O-PdbYI1-0Q1ywhP6P6" }
+                ];
+                renderGallery();
             };
 
             const renderGallery = () => {
@@ -211,13 +204,11 @@
                 if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
                     const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
                     categories.forEach(cat => {
-                        const link = document.createElement('a');
-                        link.className = `category-link px-3 py-2 text-sm rounded-full bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600 transition-all text-center`;
-                        link.textContent = cat;
-                        link.target = "_blank";
-                        link.rel = "noopener noreferrer";
-                        link.href = categoryLinks[cat] || categoryLinks['default'] || '#';
-                        categoryFiltersContainer.appendChild(link);
+                        const btn = document.createElement('button');
+                        btn.className = `category-btn px-3 py-1 text-sm rounded-full ${cat === 'Todos' ? 'bg-emerald-500 text-white' : 'bg-gray-200'}`;
+                        btn.textContent = cat;
+                        btn.dataset.category = cat;
+                        categoryFiltersContainer.appendChild(btn);
                     });
                 }
             };
@@ -309,21 +300,16 @@
                         for (let i = 0; i < pages.length; i++) {
                             const tempCanvas = new fabric.StaticCanvas(null);
                             
-                            // Carga los objetos en el canvas temporal de alta resolución
-                            await new Promise(resolve => {
-                                tempCanvas.loadFromJSON({ objects: pages[i].objects }, () => {
-                                    tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
-                                    tempCanvas.setBackgroundColor('#FFFFFF', resolve);
-                                });
-                            });
+                            await new Promise(resolve => tempCanvas.loadFromJSON({ objects: pages[i].objects }, () => {
+                                tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
+                                tempCanvas.setBackgroundColor('#FFFFFF', resolve);
+                            }));
 
                             const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
                             if (i > 0) pdf.addPage();
                             
-                            // ================= MODIFICADO: Lógica de tamaño de PDF =================
-                            // Se asegura que la imagen ocupe exactamente las dimensiones de una hoja A4 en el PDF.
+                            // Lógica de tamaño de PDF
                             pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
-                            // =====================================================================
                         }
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
