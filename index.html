@@ -44,6 +44,7 @@
             </a>
         </nav>
     </header>
+
     <div class="flex flex-1 overflow-hidden">
         <aside id="gallery-panel" class="w-full md:w-72 lg:w-96 bg-white shadow-lg p-4 flex-col gap-4 absolute md:relative z-10 md:z-0 h-full md:flex -translate-x-full md:translate-x-0 transition-transform duration-300">
              <div class="flex justify-between items-center mb-2">
@@ -84,9 +85,6 @@
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #000000;" data-color="#000000"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #FFFFFF;" data-color="#FFFFFF"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #ef4444;" data-color="#ef4444"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #22c55e;" data-color="#22c55e"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #3b82f6;" data-color="#3b82f6"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #eab308;" data-color="#eab308"></div>
                         </div>
                         <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
                         <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
@@ -134,7 +132,7 @@
                     <span>Resetear</span>
                 </button>
             </footer>
-             </main>
+        </main>
     </div>
 
     <script>
@@ -230,7 +228,7 @@
                     });
                 }
             };
-
+            
             const resizeCanvas = () => {
                 const container = document.getElementById('canvas-container');
                 const { clientWidth: cw, clientHeight: ch } = container;
@@ -281,6 +279,8 @@
 
                 document.getElementById('search-input').addEventListener('input', renderGallery);
                 document.getElementById('favorites-toggle').addEventListener('change', renderGallery);
+                
+                // ================= CORREGIDO: Listener de los filtros de categoría =================
                 document.getElementById('category-filters').addEventListener('click', e => {
                     if (e.target.classList.contains('category-btn')) {
                         document.querySelectorAll('.category-btn').forEach(btn => {
@@ -289,9 +289,11 @@
                         });
                         e.target.classList.add('bg-emerald-500', 'text-white');
                         e.target.classList.remove('bg-slate-200', 'text-slate-600', 'hover:bg-slate-300');
-                        renderGallery();
+                        renderGallery(); // Vuelve a renderizar la galería con el filtro aplicado
                     }
                 });
+                // ===============================================================================
+
                 document.getElementById('stickers-container').addEventListener('click', e => {
                     const favButton = e.target.closest('.favorite-btn');
                     if (favButton) {
@@ -354,7 +356,7 @@
                         
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
-                        showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp</a><button onclick="hideModal()" class="mt-2 bg-slate-200 text-slate-800 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300">Cerrar</button>`);
+                        showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar</a><button onclick="hideModal()" class="mt-2 bg-slate-200 text-slate-800 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300">Cerrar</button>`);
                     
                     } catch (err) {
                         console.error("Error al exportar:", err);
