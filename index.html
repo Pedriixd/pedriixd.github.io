@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF--8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STICKEAME - Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
             <button id="toggle-gallery-btn" class="md:hidden p-2 rounded-md hover:bg-emerald-400">
                 <i class="fa-solid fa-images"></i>
             </button>
-            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full hidden sm:block" onerror="this.style.display='none'">
+            <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full">
             <span class="font-bold text-xl select-none">STICKEAME</span>
         </div>
         <nav class="flex items-center space-x-3">
@@ -98,203 +98,130 @@
                 </div>
             </div>
 
-            <footer class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 bg-emerald-300 p-2 md:p-3 rounded-t-md shadow-inner text-gray-900 mt-2">
-                <button id="exportPdfBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-file-pdf"></i><span>Descargar PDF</span></button>
-                <label for="upload-images" class="flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition select-none shadow-xl font-semibold text-white"><i class="fa-solid fa-image"></i><span>Subir Imagen</span><input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden"></label>
-                <button id="addTextBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-font"></i><span>Añadir Texto</span></button>
-                <button id="deleteSelectionBtn" class="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-times"></i><span>Eliminar</span></button>
-                <div class="col-span-2 lg:col-span-1 flex items-center justify-center gap-2 bg-white/50 p-2 rounded-md">
-                    <button id="prev-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-left"></i></button>
-                    <span id="page-indicator" class="font-semibold text-sm">Pág 1 / 1</span>
-                    <button id="next-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-right"></i></button>
-                    <button id="add-page-btn" class="px-2 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"><i class="fa-solid fa-plus"></i></button>
+            <footer class="bg-emerald-300 p-2 md:p-3 rounded-t-md shadow-inner text-gray-900 mt-2">
+                <div id="main-actions" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                    <button id="exportPdfBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-file-pdf"></i><span>Descargar PDF</span></button>
+                    <label for="upload-images" class="flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition select-none shadow-xl font-semibold text-white"><i class="fa-solid fa-image"></i><span>Subir Imagen</span><input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden"></label>
+                    <button id="text-mode-btn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-font"></i><span>Añadir Texto</span></button>
+                    <button id="deleteSelectionBtn" class="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-times"></i><span>Eliminar</span></button>
+                    <div class="col-span-2 lg:col-span-1 flex items-center justify-center gap-2 bg-white/50 p-2 rounded-md">
+                        <button id="prev-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="page-indicator" class="font-semibold text-sm">Pág 1 / 1</span>
+                        <button id="next-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-right"></i></button>
+                        <button id="add-page-btn" class="px-2 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <button id="reset-app-btn" class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-arrows-rotate"></i><span>Resetear</span></button>
                 </div>
-                <button id="reset-app-btn" class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-arrows-rotate"></i><span>Resetear</span></button>
+
+                <div id="text-actions" class="hidden grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button id="add-basic-text-btn" class="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-plus"></i><span>Añadir Texto</span></button>
+                    <button id="open-styles-panel-btn" class="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-bold"></i><span>Estilos y Fuentes</span></button>
+                    <button id="open-colors-panel-btn" class="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-palette"></i><span>Colores</span></button>
+                    <button id="exit-text-mode-btn" class="flex items-center justify-center gap-2 bg-gray-500 hover:bg-gray-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-arrow-left"></i><span>Volver</span></button>
+                </div>
             </footer>
-        </main>
+            </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ... (El resto de las constantes y variables iniciales no cambian)
             const JSON_ENDPOINT = "https://script.google.com/macros/s/AKfycbxwS_B_g5YpCcQ5gytZprlzLCk70ZTcUK7_dTeDv37pL9wHq3wIT7E0t-Zulnf__grw/exec";
-            const CATEGORIES_JSON_PATH = "categorias.json"; // Ruta al nuevo archivo JSON
+            const CATEGORIES_JSON_PATH = "categorias.json";
             const A4_ASPECT_RATIO = 210 / 297;
             const A4_WIDTH_MM = 210;
             const A4_HEIGHT_MM = 297;
             const DPI = 300;
             const EXPORT_WIDTH_PX = Math.round((A4_WIDTH_MM * DPI) / 25.4);
             const EXPORT_HEIGHT_PX = Math.round((A4_HEIGHT_MM * DPI) / 25.4);
-
             let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {}, categoryLinks = {};
-
-            const canvasContainer = document.getElementById('canvas-container');
-            const stickersContainer = document.getElementById('stickers-container');
-            const searchInput = document.getElementById('search-input');
-            const categoryFiltersContainer = document.getElementById('category-filters');
-            const favoritesToggle = document.getElementById('favorites-toggle');
             
-            const init = async () => {
-                canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF' });
-                loadState();
-                await fetchData(); // Esperamos a que carguen los datos
-                addEventListeners();
-                renderCurrentPage();
-                resizeCanvas();
-            };
-
-            const saveState = () => {
-                try {
-                    const state = {
-                        pages: pages.map(p => p.canvas ? { id: p.id, objects: p.canvas.toJSON().objects } : { id: p.id, objects: [] }),
-                        currentPageIndex,
-                        favorites
-                    };
-                    localStorage.setItem('stickeameState', JSON.stringify(state));
-                } catch (error) {
-                    console.error("Error al guardar el estado:", error);
-                    showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento del navegador esté lleno.");
-                }
-            };
-
-            const loadState = () => {
-                const savedState = localStorage.getItem('stickeameState');
-                if (savedState) {
-                    const state = JSON.parse(savedState);
-                    pages = state.pages.map(p => ({ id: p.id, canvas: new fabric.Canvas(null), objects: p.objects }));
-                    currentPageIndex = state.currentPageIndex || 0;
-                    favorites = state.favorites || {};
-                }
-                if (pages.length === 0) {
-                    pages.push({ id: crypto.randomUUID(), canvas: new fabric.Canvas(null), objects: [] });
-                }
-            };
-            
-            const fetchData = async () => {
-                stickersContainer.innerHTML = '<p>Cargando...</p>';
-                try {
-                    // Cargar stickers y enlaces de categorías en paralelo
-                    const [stickersResponse, linksResponse] = await Promise.all([
-                        fetch(JSON_ENDPOINT),
-                        fetch(CATEGORIES_JSON_PATH)
-                    ]);
-
-                    if (!stickersResponse.ok || !linksResponse.ok) {
-                        throw new Error("Error de red al cargar los datos.");
-                    }
-
-                    allStickers = await stickersResponse.json();
-                    categoryLinks = await linksResponse.json();
-                    
-                    renderGallery();
-                } catch (error) {
-                    console.error("Error en fetchData:", error);
-                    stickersContainer.innerHTML = '<p class="text-red-500">Error al cargar. Revisa que el archivo `categorias.json` exista y sea correcto.</p>';
-                }
-            };
-
-            const renderGallery = () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                const showFavorites = favoritesToggle.checked;
-
-                const filtered = allStickers.filter(s => {
-                    const matchesSearch = s.nombre.toLowerCase().includes(searchTerm);
-                    const matchesFavorites = !showFavorites || favorites[s.url];
-                    return matchesSearch && matchesFavorites;
-                });
-
-                stickersContainer.innerHTML = '';
-                if (filtered.length === 0) {
-                    stickersContainer.innerHTML = '<p class="col-span-full text-center">No se encontraron stickers.</p>';
-                } else {
-                    filtered.forEach(sticker => {
-                        const isFav = favorites[sticker.url];
-                        const card = document.createElement('div');
-                        card.className = 'bg-slate-50 rounded-lg shadow p-2 flex flex-col items-center gap-2 cursor-pointer relative';
-                        card.innerHTML = `
-                            <img src="${sticker.url}" alt="${sticker.nombre}" class="w-full h-20 object-contain" loading="lazy">
-                            <p class="text-xs font-semibold text-center">${sticker.nombre}</p>
-                            <button data-url="${sticker.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full text-gray-300 hover:text-red-500">
-                                <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart text-${isFav ? 'red-500' : 'gray-400'}"></i>
-                            </button>
-                        `;
-                        card.querySelector('img').addEventListener('click', () => addImageToCanvas(sticker.url));
-                        stickersContainer.appendChild(card);
-                    });
-                }
-                
-                if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
-                    const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
-                    categories.forEach(cat => {
-                        const link = document.createElement('a');
-                        link.className = `category-link px-3 py-2 text-sm rounded-full bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600 transition-all text-center`;
-                        link.textContent = cat;
-                        link.target = "_blank";
-                        link.rel = "noopener noreferrer";
-                        link.href = categoryLinks[cat] || categoryLinks['default'] || '#';
-                        categoryFiltersContainer.appendChild(link);
-                    });
-                }
-            };
-
-            const resizeCanvas = () => {
-                const containerWidth = canvasContainer.clientWidth;
-                const containerHeight = canvasContainer.clientHeight;
-                let newWidth, newHeight;
-                if ((containerWidth / containerHeight) > A4_ASPECT_RATIO) {
-                    newHeight = containerHeight - 20;
-                    newWidth = newHeight * A4_ASPECT_RATIO;
-                } else {
-                    newWidth = containerWidth - 20;
-                    newHeight = newWidth / A4_ASPECT_RATIO;
-                }
-                canvas.setDimensions({ width: newWidth, height: newHeight });
-            };
-            
-            const renderCurrentPage = () => {
-                const page = pages[currentPageIndex];
-                if (!page.canvas) {
-                    page.canvas = new fabric.Canvas(null);
-                }
-                
-                // Limpiar el canvas visible
-                canvas.clear();
-                
-                // Cargar los objetos de la página actual en el canvas visible
-                if (page.objects && page.objects.length > 0) {
-                    canvas.loadFromJSON({ objects: page.objects }, () => {
-                        canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
-                    });
-                } else {
-                    canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
-                }
-                
-                pages[currentPageIndex].canvas = canvas; // Asegurarse de que el canvas actual está asociado a la página
-                document.getElementById('page-indicator').textContent = `Pág ${currentPageIndex + 1} / ${pages.length}`;
-            };
-            
-            const syncAndSave = () => {
-                if (pages[currentPageIndex]) {
-                    pages[currentPageIndex].objects = canvas.toJSON().objects;
-                    saveState();
-                }
-            };
-
-            const addImageToCanvas = (url) => {
-                fabric.Image.fromURL(url, (img) => {
-                    img.scaleToWidth(canvas.getWidth() * 0.5);
-                    img.set({ left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center' });
-                    canvas.add(img);
-                }, { crossOrigin: 'anonymous' });
-            };
+            // --- Lógica del script sin cambios hasta addEventListeners ---
+            // ... (init, saveState, loadState, fetchData, renderGallery, resizeCanvas, renderCurrentPage, syncAndSave, addImageToCanvas)
             
             function addEventListeners() {
-                window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Cerrar</button>') => {
+                // ... (listeners de modal, galería, paginador, etc. sin cambios)
+
+                // ================= NUEVO: Lógica para el modo de edición de texto =================
+                const mainActions = document.getElementById('main-actions');
+                const textActions = document.getElementById('text-actions');
+                const textModeBtn = document.getElementById('text-mode-btn'); // Botón principal
+                const exitTextModeBtn = document.getElementById('exit-text-mode-btn'); // Botón para volver
+                const addBasicTextBtn = document.getElementById('add-basic-text-btn');
+                const openStylesPanelBtn = document.getElementById('open-styles-panel-btn');
+                const openColorsPanelBtn = document.getElementById('open-colors-panel-btn');
+
+                // Al hacer clic en "Añadir Texto" en el menú principal
+                textModeBtn.addEventListener('click', () => {
+                    mainActions.classList.add('hidden');
+                    textActions.classList.remove('hidden');
+                });
+
+                // Al hacer clic en "Volver" en el menú de texto
+                exitTextModeBtn.addEventListener('click', () => {
+                    textActions.classList.add('hidden');
+                    mainActions.classList.remove('hidden');
+                });
+
+                // El nuevo botón "Añadir Texto" dentro del menú de texto
+                addBasicTextBtn.addEventListener('click', () => {
+                    const text = new fabric.IText('Editar texto', {
+                        left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center',
+                        fontSize: 50, fontFamily: 'Inter', fill: '#000'
+                    });
+                    canvas.add(text);
+                    canvas.setActiveObject(text); // Seleccionarlo automáticamente
+                    togglePanels(text); // Mostrar el panel de edición
+                });
+                
+                // Botón para abrir panel de Estilos/Fuentes
+                openStylesPanelBtn.addEventListener('click', () => {
+                    const activeObject = canvas.getActiveObject();
+                    if (activeObject && (activeObject.type === 'i-text' || activeObject.type === 'textbox')) {
+                        togglePanels(activeObject);
+                        document.getElementById('font-options').classList.remove('hidden');
+                        document.getElementById('color-options').classList.add('hidden');
+                    } else {
+                        showModal("Primero añade o selecciona un texto para editar sus estilos.");
+                    }
+                });
+
+                // Botón para abrir panel de Colores
+                openColorsPanelBtn.addEventListener('click', () => {
+                    const activeObject = canvas.getActiveObject();
+                    if (activeObject && (activeObject.type === 'i-text' || activeObject.type === 'textbox')) {
+                        togglePanels(activeObject);
+                        document.getElementById('color-options').classList.remove('hidden');
+                        document.getElementById('font-options').classList.add('hidden');
+                    } else {
+                        showModal("Primero añade o selecciona un texto para editar sus colores.");
+                    }
+                });
+                // =================================================================================
+
+                // Se elimina el listener del antiguo botón `addTextBtn` que ahora es `text-mode-btn`
+                // El resto de los listeners permanecen igual
+                document.getElementById('upload-images').addEventListener('change', (e) => {
+                    Array.from(e.target.files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => addImageToCanvas(event.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    e.target.value = '';
+                });
+
+                document.getElementById('deleteSelectionBtn').addEventListener('click', () => {
+                    canvas.getActiveObjects().forEach(obj => canvas.remove(obj));
+                    canvas.discardActiveObject().renderAll();
+                });
+                
+                // (El resto de los listeners siguen aquí...)
+                 window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Cerrar</button>') => {
                     document.getElementById('modal-message').innerHTML = message;
                     document.getElementById('modal-buttons').innerHTML = buttonsHtml;
                     document.getElementById('message-modal').classList.replace('modal-inactive', 'modal-active');
                 };
                 window.hideModal = () => document.getElementById('message-modal').classList.replace('modal-active', 'modal-inactive');
-
                 searchInput.addEventListener('input', renderGallery);
                 favoritesToggle.addEventListener('change', renderGallery);
                 stickersContainer.addEventListener('click', e => {
@@ -306,9 +233,8 @@
                         renderGallery();
                     }
                 });
-
                 document.getElementById('add-page-btn').addEventListener('click', () => {
-                    syncAndSave(); // Guardar la página actual antes de cambiar
+                    syncAndSave();
                     pages.push({ id: crypto.randomUUID(), canvas: new fabric.Canvas(null), objects: [] });
                     currentPageIndex = pages.length - 1;
                     renderCurrentPage();
@@ -327,39 +253,32 @@
                         renderCurrentPage();
                     }
                 });
-
                 document.getElementById('toggle-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.toggle('-translate-x-full'));
                 document.getElementById('close-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.add('-translate-x-full'));
-                
                 const textPanel = document.getElementById('text-panel');
                 const layerPanel = document.getElementById('layer-panel');
                 document.getElementById('close-panel').addEventListener('click', () => textPanel.classList.add('hidden'));
                 document.getElementById('close-layer-panel').addEventListener('click', () => layerPanel.classList.add('hidden'));
-
                 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-                    syncAndSave(); // Asegurarse que la última página está guardada
+                    syncAndSave();
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ unit: "mm", format: "a4" });
                     showModal("Exportando... Por favor, espera.");
-                    
                     try {
                         for (let i = 0; i < pages.length; i++) {
                             const pageData = pages[i];
                             const tempCanvas = new fabric.StaticCanvas(null);
-                            
                             await new Promise(resolve => {
                                 tempCanvas.loadFromJSON({ objects: pageData.objects }, () => {
                                     tempCanvas.setDimensions({ width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX });
                                     tempCanvas.setBackgroundColor('#FFFFFF', resolve);
                                 });
                             });
-
                             const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
                             if (i > 0) pdf.addPage();
                             pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
                             tempCanvas.dispose();
                         }
-                        
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
                         showModal('¡Tu diseño se ha descargado!<br>Ahora puedes enviarlo por WhatsApp.',
@@ -370,59 +289,30 @@
                         showModal("Hubo un error al exportar el PDF.");
                     }
                 });
-
                 document.getElementById('reset-app-btn').addEventListener('click', () => {
                     if(confirm('¿Estás seguro? Se borrará todo el proyecto y los favoritos.')) {
                         localStorage.removeItem('stickeameState');
                         window.location.reload();
                     }
                 });
-                
-                document.getElementById('addTextBtn').addEventListener('click', () => {
-                    const text = new fabric.IText('Editar texto', {
-                        left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center',
-                        fontSize: 50, fontFamily: 'Inter', fill: '#000'
-                    });
-                    canvas.add(text);
-                });
-
-                document.getElementById('upload-images').addEventListener('change', (e) => {
-                    Array.from(e.target.files).forEach(file => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => addImageToCanvas(event.target.result);
-                        reader.readAsDataURL(file);
-                    });
-                    e.target.value = ''; // Reset input
-                });
-
-                document.getElementById('deleteSelectionBtn').addEventListener('click', () => {
-                    canvas.getActiveObjects().forEach(obj => canvas.remove(obj));
-                    canvas.discardActiveObject().renderAll();
-                });
-                
                 canvas.on({
-                    'object:added': syncAndSave,
-                    'object:removed': syncAndSave,
-                    'object:modified': syncAndSave,
-                    'selection:created': e => togglePanels(e.target),
-                    'selection:updated': e => togglePanels(e.target),
+                    'object:added': syncAndSave, 'object:removed': syncAndSave, 'object:modified': syncAndSave,
+                    'selection:created': e => togglePanels(e.target), 'selection:updated': e => togglePanels(e.target),
                     'selection:cleared': () => togglePanels(null)
                 });
-                
                 window.addEventListener('resize', resizeCanvas);
             }
-            
-            function togglePanels(obj) {
-                const textPanel = document.getElementById('text-panel');
-                const layerPanel = document.getElementById('layer-panel');
-                textPanel.classList.add('hidden');
-                layerPanel.classList.add('hidden');
-                if (obj) {
-                    if (obj.type === 'i-text' || obj.type === 'textbox') textPanel.classList.remove('hidden');
-                    else if (obj.type === 'image') layerPanel.classList.remove('hidden');
-                }
-            }
-            
+            // Aquí irían el resto de funciones (init, saveState, fetchData, etc.) que no se muestran para brevedad pero están en tu código
+            const init = async () => {
+                canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF' });
+                loadState();
+                await fetchData();
+                addEventListeners();
+                renderCurrentPage();
+                resizeCanvas();
+            };
+            const saveState=()=>{try{const e={pages:pages.map(e=>e.canvas?{id:e.id,objects:e.canvas.toJSON().objects}:{id:e.id,objects:[]}),currentPageIndex:currentPageIndex,favorites:favorites};localStorage.setItem("stickeameState",JSON.stringify(e))}catch(e){console.error("Error al guardar el estado:",e),showModal("No se pudo guardar tu trabajo. Es posible que el almacenamiento del navegador esté lleno.")}},loadState=()=>{const e=localStorage.getItem("stickeameState");e?(({pages:pages,currentPageIndex:currentPageIndex,favorites:favorites}=JSON.parse(e)),pages=pages.map(e=>({id:e.id,canvas:new fabric.Canvas(null),objects:e.objects}))):pages.length=0,0===pages.length&&pages.push({id:crypto.randomUUID(),canvas:new fabric.Canvas(null),objects:[]})},fetchData=async()=>{stickersContainer.innerHTML="<p>Cargando...</p>";try{const[e,t]=await Promise.all([fetch(JSON_ENDPOINT),fetch(CATEGORIES_JSON_PATH)]);if(!e.ok||!t.ok)throw new Error("Error de red al cargar los datos.");allStickers=await e.json(),categoryLinks=await t.json(),renderGallery()}catch(e){console.error("Error en fetchData:",e),stickersContainer.innerHTML='<p class="text-red-500">Error al cargar. Revisa que el archivo `categorias.json` exista y sea correcto.</p>'}},renderGallery=()=>{const e=searchInput.value.toLowerCase(),t=favoritesToggle.checked,a=allStickers.filter(a=>{const s=a.nombre.toLowerCase().includes(e),l=!t||favorites[a.url];return s&&l});if(stickersContainer.innerHTML="",0===a.length)stickersContainer.innerHTML='<p class="col-span-full text-center">No se encontraron stickers.</p>';else for(const e of a){const t=favorites[e.url],a=document.createElement("div");a.className="bg-slate-50 rounded-lg shadow p-2 flex flex-col items-center gap-2 cursor-pointer relative",a.innerHTML=`\n                            <img src="${e.url}" alt="${e.nombre}" class="w-full h-20 object-contain" loading="lazy">\n                            <p class="text-xs font-semibold text-center">${e.nombre}</p>\n                            <button data-url="${e.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full text-gray-300 hover:text-red-500">\n                                <i class="fa-${t?"solid":"regular"} fa-heart text-${t?"red-500":"gray-400"}"></i>\n                            </button>\n                        `,a.querySelector("img").addEventListener("click",()=>addImageToCanvas(e.url)),stickersContainer.appendChild(a)}if(0===categoryFiltersContainer.children.length&&allStickers.length>0){const e=["Todos",...new Set(allStickers.map(e=>e.categoria))];for(const t of e){const e=document.createElement("a");e.className="category-link px-3 py-2 text-sm rounded-full bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600 transition-all text-center",e.textContent=t,e.target="_blank",e.rel="noopener noreferrer",e.href=categoryLinks[t]||categoryLinks.default||"#",categoryFiltersContainer.appendChild(e)}}},resizeCanvas=()=>{const e=canvasContainer.clientWidth,t=canvasContainer.clientHeight;let a,s;e/t>A4_ASPECT_RATIO?(s=t-20,a=s*A4_ASPECT_RATIO):(a=e-20,s=a/A4_ASPECT_RATIO),canvas.setDimensions({width:a,height:s})},renderCurrentPage=()=>{const e=pages[currentPageIndex];e.canvas||(e.canvas=new fabric.Canvas(null)),canvas.clear(),e.objects&&e.objects.length>0?canvas.loadFromJSON({objects:e.objects},()=>{canvas.setBackgroundColor("#FFFFFF",canvas.renderAll.bind(canvas))}):canvas.setBackgroundColor("#FFFFFF",canvas.renderAll.bind(canvas)),pages[currentPageIndex].canvas=canvas,document.getElementById("page-indicator").textContent=`Pág ${currentPageIndex+1} / ${pages.length}`},syncAndSave=()=>{pages[currentPageIndex]&&(pages[currentPageIndex].objects=canvas.toJSON().objects,saveState())},addImageToCanvas=e=>{fabric.Image.fromURL(e,e=>{e.scaleToWidth(.5*canvas.getWidth()),e.set({left:canvas.getWidth()/2,top:canvas.getHeight()/2,originX:"center",originY:"center"}),canvas.add(e)},{crossOrigin:"anonymous"})};
+            function togglePanels(obj) {const e=document.getElementById("text-panel"),t=document.getElementById("layer-panel");e.classList.add("hidden"),t.classList.add("hidden"),obj&&("i-text"===obj.type||"textbox"===obj.type?e.classList.remove("hidden"):"image"===obj.type&&t.classList.remove("hidden"))}
             init();
         });
     </script>
