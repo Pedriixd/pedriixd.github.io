@@ -16,11 +16,7 @@
         .modal-inactive { opacity: 0; pointer-events: none; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        #logo-container {
-            display: flex;
-            align-items: center;
-            height: 40px;
-        }
+        #logo-container { display: flex; align-items: center; height: 40px; }
     </style>
 </head>
 <body class="bg-slate-100 text-gray-900 flex flex-col h-screen">
@@ -42,7 +38,7 @@
                 <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline';">
                 <span id="logo-fallback" class="font-bold text-xl select-none hidden sm:inline" style="display:none;">STICKEAME</span>
             </div>
-             </nav>
+        </nav>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
@@ -86,7 +82,6 @@
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #000000;" data-color="#000000"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #FFFFFF;" data-color="#FFFFFF"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FF0000;" data-color="#FF0000"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #008000;" data-color="#008000"></div>
                         </div>
                         <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
                         <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
@@ -123,6 +118,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const STICKERS_JSON_PATH = "stickers.json";
             const A4_ASPECT_RATIO = 210 / 297;
             const A4_WIDTH_MM = 210;
             const A4_HEIGHT_MM = 297;
@@ -132,11 +128,10 @@
 
             let canvas, pages = [], currentPageIndex = 0, allStickers = [], favorites = {};
 
-            const init = () => {
+            const init = async () => {
                 canvas = new fabric.Canvas('canvas', { backgroundColor: '#FFFFFF', preserveObjectStacking: true });
                 loadState();
-                allStickers = getStickersData();
-                renderGallery();
+                await fetchData();
                 addEventListeners();
                 renderCurrentPage();
                 resizeCanvas();
@@ -150,9 +145,7 @@
                         favorites
                     };
                     localStorage.setItem('stickeameState', JSON.stringify(state));
-                } catch (error) {
-                    console.error("Error al guardar:", error);
-                }
+                } catch (error) { console.error("Error al guardar:", error); }
             };
             
             const loadState = () => {
@@ -168,13 +161,17 @@
                 }
             };
 
-            const getStickersData = () => {
-                return [
-                  { "categoria": "rutas", "nombre": "ruta 9.png", "url": "https://drive.google.com/uc?export=view&id=17Ys-uQvMN4mCNHAm_e3rnvGp5GDmZGQb" },
-                  { "categoria": "rutas", "nombre": "ruta 12.png", "url": "https://drive.google.com/uc?export=view&id=1mmgpv82b7pxmENmQv6ORlafOCol2fztz" },
-                  // Inserta aquí el resto de tu JSON
-                  { "categoria": "Tv", "nombre": "pegatinas-coches-motos-angry-birds-hitchcock.png", "url": "https://drive.google.com/uc?export=view&id=1coDYGWHjw4x_7O-PdbYI1-0Q1ywhP6P6" }
-                ];
+            const fetchData = async () => {
+                document.getElementById('stickers-container').innerHTML = '<p>Cargando...</p>';
+                try {
+                    const response = await fetch(STICKERS_JSON_PATH);
+                    if (!response.ok) throw new Error("No se encontró el archivo stickers.json");
+                    allStickers = await response.json();
+                    renderGallery();
+                } catch (error) {
+                    console.error("Error en fetchData:", error);
+                    document.getElementById('stickers-container').innerHTML = '<p class="col-span-full text-center text-red-500">Error: Asegúrate de que el archivo <b>stickers.json</b> está en la misma carpeta que este HTML.</p>';
+                }
             };
 
             const renderGallery = () => {
@@ -202,6 +199,7 @@
 
                 if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
                     const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
+                    categoryFiltersContainer.innerHTML = '';
                     categories.forEach(cat => {
                         const btn = document.createElement('button');
                         btn.className = `category-btn px-3 py-1 text-sm rounded-full ${cat === 'Todos' ? 'bg-emerald-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
@@ -238,7 +236,9 @@
             };
 
             const addImageToCanvas = (url) => {
-                fabric.Image.fromURL(url, (img) => {
+                // ============== SOLUCIÓN CORS PARA IMÁGENES DE GOOGLE DRIVE ==============
+                const proxyUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(url)}`;
+                fabric.Image.fromURL(proxyUrl, (img) => {
                     img.scaleToWidth(canvas.getWidth() * 0.5);
                     img.set({ left: canvas.getWidth() / 2, top: canvas.getHeight() / 2, originX: 'center', originY: 'center' });
                     canvas.add(img);
@@ -276,10 +276,7 @@
                 });
 
                 document.getElementById('add-page-btn').addEventListener('click', () => {
-                    syncAndSave();
-                    pages.push({ id: crypto.randomUUID(), canvas: null, objects: [] });
-                    currentPageIndex = pages.length - 1;
-                    renderCurrentPage();
+                    syncAndSave(); pages.push({ id: crypto.randomUUID(), canvas: null, objects: [] }); currentPageIndex = pages.length - 1; renderCurrentPage();
                 });
                 document.getElementById('prev-page-btn').addEventListener('click', () => {
                     if (currentPageIndex > 0) { syncAndSave(); currentPageIndex--; renderCurrentPage(); }
@@ -291,50 +288,45 @@
                 document.getElementById('toggle-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.toggle('-translate-x-full'));
                 document.getElementById('close-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.add('-translate-x-full'));
                 
-                // ================= MODIFICADO: Nueva función de exportación a PDF =================
+                // ================= MODIFICADO: Nueva y definitiva función de exportación a PDF =================
                 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
                     syncAndSave();
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
                     showModal("Exportando tu diseño... Por favor, espera.");
 
-                    const mainCanvas = canvas;
-                    const originalZoom = mainCanvas.getZoom();
-                    const originalWidth = mainCanvas.getWidth();
-                    const originalHeight = mainCanvas.getHeight();
-
                     try {
                         for (let i = 0; i < pages.length; i++) {
                             const pageData = pages[i];
-                            
-                            // Creamos un canvas estático temporal para la exportación de alta resolución
-                            const exportCanvas = new fabric.StaticCanvas(null, {
+                            const tempCanvas = new fabric.StaticCanvas(null, {
                                 width: EXPORT_WIDTH_PX,
-                                height: EXPORT_HEIGHT_PX
+                                height: EXPORT_HEIGHT_PX,
+                                backgroundColor: '#FFFFFF'
                             });
-                            exportCanvas.setBackgroundColor('#FFFFFF');
 
-                            // Clonamos cada objeto y lo re-escalamos manualmente
-                            const scaleFactor = EXPORT_WIDTH_PX / originalWidth;
-                            
                             if (pageData.objects && pageData.objects.length > 0) {
-                                const objects = await new Promise(resolve => {
-                                    fabric.util.enlivenObjects(pageData.objects, resolve);
-                                });
+                                const objects = await new Promise(resolve => fabric.util.enlivenObjects(pageData.objects, resolve));
                                 
-                                for (const obj of objects) {
-                                    obj.set({
+                                const scaleFactor = EXPORT_WIDTH_PX / canvas.getWidth();
+
+                                objects.forEach(obj => {
+                                    const newProps = {
                                         left: obj.left * scaleFactor,
                                         top: obj.top * scaleFactor,
                                         scaleX: obj.scaleX * scaleFactor,
-                                        scaleY: obj.scaleY * scaleFactor,
-                                    });
-                                    exportCanvas.add(obj);
-                                }
+                                        scaleY: obj.scaleY * scaleFactor
+                                    };
+                                    // Para textos, también escalar el tamaño de la fuente para mejor calidad
+                                    if (obj.type === 'i-text' || obj.type === 'textbox') {
+                                        newProps.fontSize = obj.fontSize * scaleFactor;
+                                    }
+                                    obj.set(newProps);
+                                    tempCanvas.add(obj);
+                                });
                             }
                             
-                            exportCanvas.renderAll();
-                            const imgData = exportCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
+                            tempCanvas.renderAll();
+                            const imgData = tempCanvas.toDataURL({ format: 'jpeg', quality: 0.9 });
                             
                             if (i > 0) pdf.addPage();
                             pdf.addImage(imgData, "JPEG", 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM);
@@ -343,6 +335,7 @@
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
                         showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar</a><button onclick="hideModal()" class="mt-2 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400">Cerrar</button>`);
+                    
                     } catch (err) {
                         console.error("Error al exportar:", err);
                         showModal("Hubo un error al exportar el PDF. Intenta de nuevo.");
@@ -352,8 +345,7 @@
                 
                 document.getElementById('reset-app-btn').addEventListener('click', () => {
                     if(confirm('¿Seguro? Se borrará todo.')) {
-                        localStorage.removeItem('stickeameState');
-                        window.location.reload();
+                        localStorage.removeItem('stickeameState'); window.location.reload();
                     }
                 });
                 
@@ -411,8 +403,7 @@
             function togglePanels(obj) {
                 const textPanel = document.getElementById('text-panel');
                 const layerPanel = document.getElementById('layer-panel');
-                textPanel.classList.add('hidden');
-                layerPanel.classList.add('hidden');
+                textPanel.classList.add('hidden'); layerPanel.classList.add('hidden');
                 if (obj) {
                     if (obj.type === 'i-text' || obj.type === 'textbox') textPanel.classList.remove('hidden');
                     else if (obj.type === 'image') layerPanel.classList.remove('hidden');
