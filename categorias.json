@@ -1,6 +1,10 @@
 {
-  "Animes": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_ANIMES",
-  "Juegos": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_JUEGOS",
-  "Memes": "https://drive.google.com/drive/folders/URL_DE_LA_CARPETA_MEMES",
-  "default": "https://drive.google.com/drive/folders/URL_GENERAL_SI_NO_HAY_COINCIDENCIA"
+  "Animes": "https://drive.google.com/drive/folders/1gUXXzlsvq1RA7t8-RlQHCcG7RbbL18wv",
+  "Juegos": "https://drive.google.com/drive/folders/1a7AtFdc6qCkEBoAr9tSlP5kT24oKaMFf",
+  "Memes": "https://drive.google.com/drive/folders/1cmshpI2eWZKfZgW9M7wLaHgM0oQ1wW8d",
+  "Frases": "https://drive.google.com/drive/folders/1fxKdzx-3J2H7bo5_p8rM5M04cOQe5cvE",
+  "Logos": "https://drive.google.com/drive/folders/1XcJQ8T8qQ1Zg7P8cNwG8mW0qE2p0nMok",
+  "Caricaturas": "https://drive.google.com/drive/folders/1VEmdHgAokJqvW3Z7CwOqH8s8DzjtwQnM",
+  "Películas": "https://drive.google.com/drive/folders/1z1StHEQumkXf7wMZ1Vj6nZqHrC9Q9E4A",
+  "default": "https://drive.google.com/drive/folders/1ZeBNXXJZZ4RfSIYu_DnhULqT3hNFUrs5"
 }
