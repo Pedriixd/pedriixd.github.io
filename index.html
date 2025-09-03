@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .modal { transition: opacity 0.3s ease-in-out; }
         .modal-active { opacity: 1; pointer-events: auto; }
@@ -28,92 +28,113 @@
         </div>
     </div>
 
-    <header class="flex items-center justify-between bg-emerald-300 text-gray-900 px-4 py-2 shadow-md rounded-b-md z-20">
-        <div class="flex items-center space-x-3">
-            <button id="toggle-gallery-btn" class="md:hidden flex items-center gap-2 bg-white text-emerald-700 font-semibold px-3 py-1 rounded-md shadow hover:bg-gray-200 transition">
+    <header class="flex items-center justify-between bg-white text-slate-800 px-4 py-3 border-b border-slate-200 z-20">
+        <div class="flex items-center space-x-4">
+            <button id="toggle-gallery-btn" class="md:hidden flex items-center gap-2 bg-slate-100 text-slate-600 font-semibold px-3 py-2 rounded-lg shadow-sm hover:bg-slate-200 transition">
                 <i class="fa-solid fa-images"></i>
-                <span>Galería</span>
             </button>
             <div id="logo-container">
                 <img src="logo.png" alt="STICKEAME Logo" class="h-10 w-auto rounded-full" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline';">
-                <span id="logo-fallback" class="font-bold text-xl select-none hidden sm:inline" style="display:none;">STICKEAME</span>
+                <span id="logo-fallback" class="font-bold text-xl tracking-wider select-none" style="display:none;">STICKEAME</span>
             </div>
+        </div>
+        <nav class="flex items-center space-x-3">
+            <a href="https://www.instagram.com/pedriixd.alvez" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-2 text-slate-500 hover:text-emerald-600 transition-colors duration-300">
+                <i class="fa-brands fa-instagram fa-xl"></i>
+            </a>
         </nav>
     </header>
-
     <div class="flex flex-1 overflow-hidden">
         <aside id="gallery-panel" class="w-full md:w-72 lg:w-96 bg-white shadow-lg p-4 flex-col gap-4 absolute md:relative z-10 md:z-0 h-full md:flex -translate-x-full md:translate-x-0 transition-transform duration-300">
              <div class="flex justify-between items-center mb-2">
                 <h2 class="text-xl font-bold">Galería de Stickers</h2>
-                <button id="close-gallery-btn" class="md:hidden p-2 rounded-full hover:bg-gray-200">
+                <button id="close-gallery-btn" class="md:hidden p-2 rounded-full hover:bg-slate-200">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             <div class="flex flex-col gap-3 mb-3">
                 <input id="search-input" type="text" placeholder="Buscar por nombre..." class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400">
                 <div id="category-filters" class="flex flex-wrap gap-2"></div>
-                <label class="flex items-center gap-2 cursor-pointer"><input id="favorites-toggle" type="checkbox" class="h-5 w-5 text-emerald-500 rounded"/> <span>Mostrar solo favoritos</span></label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-600"><input id="favorites-toggle" type="checkbox" class="h-5 w-5 text-emerald-500 rounded border-slate-300 focus:ring-emerald-400"/> <span>Mostrar solo favoritos</span></label>
             </div>
             <div id="stickers-container" class="flex-1 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 pr-2 scrollbar-hide">
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col p-2 md:p-4 bg-slate-50">
+        <main class="flex-1 flex flex-col p-2 md:p-4 bg-slate-200">
             <div class="flex-1 flex items-stretch bg-white rounded-lg shadow-inner overflow-hidden relative">
                 <div id="canvas-container" class="flex-1 flex items-center justify-center p-2">
-                    <canvas id="canvas" class="shadow-2xl"></canvas>
+                    <canvas id="canvas" class="shadow-lg rounded-md"></canvas>
                 </div>
-
-                <div id="text-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-gray-50/90 backdrop-blur-sm rounded-r-lg shadow-lg overflow-y-auto">
+                <div id="text-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-white/90 backdrop-blur-sm rounded-r-lg shadow-lg overflow-y-auto">
                      <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold">Editar Texto</h2>
-                        <button id="close-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                        <button id="close-panel" class="p-1 rounded-full text-slate-500 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="flex flex-col space-y-2">
-                        <button id="fontBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-font mr-2"></i>Fuentes</button>
-                        <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-gray-100 rounded-md">
-                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Inter">Inter</button>
-                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Arial">Arial</button>
-                             <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Times New Roman">Times New Roman</button>
-                            <button class="font-option text-left p-1 rounded hover:bg-gray-200" data-font="Comic Neue">Comic Neue</button>
+                        <button id="fontBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-font mr-2"></i>Fuentes</button>
+                        <div id="font-options" class="hidden flex flex-col space-y-1 p-2 bg-slate-100 rounded-md">
+                            <button class="font-option text-left p-1 rounded hover:bg-slate-200" data-font="Inter">Inter</button>
+                            <button class="font-option text-left p-1 rounded hover:bg-slate-200" data-font="Arial">Arial</button>
+                             <button class="font-option text-left p-1 rounded hover:bg-slate-200" data-font="Times New Roman">Times New Roman</button>
+                            <button class="font-option text-left p-1 rounded hover:bg-slate-200" data-font="Comic Neue">Comic Neue</button>
                         </div>
-                        <button id="colorBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-palette mr-2"></i>Colores</button>
-                        <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-gray-100 rounded-md">
+                        <button id="colorBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-palette mr-2"></i>Colores</button>
+                        <div id="color-options" class="hidden grid grid-cols-5 gap-2 p-2 bg-slate-100 rounded-md">
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #000000;" data-color="#000000"></div>
                             <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm border" style="background-color: #FFFFFF;" data-color="#FFFFFF"></div>
-                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #FF0000;" data-color="#FF0000"></div>
+                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #ef4444;" data-color="#ef4444"></div>
+                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #22c55e;" data-color="#22c55e"></div>
+                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #3b82f6;" data-color="#3b82f6"></div>
+                            <div class="color-swatch w-6 h-6 rounded-full cursor-pointer shadow-sm" style="background-color: #eab308;" data-color="#eab308"></div>
                         </div>
-                        <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
-                        <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
-                        <button id="underlineBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100 w-full"><i class="fa-solid fa-underline mr-2"></i>Subrayado</button>
+                        <button id="boldBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-bold mr-2"></i>Negrita</button>
+                        <button id="italicBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-italic mr-2"></i>Cursiva</button>
+                        <button id="underlineBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100 w-full"><i class="fa-solid fa-underline mr-2"></i>Subrayado</button>
                     </div>
                 </div>
-                <div id="layer-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-gray-50/90 backdrop-blur-sm rounded-r-lg shadow-lg">
+                <div id="layer-panel" class="hidden absolute right-0 top-0 h-full flex-shrink-0 w-64 p-4 border-l bg-white/90 backdrop-blur-sm rounded-r-lg shadow-lg">
                      <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-semibold">Capas</h2>
-                        <button id="close-layer-panel" class="p-1 rounded-full text-gray-500 hover:bg-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                        <button id="close-layer-panel" class="p-1 rounded-full text-slate-500 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="flex flex-col space-y-2">
-                        <button id="bringForwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-arrow-up mr-2"></i>Adelante</button>
-                        <button id="sendBackwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-md shadow-sm border hover:bg-gray-100"><i class="fa-solid fa-arrow-down mr-2"></i>Atrás</button>
+                        <button id="bringForwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100"><i class="fa-solid fa-arrow-up mr-2"></i>Adelante</button>
+                        <button id="sendBackwardBtn" class="bg-white text-left font-semibold py-2 px-4 rounded-lg shadow-sm border hover:bg-slate-100"><i class="fa-solid fa-arrow-down mr-2"></i>Atrás</button>
                     </div>
                 </div>
             </div>
 
-            <footer class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 bg-emerald-300 p-2 md:p-3 rounded-t-md shadow-inner text-gray-900 mt-2">
-                <button id="exportPdfBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-file-pdf"></i><span>Descargar PDF</span></button>
-                <label for="upload-images" class="flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition select-none shadow-xl font-semibold text-white"><i class="fa-solid fa-image"></i><span>Subir Imagen</span><input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden"></label>
-                <button id="addTextBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-font"></i><span>Añadir Texto</span></button>
-                <button id="deleteSelectionBtn" class="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-times"></i><span>Eliminar</span></button>
-                <div class="col-span-2 lg:col-span-1 flex items-center justify-center gap-2 bg-white/50 p-2 rounded-md">
-                    <button id="prev-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-left"></i></button>
-                    <span id="page-indicator" class="font-semibold text-sm">Pág 1 / 1</span>
-                    <button id="next-page-btn" class="px-2 py-1 rounded hover:bg-emerald-200"><i class="fa-solid fa-chevron-right"></i></button>
-                    <button id="add-page-btn" class="px-2 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600"><i class="fa-solid fa-plus"></i></button>
+            <footer class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 bg-white p-3 rounded-t-lg border-t border-slate-200 shadow-lg mt-2">
+                <button id="exportPdfBtn" class="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 px-3 py-2 rounded-lg transition shadow-sm font-semibold text-white col-span-2 md:col-span-1">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Descargar y Enviar</span>
+                </button>
+                <label for="upload-images" class="flex items-center justify-center gap-2 cursor-pointer bg-slate-200 hover:bg-slate-300 px-3 py-2 rounded-lg transition select-none shadow-sm font-medium text-slate-700">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Subir Imagen</span>
+                    <input id="upload-images" type="file" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
+                </label>
+                <button id="addTextBtn" class="flex items-center justify-center gap-2 bg-slate-200 hover:bg-slate-300 px-3 py-2 rounded-lg transition shadow-sm font-medium text-slate-700">
+                    <i class="fa-solid fa-font"></i>
+                    <span>Añadir Texto</span>
+                </button>
+                <button id="deleteSelectionBtn" class="flex items-center justify-center gap-2 bg-rose-100 text-rose-600 hover:bg-rose-200 px-3 py-2 rounded-lg transition shadow-sm font-medium">
+                    <i class="fa-solid fa-times"></i>
+                    <span>Eliminar</span>
+                </button>
+                <div class="col-span-2 lg:col-span-1 flex items-center justify-center gap-2 bg-slate-100 p-2 rounded-lg border">
+                    <button id="prev-page-btn" class="px-2 py-1 rounded-md hover:bg-slate-200 disabled:opacity-40" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                    <span id="page-indicator" class="font-semibold text-sm text-slate-600">Pág 1 / 1</span>
+                    <button id="next-page-btn" class="px-2 py-1 rounded-md hover:bg-slate-200 disabled:opacity-40" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                    <button id="add-page-btn" class="px-2 py-1 rounded-md bg-emerald-500 text-white hover:bg-emerald-600"><i class="fa-solid fa-plus"></i></button>
                 </div>
-                <button id="reset-app-btn" class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded transition shadow-xl font-semibold text-white"><i class="fa-solid fa-arrows-rotate"></i><span>Resetear</span></button>
+                <button id="reset-app-btn" class="flex items-center justify-center gap-2 bg-amber-100 text-amber-700 hover:bg-amber-200 px-3 py-2 rounded-lg transition shadow-sm font-medium">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Resetear</span>
+                </button>
             </footer>
-        </main>
+             </main>
     </div>
 
     <script>
@@ -135,6 +156,7 @@
                 addEventListeners();
                 renderCurrentPage();
                 resizeCanvas();
+                updatePaginator();
             };
 
             const saveState = () => {
@@ -169,8 +191,7 @@
                     allStickers = await response.json();
                     renderGallery();
                 } catch (error) {
-                    console.error("Error en fetchData:", error);
-                    document.getElementById('stickers-container').innerHTML = '<p class="col-span-full text-center text-red-500">Error: Asegúrate de que el archivo <b>stickers.json</b> está en la misma carpeta que este HTML.</p>';
+                    document.getElementById('stickers-container').innerHTML = `<p class="col-span-full text-center text-red-500"><b>Error:</b> Asegúrate de que el archivo <b>stickers.json</b> está en la misma carpeta que este HTML.</p>`;
                 }
             };
 
@@ -182,27 +203,27 @@
                 const activeCategory = document.querySelector('.category-btn.bg-emerald-500')?.dataset.category || 'Todos';
 
                 const filtered = allStickers.filter(s => 
-                    s.nombre.toLowerCase().includes(searchTerm) && 
+                    (s.nombre?.toLowerCase() || '').includes(searchTerm) && 
                     (!showFavorites || favorites[s.url]) &&
                     (activeCategory === 'Todos' || s.categoria === activeCategory)
                 );
 
-                stickersContainer.innerHTML = filtered.length === 0 ? '<p class="col-span-full text-center">No se encontraron.</p>' : '';
+                stickersContainer.innerHTML = filtered.length === 0 ? '<p class="col-span-full text-center text-slate-500 mt-4">No se encontraron stickers.</p>' : '';
                 filtered.forEach(sticker => {
                     const isFav = favorites[sticker.url];
                     const card = document.createElement('div');
-                    card.className = 'bg-slate-50 rounded-lg shadow p-2 flex flex-col items-center gap-2 cursor-pointer relative';
-                    card.innerHTML = `<img src="${sticker.url}" alt="${sticker.nombre}" class="w-full h-20 object-contain" loading="lazy"><p class="text-xs font-semibold text-center">${sticker.nombre}</p><button data-url="${sticker.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full"><i class="fa-${isFav ? 'solid text-red-500' : 'regular text-gray-400'} fa-heart"></i></button>`;
+                    card.className = 'bg-slate-50 rounded-lg shadow-sm p-2 flex flex-col items-center gap-2 cursor-pointer relative hover:shadow-md hover:-translate-y-1 transition-all';
+                    card.innerHTML = `<img src="${sticker.url}" alt="${sticker.nombre}" class="w-full h-20 object-contain" loading="lazy"><p class="text-xs font-semibold text-center text-slate-700">${sticker.nombre}</p><button data-url="${sticker.url}" class="favorite-btn absolute top-1 right-1 p-1 rounded-full"><i class="fa-${isFav ? 'solid text-red-500' : 'regular text-slate-300'} fa-heart"></i></button>`;
                     card.querySelector('img').addEventListener('click', () => addImageToCanvas(sticker.url));
                     stickersContainer.appendChild(card);
                 });
 
                 if (categoryFiltersContainer.children.length === 0 && allStickers.length > 0) {
-                    const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria))];
+                    const categories = ['Todos', ...new Set(allStickers.map(s => s.categoria).filter(Boolean))];
                     categoryFiltersContainer.innerHTML = '';
                     categories.forEach(cat => {
                         const btn = document.createElement('button');
-                        btn.className = `category-btn px-3 py-1 text-sm rounded-full ${cat === 'Todos' ? 'bg-emerald-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
+                        btn.className = `category-btn px-3 py-1 text-sm rounded-full font-medium ${cat === 'Todos' ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`;
                         btn.textContent = cat;
                         btn.dataset.category = cat;
                         categoryFiltersContainer.appendChild(btn);
@@ -219,13 +240,19 @@
                 canvas.setDimensions({ width: newWidth, height: newHeight });
             };
             
+            const updatePaginator = () => {
+                document.getElementById('page-indicator').textContent = `Pág ${currentPageIndex + 1} / ${pages.length}`;
+                document.getElementById('prev-page-btn').disabled = currentPageIndex === 0;
+                document.getElementById('next-page-btn').disabled = currentPageIndex >= pages.length - 1;
+            };
+
             const renderCurrentPage = () => {
                 const page = pages[currentPageIndex];
                 canvas.loadFromJSON({ objects: page.objects || [] }, () => {
                     canvas.setBackgroundColor('#FFFFFF', canvas.renderAll.bind(canvas));
                 });
                 pages[currentPageIndex].canvas = canvas;
-                document.getElementById('page-indicator').textContent = `Pág ${currentPageIndex + 1} / ${pages.length}`;
+                updatePaginator();
             };
             
             const syncAndSave = () => {
@@ -236,7 +263,6 @@
             };
 
             const addImageToCanvas = (url) => {
-                // ============== SOLUCIÓN CORS PARA IMÁGENES DE GOOGLE DRIVE ==============
                 const proxyUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=${encodeURIComponent(url)}`;
                 fabric.Image.fromURL(proxyUrl, (img) => {
                     img.scaleToWidth(canvas.getWidth() * 0.5);
@@ -246,7 +272,7 @@
             };
 
             function addEventListeners() {
-                window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600">Cerrar</button>') => {
+                window.showModal = (message, buttonsHtml = '<button onclick="hideModal()" class="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600">Cerrar</button>') => {
                     document.getElementById('modal-message').innerHTML = message;
                     document.getElementById('modal-buttons').innerHTML = buttonsHtml;
                     document.getElementById('message-modal').classList.replace('modal-inactive', 'modal-active');
@@ -259,10 +285,10 @@
                     if (e.target.classList.contains('category-btn')) {
                         document.querySelectorAll('.category-btn').forEach(btn => {
                             btn.classList.remove('bg-emerald-500', 'text-white');
-                            btn.classList.add('bg-gray-200', 'hover:bg-gray-300');
+                            btn.classList.add('bg-slate-200', 'text-slate-600', 'hover:bg-slate-300');
                         });
                         e.target.classList.add('bg-emerald-500', 'text-white');
-                        e.target.classList.remove('bg-gray-200', 'hover:bg-gray-300');
+                        e.target.classList.remove('bg-slate-200', 'text-slate-600', 'hover:bg-slate-300');
                         renderGallery();
                     }
                 });
@@ -288,7 +314,6 @@
                 document.getElementById('toggle-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.toggle('-translate-x-full'));
                 document.getElementById('close-gallery-btn').addEventListener('click', () => document.getElementById('gallery-panel').classList.add('-translate-x-full'));
                 
-                // ================= MODIFICADO: Nueva y definitiva función de exportación a PDF =================
                 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
                     syncAndSave();
                     const { jsPDF } = window.jspdf;
@@ -299,26 +324,21 @@
                         for (let i = 0; i < pages.length; i++) {
                             const pageData = pages[i];
                             const tempCanvas = new fabric.StaticCanvas(null, {
-                                width: EXPORT_WIDTH_PX,
-                                height: EXPORT_HEIGHT_PX,
-                                backgroundColor: '#FFFFFF'
+                                width: EXPORT_WIDTH_PX, height: EXPORT_HEIGHT_PX, backgroundColor: '#FFFFFF'
                             });
 
                             if (pageData.objects && pageData.objects.length > 0) {
-                                const objects = await new Promise(resolve => fabric.util.enlivenObjects(pageData.objects, resolve));
+                                const objects = await new Promise(resolve => fabric.util.enlivenObjects(pageData.objects, resolve, ''));
                                 
                                 const scaleFactor = EXPORT_WIDTH_PX / canvas.getWidth();
 
                                 objects.forEach(obj => {
                                     const newProps = {
-                                        left: obj.left * scaleFactor,
-                                        top: obj.top * scaleFactor,
-                                        scaleX: obj.scaleX * scaleFactor,
-                                        scaleY: obj.scaleY * scaleFactor
+                                        left: obj.left * scaleFactor, top: obj.top * scaleFactor,
+                                        scaleX: obj.scaleX * scaleFactor, scaleY: obj.scaleY * scaleFactor
                                     };
-                                    // Para textos, también escalar el tamaño de la fuente para mejor calidad
-                                    if (obj.type === 'i-text' || obj.type === 'textbox') {
-                                        newProps.fontSize = obj.fontSize * scaleFactor;
+                                    if (obj.type.includes('text')) {
+                                        newProps.fontSize = (obj.fontSize || 0) * scaleFactor;
                                     }
                                     obj.set(newProps);
                                     tempCanvas.add(obj);
@@ -334,14 +354,13 @@
                         
                         pdf.save("diseno_stickeame.pdf");
                         hideModal();
-                        showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar</a><button onclick="hideModal()" class="mt-2 bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-400">Cerrar</button>`);
+                        showModal('¡Tu diseño se ha descargado!', `<a href="https://wa.me/543755298440?text=${encodeURIComponent('¡Hola! Te envío mi diseño.')}" target="_blank" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 block"><i class="fa-brands fa-whatsapp mr-2"></i>Enviar por WhatsApp</a><button onclick="hideModal()" class="mt-2 bg-slate-200 text-slate-800 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300">Cerrar</button>`);
                     
                     } catch (err) {
                         console.error("Error al exportar:", err);
                         showModal("Hubo un error al exportar el PDF. Intenta de nuevo.");
                     }
                 });
-                // =================================================================================
                 
                 document.getElementById('reset-app-btn').addEventListener('click', () => {
                     if(confirm('¿Seguro? Se borrará todo.')) {
